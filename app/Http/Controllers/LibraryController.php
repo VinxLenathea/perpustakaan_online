@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DocumentModel;
 use App\Models\CategoryModel;
-use App\Models\SubcategoryModel;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -41,9 +41,9 @@ class LibraryController extends Controller
         $documents = $query->paginate(10)->withQueryString();
 
         $categories = CategoryModel::all();
-        $subcategories = SubcategoryModel::all();
 
-        return view('library', compact('documents', 'categories', 'subcategories'));
+
+        return view('library', compact('documents', 'categories'));
     }
 
     /**
@@ -52,9 +52,9 @@ class LibraryController extends Controller
     public function create()
     {
         $categories = CategoryModel::all();
-        $subcategories = SubcategoryModel::all();
+        ;
 
-        return view('library_create', compact('categories', 'subcategories'));
+        return view('library_create', compact('categories'));
     }
 
     /**
@@ -67,7 +67,6 @@ class LibraryController extends Controller
             'author'          => 'required|string|max:255',
             'year_published'  => 'required|integer|min:1900|max:2099',
             'category_id'     => 'required|exists:categories,id',
-            'subcategory_id'  => 'nullable|exists:subcategories,id',
             'file'            => 'nullable|mimes:pdf,png|max:2048',
         ]);
 
@@ -76,14 +75,21 @@ class LibraryController extends Controller
             $filePath = $request->file('file')->store('documents', 'public');
         }
 
-        DocumentModel::create([
+        $document = DocumentModel::create([
             'title'          => $request->title,
             'author'         => $request->author,
             'year_published' => $request->year_published,
             'category_id'    => $request->category_id,
-            'subcategory_id' => $request->subcategory_id,
             'file_url'       => $filePath,
         ]);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Document berhasil ditambahkan!',
+                'document' => $document->load('category')
+            ]);
+        }
 
         return redirect()->route('library')->with('success', 'Data berhasil ditambahkan!');
     }
@@ -91,11 +97,9 @@ class LibraryController extends Controller
     /**
      * Form edit document
      */
-    public function edit($id)
+    public function edit(DocumentModel $document)
     {
-        $document = DocumentModel::findOrFail($id);
         $categories = CategoryModel::all();
-        $subcategories = SubcategoryModel::all();
 
         return view('library_edit', compact('document', 'categories'));
     }
@@ -103,24 +107,20 @@ class LibraryController extends Controller
     /**
      * Update document
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, DocumentModel $document)
     {
         $request->validate([
             'title'           => 'required|string|max:255',
             'author'          => 'required|string|max:255',
             'year_published'  => 'required|integer|min:1900|max:2099',
             'category_id'     => 'required|exists:categories,id',
-            'subcategory_id'  => 'nullable|exists:subcategories,id',
             'file'            => 'nullable|mimes:pdf,png|max:2048',
         ]);
-
-        $document = DocumentModel::findOrFail($id);
 
         $document->title          = $request->title;
         $document->author         = $request->author;
         $document->year_published = $request->year_published;
         $document->category_id    = $request->category_id;
-        $document->subcategory_id = $request->subcategory_id;
 
         // 📂 Jika ada file baru
         if ($request->hasFile('file')) {
@@ -136,6 +136,15 @@ class LibraryController extends Controller
 
         $document->save();
 
+        if ($request->ajax()) {
+            return response()->json([
+                'success'  => true,
+                'message'  => 'Data berhasil diperbarui!',
+                'document' => $document->load('category') // biar category_name ikut
+            ]);
+        }
+
+        // kalau bukan AJAX tetap redirect
         return redirect()->route('library')->with('success', 'Data berhasil diperbarui!');
     }
 
@@ -146,13 +155,18 @@ class LibraryController extends Controller
     {
         $document = DocumentModel::findOrFail($id);
 
-        // hapus file di storage juga
         if ($document->file_url && Storage::disk('public')->exists($document->file_url)) {
             Storage::disk('public')->delete($document->file_url);
         }
 
         $document->delete();
 
-        return redirect()->route('library')->with('success', 'Data berhasil dihapus!');
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil dihapus!'
+        ]);
     }
+
+
+
 }

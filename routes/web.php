@@ -21,8 +21,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/library', [LibraryController::class, 'index'])->name('library');
     Route::post('/library/store', [LibraryController::class, 'store'])->name('library.store');
     route::delete('/library/{id}', [LibraryController::class, 'destroy'])->name('library.destroy');
-    Route::get('/library/{id}/edit', [LibraryController::class, 'edit'])->name('library.edit');
-    Route::put('/library/{id}', [LibraryController::class, 'update'])->name('library.update');
+    Route::get('/library/{document}/edit', [LibraryController::class, 'edit'])->name('library.edit');
+    Route::put('/library/{document}', [LibraryController::class, 'update'])->name('library.update');
     // user management
     Route::get('/users', [UserController::class, 'index'])->name('users.index');          // daftar user
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create'); // form tambah
