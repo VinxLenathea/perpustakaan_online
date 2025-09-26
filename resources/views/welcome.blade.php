@@ -126,11 +126,66 @@
             <i class="fas fa-search"></i>
         </button>
     </form>
+
+
 </div>
 
         </div>
     </div>
 
+<div class="container my-4">
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="row g-0">
+
+            <!-- Gambar Cover -->
+             <div class="col-md-3 text-center p-3">
+                <img src="{{ asset('storage/covers/'.$book->id.'.jpg') }}"
+                     class="img-fluid rounded shadow-sm"
+                     alt="Cover Buku"
+                     style="max-height: 300px;">
+            </div>
+
+            <!-- Detail Buku -->
+            <div class="col-md-9">
+                <div class="card-body">
+                    <h4 class="card-title text-danger fw-bold mb-3">
+                        Thoracic Surgery Clinics
+                    </h4>
+
+                    <p class="mb-1"><strong>Jenis Bahan:</strong> Sumber Elektronik</p>
+
+                    <p class="mb-1"><strong>Pengarang:</strong></p>
+                    <ul class="list-unstyled ms-3">
+                        <li><a href="#" class="text-primary text-decoration-none">Sandeep J. Khandhar</a></li>
+                        <li><a href="#" class="text-primary text-decoration-none">John P. Sutyak</a></li>
+                        <li><a href="#" class="text-primary text-decoration-none">Brian L. Pettiford</a></li>
+                        <li><a href="#" class="text-primary text-decoration-none">Riyad Karmy-Jones</a></li>
+                        <li><a href="#" class="text-primary text-decoration-none">Dan M. Meyer</a></li>
+                        <li><a href="#" class="text-primary text-decoration-none">Daniel L. Miller</a></li>
+                        <li><a href="#" class="text-primary text-decoration-none">Ayesha S. Bryant</a></li>
+                        <li><a href="#" class="text-primary text-decoration-none">Ibrahim B. Cetindag</a></li>
+                        <li><a href="#" class="text-primary text-decoration-none">James R. Schaff</a></li>
+                        <li><a href="#" class="text-primary text-decoration-none">Richard Embry</a></li>
+                        <li><a href="#" class="text-primary text-decoration-none">William T. Brinkman</a></li>
+                    </ul>
+
+                    <p class="mb-1">
+                        <strong>Penerbitan:</strong> ELSEVIER SAUNDERS, 2007
+                    </p>
+
+                    <p class="mb-1">
+                        <strong>Konten Digital:</strong>
+                        <a href="#" class="text-primary fw-semibold">pdf</a>
+                    </p>
+
+                    <p class="mb-0">
+                        <strong>Artikel:</strong> <span class="text-muted">Tidak ada data</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
     <!-- Main Content Area -->
