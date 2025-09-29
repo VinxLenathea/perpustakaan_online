@@ -20,25 +20,26 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @else
         <style>
-    .navbar-cusatom {
+    .navbar-custom {
         background-color: #001f3f !important; /* Navy utama */
     }
     .navbar-custom .nav-link {
-        color: FED16A !important;
+        color: #FED16A !important;
     }
     .navbar-custom .dropdown-menu {
         background-color: #002147; /* Navy lebih terang */
     }
     .navbar-custom .dropdown-item {
-        color:FED16A;
+        color: #FED16A;
     }
     .navbar-custom .dropdown-item:hover {
         background-color: #001633; /* Hover lebih gelap */
     }
     .search-bar {
-        background-color: #002147s;
+        background-color: #001f3f; /* Navy utama */
         padding: 20px;
         margin: 20px 0;
+        border-radius: 8px;
     }
     .top-bar {
         background-color: #f8f9fa;
@@ -56,12 +57,19 @@
     .text-success {
         color: #001f3f !important; /* Ikon & teks jadi navy */
     }
-    .search-bar {
-    background-color: #001f3f; /* Navy utama */
-    padding: 20px;
-    margin: 20px 0;
-    border-radius: 8px; /* opsional biar lebih halus */
-}
+    .hero-section {
+        background: linear-gradient(135deg, #001f3f 0%, #002147 100%);
+        color: white;
+        padding: 60px 0;
+        text-align: center;
+    }
+    .featured-grid {
+        padding: 40px 0;
+    }
+    .card-hover:hover {
+        transform: translateY(-5px);
+        transition: transform 0.3s ease;
+    }
 
 </style>
 
@@ -73,7 +81,7 @@
 <div class="top-bar d-flex justify-content-between align-items-center">
     <!-- Logo di kiri -->
     <div class="d-flex align-items-center">
-        <img src="assets/img/logo rsmn.png" alt="Logo Perpustakaan" width="100" height="100" class="me-2">
+        <img src="assets/img/logo rsmn.png" alt="Logo Perpustakaan" class="img-fluid me-2" style="max-width: 80px; height: auto;">
         <h5 class="m-0 text-success">Perpustakaan online RSMN</h5>
     </div>
 
@@ -100,81 +108,75 @@
 
 </div>
 
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="display-4 fw-bold">Selamat Datang di Perpustakaan Online RSMN</h1>
+            <p class="lead">Temukan koleksi buku, jurnal, dan dokumen ilmiah terlengkap untuk mendukung pembelajaran dan penelitian Anda.</p>
+            <a href="{{ route('library') }}" class="btn btn-light btn-lg">Jelajahi Koleksi</a>
+        </div>
+    </div>
 
     <!-- Logo & Search Section -->
     <div class="container-fluid">
         <div class="row search-bar">
 
             <!-- Search -->
-            <div class="col-md-8" height="80">
-    <form class="d-flex align-items-center justify-content-center text-white">
-        <span class="me-2">Search the</span>
-        <select class="form-select form-select-sm me-2" style="width: auto;">
-            <option>Judul</option>
-            <option>Penulis</option>
-            <option>Tahun</option>
+            <div class="col-12 d-flex justify-content-center">
+    <form class="d-flex align-items-center justify-content-center text-white flex-wrap" action="{{ route('library') }}" method="GET">
+        <span class="me-2">Cari</span>
+        <select class="form-select form-select-sm me-2" name="search_by" style="width: auto;">
+            <option value="judul">Judul</option>
+            <option value="penulis">Penulis</option>
+            <option value="tahun">Tahun</option>
         </select>
-        <span class="me-2">by</span>
-        <select class="form-select form-select-sm me-2" style="width: auto;">
-            <option>Karya Tulis Ilmiah</option>
-            <option>Poster</option>
-            <option>Penelitian Eksternal</option>
-            <option>Penelitian Internal</option>
+        <span class="me-2">berdasarkan</span>
+        <select class="form-select form-select-sm me-2" name="category" style="width: auto;">
+            <option value="karya_tulis_ilmiah">Karya Tulis Ilmiah</option>
+            <option value="poster">Poster</option>
+            <option value="penelitian_eksternal">Penelitian Eksternal</option>
+            <option value="penelitian_internal">Penelitian Internal</option>
         </select>
-        <input type="text" class="form-control form-control-sm me-2" style="width: 200px;" placeholder="Enter search terms...">
+        <input type="text" class="form-control form-control-sm me-2" name="query" style="min-width: 200px;" placeholder="Masukkan kata kunci...">
         <button class="btn btn-outline-light" type="submit">
             <i class="fas fa-search"></i>
         </button>
     </form>
-
-
 </div>
 
         </div>
     </div>
 
 <div class="container my-4">
-    <div class="card shadow-sm border-0 rounded-3">
+    <h2 class="text-center mb-4 text-success">Buku Unggulan</h2>
+    <div class="card shadow-sm border-0 rounded-3 card-hover">
         <div class="row g-0">
-
             <!-- Gambar Cover -->
-
+            <div class="col-md-3">
+                <img src="assets/img/undraw_posting_photo.svg" class="img-fluid rounded-start" alt="Cover Buku Unggulan">
+            </div>
             <!-- Detail Buku -->
             <div class="col-md-9">
                 <div class="card-body">
                     <h4 class="card-title text-danger fw-bold mb-3">
                         Thoracic Surgery Clinics
                     </h4>
-
                     <p class="mb-1"><strong>Jenis Bahan:</strong> Sumber Elektronik</p>
-
                     <p class="mb-1"><strong>Pengarang:</strong></p>
                     <ul class="list-unstyled ms-3">
                         <li><a href="#" class="text-primary text-decoration-none">Sandeep J. Khandhar</a></li>
-                        <li><a href="#" class="text-primary text-decoration-none">John P. Sutyak</a></li>
-                        <li><a href="#" class="text-primary text-decoration-none">Brian L. Pettiford</a></li>
-                        <li><a href="#" class="text-primary text-decoration-none">Riyad Karmy-Jones</a></li>
-                        <li><a href="#" class="text-primary text-decoration-none">Dan M. Meyer</a></li>
-                        <li><a href="#" class="text-primary text-decoration-none">Daniel L. Miller</a></li>
-                        <li><a href="#" class="text-primary text-decoration-none">Ayesha S. Bryant</a></li>
-                        <li><a href="#" class="text-primary text-decoration-none">Ibrahim B. Cetindag</a></li>
-                        <li><a href="#" class="text-primary text-decoration-none">James R. Schaff</a></li>
-                        <li><a href="#" class="text-primary text-decoration-none">Richard Embry</a></li>
-                        <li><a href="#" class="text-primary text-decoration-none">William T. Brinkman</a></li>
                     </ul>
-
                     <p class="mb-1">
                         <strong>Penerbitan:</strong> ELSEVIER SAUNDERS, 2007
                     </p>
-
                     <p class="mb-1">
                         <strong>Konten Digital:</strong>
                         <a href="#" class="text-primary fw-semibold">pdf</a>
                     </p>
-
-                    <p class="mb-0">
+                    <p class="mb-3">
                         <strong>Artikel:</strong> <span class="text-muted">Tidak ada data</span>
                     </p>
+                    <a href="{{ route('library') }}" class="btn btn-success">Lihat Lebih Banyak</a>
                 </div>
             </div>
         </div>
@@ -182,12 +184,59 @@
 </div>
 
 
-    <!-- Main Content Area -->
-    <div class="container-fluid mt-4">
+    <!-- Featured Categories -->
+    <div class="container featured-grid">
+        <h2 class="text-center mb-4 text-success">Kategori Unggulan</h2>
         <div class="row">
-
+            <div class="col-md-3 mb-4">
+                <div class="card card-hover text-center h-100">
+                    <div class="card-body">
+                        <i class="fas fa-book fa-3x text-success mb-3"></i>
+                        <h5>Karya Tulis Ilmiah</h5>
+                        <p>Koleksi penelitian dan artikel ilmiah terbaru.</p>
+                        <a href="{{ route('library') }}?category=karya_tulis_ilmiah" class="btn btn-success">Lihat Koleksi</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card card-hover text-center h-100">
+                    <div class="card-body">
+                        <i class="fas fa-image fa-3x text-success mb-3"></i>
+                        <h5>Poster</h5>
+                        <p>Poster penelitian dan presentasi visual.</p>
+                        <a href="{{ route('library') }}?category=poster" class="btn btn-success">Lihat Koleksi</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card card-hover text-center h-100">
+                    <div class="card-body">
+                        <i class="fas fa-flask fa-3x text-success mb-3"></i>
+                        <h5>Penelitian Eksternal</h5>
+                        <p>Hasil penelitian dari kolaborasi eksternal.</p>
+                        <a href="{{ route('library') }}?category=penelitian_eksternal" class="btn btn-success">Lihat Koleksi</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card card-hover text-center h-100">
+                    <div class="card-body">
+                        <i class="fas fa-microscope fa-3x text-success mb-3"></i>
+                        <h5>Penelitian Internal</h5>
+                        <p>Penelitian yang dilakukan secara internal.</p>
+                        <a href="{{ route('library') }}?category=penelitian_internal" class="btn btn-success">Lihat Koleksi</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <div class="container">
+            <p class="mb-0">&copy; 2024 Perpustakaan Online RSMN. All rights reserved.</p>
+        </div>
+    </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
