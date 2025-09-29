@@ -138,12 +138,6 @@
         <div class="row g-0">
 
             <!-- Gambar Cover -->
-             <div class="col-md-3 text-center p-3">
-                <img src="{{ asset('storage/covers/'.$book->id.'.jpg') }}"
-                     class="img-fluid rounded shadow-sm"
-                     alt="Cover Buku"
-                     style="max-height: 300px;">
-            </div>
 
             <!-- Detail Buku -->
             <div class="col-md-9">
