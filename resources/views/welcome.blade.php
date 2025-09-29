@@ -217,7 +217,7 @@
                         <i class="fas fa-image fa-3x text-success mb-3"></i>
                         <h5>Poster</h5>
                         <p>Poster penelitian dan presentasi visual.</p>
-                        <a href="{{ route('library') }}?category=poster" class="btn btn-success">Lihat Koleksi</a>
+                        <a href="{{ route('collection', 'poster') }}" class="btn btn-success">Lihat Koleksi</a>
                     </div>
                 </div>
             </div>
@@ -228,7 +228,7 @@
                         <i class="fas fa-flask fa-3x text-success mb-3"></i>
                         <h5>Penelitian Eksternal</h5>
                         <p>Hasil penelitian dari kolaborasi eksternal.</p>
-                        <a href="{{ route('library') }}?category=penelitian_eksternal" class="btn btn-success">Lihat Koleksi</a>
+                        <a href="{{ route('collection', 'penelitian_eksternal') }}" class="btn btn-success">Lihat Koleksi</a>
                     </div>
                 </div>
             </div>
@@ -239,7 +239,7 @@
                         <i class="fas fa-microscope fa-3x text-success mb-3"></i>
                         <h5>Penelitian Internal</h5>
                         <p>Penelitian yang dilakukan secara internal.</p>
-                        <a href="{{ route('library') }}?category=penelitian_internal" class="btn btn-success">Lihat Koleksi</a>
+                        <a href="{{ route('collection', 'penelitian_eksternal') }}" class="btn btn-success">Lihat Koleksi</a>
                     </div>
                 </div>
             </div>

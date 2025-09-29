@@ -34,6 +34,6 @@ class CollectionController extends Controller
 
         $documents = $query->get();
 
-        return view('collection', compact('documents', 'category'));
+        return view('collection.collection', compact('documents', 'category'));
     }
 }

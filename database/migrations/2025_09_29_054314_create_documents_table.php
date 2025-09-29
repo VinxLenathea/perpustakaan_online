@@ -16,9 +16,10 @@ return new class extends Migration
             $table->string('title');
             $table->string('author');
             $table->year('year_published');
-            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+            $table->foreignId('category_id')->constrained('categories');
             $table->text('abstract')->nullable();
-            $table->string('file_url')->nullable();
+            $table->string('cover_image');
+            $table->string('file_url');
             $table->timestamps();
         });
     }
