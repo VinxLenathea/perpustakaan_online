@@ -87,10 +87,12 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
+                                        <th>Cover</th>
                                         <th>Judul</th>
                                         <th>Kategori</th>
                                         <th>Tahun</th>
                                         <th>Pembuat</th>
+                                        <th>Abstrak</th>
                                         <th>File</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -99,10 +101,24 @@
                                     @foreach ($documents as $doc)
                                         <tr id="row-{{ $doc->id }}">
                                             <td>{{ $doc->id }}</td>
+                                            <td>
+                                                @if($doc->cover_image)
+                                                    <img src="{{ asset('storage/' . $doc->cover_image) }}" alt="Cover {{ $doc->title }}" style="width: 50px; height: 70px; object-fit: cover;">
+                                                @else
+                                                    <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}" alt="Cover {{ $doc->title }}" style="width: 50px; height: 70px; object-fit: cover;">
+                                                @endif
+                                            </td>
                                             <td class="title">{{ $doc->title }}</td>
                                             <td class="category">{{ $doc->category->category_name }}</td>
                                             <td class="year">{{ $doc->year_published }}</td>
                                             <td class="author">{{ $doc->author }}</td>
+                                            <td class="abstract">
+                                                @if($doc->abstract)
+                                                    {{ Str::limit($doc->abstract, 50) }}
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
                                             <td class="file">
                                                 <a href="{{ asset('storage/' . $doc->file_url) }}"
                                                     target="_blank">Lihat File</a>
@@ -173,6 +189,17 @@
                                             <input type="file" class="form-control" name="file"
                                                 accept=".pdf,.png" required>
                                         </div>
+                                        <div class="form-group">
+                                            <label for="cover_image">Upload Cover Image</label>
+                                            <input type="file" class="form-control" name="cover_image"
+                                                accept="image/*">
+                                            <small class="text-muted">Opsional. Format: JPG, PNG, GIF. Max 2MB.</small>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="abstract">Abstrak</label>
+                                            <textarea class="form-control" name="abstract" rows="4"
+                                                placeholder="Masukkan abstrak dokumen..."></textarea>
+                                        </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
@@ -236,6 +263,17 @@
                                                     accept=".pdf,.doc,.docx">
                                                 <small class="text-muted">Kosongkan jika tidak ingin mengganti
                                                     file.</small>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="cover_image">Ganti Cover Image (Opsional)</label>
+                                                <input type="file" class="form-control" name="cover_image"
+                                                    accept="image/*">
+                                                <small class="text-muted">Kosongkan jika tidak ingin mengganti cover. Format: JPG, PNG, GIF. Max 2MB.</small>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="abstract">Abstrak</label>
+                                                <textarea class="form-control" name="abstract" rows="4"
+                                                    placeholder="Masukkan abstrak dokumen...">{{ $doc->abstract }}</textarea>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -544,14 +582,22 @@
                                 $('#editDocumentModal' + id).modal('hide');
 
                                 // update data di tabel langsung
-                                $('#row-' + id + ' .title').text(response.document
-                                    .title);
-                                $('#row-' + id + ' .author').text(response.document
-                                    .author);
-                                $('#row-' + id + ' .year').text(response.document
-                                    .year_published);
-                                $('#row-' + id + ' .category').text(response.document
-                                    .category.category_name);
+                                $('#row-' + id + ' .title').text(response.document.title);
+                                $('#row-' + id + ' .author').text(response.document.author);
+                                $('#row-' + id + ' .year').text(response.document.year_published);
+                                $('#row-' + id + ' .category').text(response.document.category.category_name);
+
+                                // Update abstract
+                                let abstractText = response.document.abstract ? response.document.abstract.substring(0, 50) + (response.document.abstract.length > 50 ? '...' : '') : '-';
+                                $('#row-' + id + ' .abstract').text(abstractText);
+
+                                // Update cover image
+                                let coverCell = $('#row-' + id + ' td').eq(1); // Cover is second column (index 1)
+                                if (response.document.cover_image) {
+                                    coverCell.html(`<img src="/storage/${response.document.cover_image}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`);
+                                } else {
+                                    coverCell.html(`<img src="{{ asset('assets/img/undraw_posting_photo.svg') }}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`);
+                                }
 
                                 Swal.fire({
                                     icon: 'success',
@@ -617,13 +663,21 @@
                         form[0].reset();
 
                         // Tambahkan row baru ke tabel
+                        let coverHtml = response.document.cover_image ?
+                            `<img src="/storage/${response.document.cover_image}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">` :
+                            `<img src="{{ asset('assets/img/undraw_posting_photo.svg') }}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`;
+
+                        let abstractText = response.document.abstract ? response.document.abstract.substring(0, 50) + (response.document.abstract.length > 50 ? '...' : '') : '-';
+
                         let newRow = `
                             <tr id="row-${response.document.id}">
                                 <td>${response.document.id}</td>
+                                <td>${coverHtml}</td>
                                 <td class="title">${response.document.title}</td>
                                 <td class="category">${response.document.category.category_name}</td>
                                 <td class="year">${response.document.year_published}</td>
                                 <td class="author">${response.document.author}</td>
+                                <td class="abstract">${abstractText}</td>
                                 <td class="file">
                                     <a href="/storage/${response.document.file_url}" target="_blank">Lihat File</a>
                                 </td>

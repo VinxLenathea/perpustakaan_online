@@ -18,9 +18,9 @@ class DocumentModel extends Model
         'author',
         'year_published',
         'category_id',
-        'subcategory_id',
         'abstract',
-        'file_url'
+        'file_url',
+        'cover_image'
     ];
 
     /**
@@ -29,15 +29,8 @@ class DocumentModel extends Model
      */
     public function category()
     {
-        return $this->belongsTo(categoryModel::class, 'category_id', 'id');
+        return $this->belongsTo(CategoryModel::class, 'category_id', 'id');
     }
 
-    /**
-     * Relasi ke tabel Subcategory
-     * Satu dokumen bisa punya satu subkategori
-     */
-    public function subcategory()
-    {
-        return $this->belongsTo(subcategoryModel::class, 'subcategory_id', 'id');
-    }
+
 }

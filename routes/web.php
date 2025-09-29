@@ -6,8 +6,11 @@ use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
-    return view('welcome');
+    $recentDocuments = \App\Models\DocumentModel::with('category')->latest()->take(2)->get();
+    return view('welcome', compact('recentDocuments'));
 });
+
+Route::get('/collection/{category}', [App\Http\Controllers\CollectionController::class, 'index'])->name('collection');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

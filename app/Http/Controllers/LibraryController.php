@@ -68,11 +68,18 @@ class LibraryController extends Controller
             'year_published'  => 'required|integer|min:1900|max:2099',
             'category_id'     => 'required|exists:categories,id',
             'file'            => 'nullable|mimes:pdf,png|max:2048',
+            'cover_image'     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'abstract'        => 'nullable|string',
         ]);
 
         $filePath = null;
         if ($request->hasFile('file')) {
             $filePath = $request->file('file')->store('documents', 'public');
+        }
+
+        $coverPath = null;
+        if ($request->hasFile('cover_image')) {
+            $coverPath = $request->file('cover_image')->store('covers', 'public');
         }
 
         $document = DocumentModel::create([
@@ -81,6 +88,8 @@ class LibraryController extends Controller
             'year_published' => $request->year_published,
             'category_id'    => $request->category_id,
             'file_url'       => $filePath,
+            'cover_image'    => $coverPath,
+            'abstract'       => $request->abstract,
         ]);
 
         if ($request->ajax()) {
@@ -114,13 +123,16 @@ class LibraryController extends Controller
             'author'          => 'required|string|max:255',
             'year_published'  => 'required|integer|min:1900|max:2099',
             'category_id'     => 'required|exists:categories,id',
+            'abstract'        => 'nullable|string',
             'file'            => 'nullable|mimes:pdf,png|max:2048',
+            'cover_image'     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $document->title          = $request->title;
         $document->author         = $request->author;
         $document->year_published = $request->year_published;
         $document->category_id    = $request->category_id;
+        $document->abstract       = $request->abstract;
 
         // 📂 Jika ada file baru
         if ($request->hasFile('file')) {
@@ -132,6 +144,18 @@ class LibraryController extends Controller
             // simpan file baru
             $path = $request->file('file')->store('documents', 'public');
             $document->file_url = $path;
+        }
+
+        // Cover image
+        if ($request->hasFile('cover_image')) {
+            // hapus cover lama (jika ada)
+            if ($document->cover_image && Storage::disk('public')->exists($document->cover_image)) {
+                Storage::disk('public')->delete($document->cover_image);
+            }
+
+            // simpan cover baru
+            $coverPath = $request->file('cover_image')->store('covers', 'public');
+            $document->cover_image = $coverPath;
         }
 
         $document->save();
@@ -157,6 +181,10 @@ class LibraryController extends Controller
 
         if ($document->file_url && Storage::disk('public')->exists($document->file_url)) {
             Storage::disk('public')->delete($document->file_url);
+        }
+
+        if ($document->cover_image && Storage::disk('public')->exists($document->cover_image)) {
+            Storage::disk('public')->delete($document->cover_image);
         }
 
         $document->delete();
