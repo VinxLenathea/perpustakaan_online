@@ -4,10 +4,47 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WelcomeControllerController;
+use Illuminate\Http\Request;
 
-Route::get('/', function () {
-    $recentDocuments = \App\Models\DocumentModel::with('category')->latest()->take(2)->get();
-    return view('welcome', compact('recentDocuments'));
+Route::get('/', function (Request $request) {
+    // Check if search parameters are present
+    if ($request->has('query') || $request->has('search_by') || $request->has('category')) {
+        // Perform search
+        $query = \App\Models\DocumentModel::with('category');
+
+        $keyword = $request->input('query');
+        $filter = $request->input('search_by');
+        $categoryName = $request->input('category');
+
+        if ($keyword && $filter) {
+            if ($filter == 'judul') {
+                $query->where('title', 'LIKE', "%{$keyword}%");
+            } elseif ($filter == 'penulis') {
+                $query->where('author', 'LIKE', "%{$keyword}%");
+            } elseif ($filter == 'tahun') {
+                $query->where('year_published', 'LIKE', "%{$keyword}%");
+            }
+        }
+
+        if ($categoryName) {
+            $category = \App\Models\CategoryModel::where('category_name', $categoryName)->first();
+            if ($category) {
+                $query->where('category_id', $category->id);
+            }
+        }
+
+        $searchResults = $query->paginate(10)->withQueryString();
+        $isSearch = true;
+
+        return view('welcome', compact('searchResults', 'isSearch'));
+    } else {
+        // Show recent documents
+        $recentDocuments = \App\Models\DocumentModel::with('category')->latest()->take(2)->get();
+        $isSearch = false;
+
+        return view('welcome', compact('recentDocuments', 'isSearch'));
+    }
 });
 
 Route::get('/collection/{category}', [App\Http\Controllers\CollectionController::class, 'index'])->name('collection');
@@ -35,6 +72,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy'); // hapus user
     // Dashboard
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/welcome', [LibraryController::class, 'index'])->name('welcome');
 
 });
 
