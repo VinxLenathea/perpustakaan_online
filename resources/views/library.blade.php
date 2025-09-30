@@ -725,6 +725,43 @@
         });
     </script>
 
+    <script>
+        // Show/hide abstract and cover image fields based on category selection
+        $(document).ready(function() {
+            function toggleFields(form) {
+                var categorySelect = form.find('select[name="category_id"]');
+                var selectedCategoryText = categorySelect.find('option:selected').text().trim();
+
+                // Show fields for all categories except poster
+                if (selectedCategoryText !== 'poster') {
+                    form.find('input[name="cover_image"]').closest('.form-group').show();
+                    form.find('textarea[name="abstract"]').closest('.form-group').show();
+                } else {
+                    form.find('input[name="cover_image"]').closest('.form-group').hide();
+                    form.find('textarea[name="abstract"]').closest('.form-group').hide();
+                }
+            }
+
+            // Handle add document modal
+            $('#tambahDocumentModal').on('shown.bs.modal', function() {
+                toggleFields($(this).find('form'));
+            });
+
+            $('#tambahDocumentModal select[name="category_id"]').on('change', function() {
+                toggleFields($(this).closest('form'));
+            });
+
+            // Handle edit document modals
+            $('[id^="editDocumentModal"]').on('shown.bs.modal', function() {
+                toggleFields($(this).find('form'));
+            });
+
+            $('[id^="editDocumentModal"] select[name="category_id"]').on('change', function() {
+                toggleFields($(this).closest('form'));
+            });
+        });
+    </script>
+
 </body>
 
 </html>

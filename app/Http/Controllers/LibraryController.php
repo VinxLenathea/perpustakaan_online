@@ -68,9 +68,19 @@ class LibraryController extends Controller
             'year_published'  => 'required|integer|min:1900|max:2099',
             'category_id'     => 'required|exists:categories,id',
             'file'            => 'nullable|mimes:pdf,png|max:2048',
-            'cover_image'     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'cover_image'     => 'nullable|image|
+            :jpeg,png,jpg,gif|max:2048',
             'abstract'        => 'nullable|string',
         ]);
+
+        // Additional validation for categories that require abstract and cover image (all except poster)
+        $category = CategoryModel::find($request->category_id);
+        if ($category && $category->category_name !== 'poster') {
+            $request->validate([
+                'cover_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'abstract'    => 'required|string',
+            ]);
+        }
 
         $filePath = null;
         if ($request->hasFile('file')) {
@@ -127,6 +137,15 @@ class LibraryController extends Controller
             'file'            => 'nullable|mimes:pdf,png|max:2048',
             'cover_image'     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        // Additional validation for categories that require abstract and cover image
+        $category = CategoryModel::find($request->category_id);
+        if ($category && in_array($category->category_name, ['karya tulis ilmiah', 'penelitian eksternal', 'penelitian internal'])) {
+            $request->validate([
+                'cover_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'abstract'    => 'required|string',
+            ]);
+        }
 
         $document->title          = $request->title;
         $document->author         = $request->author;
