@@ -111,16 +111,30 @@
                     <div class="row g-3 align-items-center">
                         <!-- Cover Buku -->
                         <div class="col-md-3 col-12 text-center">
-                            @if($doc->cover_image)
-                                <img src="{{ asset('storage/' . $doc->cover_image) }}"
-                                     class="img-fluid rounded shadow-sm"
-                                     alt="Cover {{ $doc->title }}"
-                                     style="max-height: 220px; object-fit: cover;">
+                            @if($doc->category->category_name == 'poster')
+                                @if($doc->file_url && in_array(pathinfo($doc->file_url, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg', 'gif']))
+                                    <img src="{{ asset('storage/' . $doc->file_url) }}"
+                                         class="img-fluid rounded shadow-sm"
+                                         alt="Cover {{ $doc->title }}"
+                                         style="max-height: 220px; object-fit: cover;">
+                                @else
+                                    <img src="assets/img/undraw_posting_photo.svg"
+                                         class="img-fluid rounded shadow-sm"
+                                         alt="Cover {{ $doc->title }}"
+                                         style="max-height: 220px; object-fit: cover;">
+                                @endif
                             @else
-                                <img src="assets/img/undraw_posting_photo.svg"
-                                     class="img-fluid rounded shadow-sm"
-                                     alt="Cover {{ $doc->title }}"
-                                     style="max-height: 220px; object-fit: cover;">
+                                @if($doc->cover_image)
+                                    <img src="{{ asset('storage/' . $doc->cover_image) }}"
+                                         class="img-fluid rounded shadow-sm"
+                                         alt="Cover {{ $doc->title }}"
+                                         style="max-height: 220px; object-fit: cover;">
+                                @else
+                                    <img src="assets/img/undraw_posting_photo.svg"
+                                         class="img-fluid rounded shadow-sm"
+                                         alt="Cover {{ $doc->title }}"
+                                         style="max-height: 220px; object-fit: cover;">
+                                @endif
                             @endif
                         </div>
 
@@ -165,16 +179,30 @@
                     <div class="row g-3 align-items-center">
                         <!-- Cover Buku -->
                         <div class="col-md-3 col-12 text-center">
-                            @if($doc->cover_image)
-                                <img src="{{ asset('storage/' . $doc->cover_image) }}"
-                                     class="img-fluid rounded shadow-sm"
-                                     alt="Cover {{ $doc->title }}"
-                                     style="max-height: 220px; object-fit: cover;">
+                            @if($doc->category->category_name == 'poster')
+                                @if($doc->file_url && in_array(pathinfo($doc->file_url, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg', 'gif']))
+                                    <img src="{{ asset('storage/' . $doc->file_url) }}"
+                                         class="img-fluid rounded shadow-sm"
+                                         alt="Cover {{ $doc->title }}"
+                                         style="max-height: 220px; object-fit: cover;">
+                                @else
+                                    <img src="assets/img/undraw_posting_photo.svg"
+                                         class="img-fluid rounded shadow-sm"
+                                         alt="Cover {{ $doc->title }}"
+                                         style="max-height: 220px; object-fit: cover;">
+                                @endif
                             @else
-                                <img src="assets/img/undraw_posting_photo.svg"
-                                     class="img-fluid rounded shadow-sm"
-                                     alt="Cover {{ $doc->title }}"
-                                     style="max-height: 220px; object-fit: cover;">
+                                @if($doc->cover_image)
+                                    <img src="{{ asset('storage/' . $doc->cover_image) }}"
+                                         class="img-fluid rounded shadow-sm"
+                                         alt="Cover {{ $doc->title }}"
+                                         style="max-height: 220px; object-fit: cover;">
+                                @else
+                                    <img src="assets/img/undraw_posting_photo.svg"
+                                         class="img-fluid rounded shadow-sm"
+                                         alt="Cover {{ $doc->title }}"
+                                         style="max-height: 220px; object-fit: cover;">
+                                @endif
                             @endif
                         </div>
 

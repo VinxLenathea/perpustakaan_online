@@ -92,10 +92,18 @@
                             <div class="row g-0">
                                 <!-- Cover Dokumen -->
                                 <div class="col-md-3">
-                                    @if($doc->cover_image)
-                                        <img src="{{ asset('storage/' . $doc->cover_image) }}" class="img-fluid rounded-start" alt="Cover {{ $doc->title }}">
+                                    @if($doc->category->category_name == 'poster')
+                                        @if($doc->file_url && in_array(pathinfo($doc->file_url, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg', 'gif']))
+                                            <img src="{{ asset('storage/' . $doc->file_url) }}" class="img-fluid rounded-start" alt="Cover {{ $doc->title }}">
+                                        @else
+                                            <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}" class="img-fluid rounded-start" alt="Cover {{ $doc->title }}">
+                                        @endif
                                     @else
-                                        <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}" class="img-fluid rounded-start" alt="Cover {{ $doc->title }}">
+                                        @if($doc->cover_image)
+                                            <img src="{{ asset('storage/' . $doc->cover_image) }}" class="img-fluid rounded-start" alt="Cover {{ $doc->title }}">
+                                        @else
+                                            <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}" class="img-fluid rounded-start" alt="Cover {{ $doc->title }}">
+                                        @endif
                                     @endif
                                 </div>
                                 <!-- Detail Dokumen -->

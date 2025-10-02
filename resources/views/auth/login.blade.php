@@ -42,11 +42,11 @@
                         <form method="POST" action="{{ route('login') }}">
                             @csrf
                             <div class="form-group">
-                                <x-input-label for="email" :value="__('Email')" />
-                                <x-text-input id="email" class="form-control"
-                                    type="email" name="email" :value="old('email')" required autofocus
-                                    placeholder="Enter Email Address" />
-                                <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                                <x-input-label for="name" :value="__('Name')" />
+                                <x-text-input id="name" class="form-control"
+                                    type="name" name="name" :value="old('name')" required autofocus
+                                    placeholder="Enter Username" />
+                                <x-input-error :messages="$errors->get('name')" class="mt-2" />
                             </div>
 
                             <div class="form-group">

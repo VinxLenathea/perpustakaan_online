@@ -102,10 +102,18 @@
                                         <tr id="row-{{ $doc->id }}">
                                             <td>{{ $doc->id }}</td>
                                             <td>
-                                                @if($doc->cover_image)
-                                                    <img src="{{ asset('storage/' . $doc->cover_image) }}" alt="Cover {{ $doc->title }}" style="width: 50px; height: 70px; object-fit: cover;">
+                                                @if($doc->category->category_name == 'poster')
+                                                    @if($doc->file_url && in_array(pathinfo($doc->file_url, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg', 'gif']))
+                                                        <img src="{{ asset('storage/' . $doc->file_url) }}" alt="Cover {{ $doc->title }}" style="width: 50px; height: 70px; object-fit: cover;">
+                                                    @else
+                                                        <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}" alt="Cover {{ $doc->title }}" style="width: 50px; height: 70px; object-fit: cover;">
+                                                    @endif
                                                 @else
-                                                    <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}" alt="Cover {{ $doc->title }}" style="width: 50px; height: 70px; object-fit: cover;">
+                                                    @if($doc->cover_image)
+                                                        <img src="{{ asset('storage/' . $doc->cover_image) }}" alt="Cover {{ $doc->title }}" style="width: 50px; height: 70px; object-fit: cover;">
+                                                    @else
+                                                        <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}" alt="Cover {{ $doc->title }}" style="width: 50px; height: 70px; object-fit: cover;">
+                                                    @endif
                                                 @endif
                                             </td>
                                             <td class="title">{{ $doc->title }}</td>
@@ -124,15 +132,15 @@
                                                     target="_blank">Lihat File</a>
                                             </td>
                                             <td>
-                                                <button class="btn btn-success btn-sm" data-toggle="modal"
-                                                    data-target="#editDocumentModal{{ $doc->id }}"><i class="fas fa-edit"></i></button>
-                                                <button type="button" class="btn btn-danger btn-sm deleteBtn"
-                                                    data-toggle="modal" data-target="#confirmModal"
-                                                    data-url="{{ route('library.destroy', $doc) }}">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-
-
+                                                <div class="d-flex flex-column align-items-center gap-1">
+                                                    <button class="btn btn-success btn-sm" data-toggle="modal"
+                                                        data-target="#editDocumentModal{{ $doc->id }}"><i class="fas fa-edit"></i></button>
+                                                    <button type="button" class="btn btn-danger btn-sm"
+                                                        data-toggle="modal" style="margin-top: 5px" data-target="#confirmModal"
+                                                        data-url="{{ route('library.destroy', $doc) }}">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -294,13 +302,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
-                    </div>
-                </div>
-            </footer>
+            @include('footer')
         </div>
         <!-- End of Content Wrapper -->
     </div>
@@ -418,22 +420,22 @@
             // Deteksi jenis data berdasarkan struktur tabel
             if (row.find('td:nth-child(3)').length > 0) {
                 // User table (kolom: ID, Name, Email, Aksi)
-                var itemName = row.find('td:nth-child(2)').text(); // Nama user
-                var itemDetail = row.find('td:nth-child(3)').text(); // Email user
+                var itemName = row.find('.title').text(); // Nama user
+                var itemDetail = row.find('.category').text(); // Email user
                 var itemType = 'user';
 
                 var detailsHtml = `
                     <div class="alert alert-light">
-                        <strong>Nama:</strong> ${itemName}<br>
-                        <strong>Email:</strong> ${itemDetail}
+                        <strong>Nama File:</strong> ${itemName}<br>
+                        <strong>Kategori:</strong> ${itemDetail}
                     </div>
                 `;
 
-                var warningText = 'User ini akan dihapus secara permanen.';
+                var warningText = 'Data ini akan dihapus secara permanen.';
             } else {
                 // Document table (kolom: ID, Judul, Kategori, Tahun, Pembuat, File, Aksi)
                 var itemName = row.find('.title').text(); // Judul document
-                var itemDetail = row.find('.author').text(); // Penulis document
+                var itemDetail = row.find('.category').text(); // Penulis document
                 var itemType = 'document';
 
                 var detailsHtml = `
@@ -443,12 +445,12 @@
                     </div>
                 `;
 
-                var warningText = 'Document ini akan dihapus secara permanen beserta file yang terkait.';
+                var warningText = 'File ini akan dihapus secara permanen.';
             }
 
             // Update modal content
             $(this).find('#itemDetails').html(detailsHtml);
-            $(this).find('.modal-body p').first().html(`Apakah Anda yakin ingin menghapus ${itemType} ini?`);
+            $(this).find('.modal-body p').first().html(`Apakah Anda yakin ingin menghapus file ini?`);
             $(this).find('.text-muted').html(warningText);
 
             // Set action form untuk AJAX
@@ -468,7 +470,7 @@
             // Deteksi jenis item berdasarkan konten modal
             var isUser = modal.find('#itemDetails').text().includes('Email:');
             var itemType = isUser ? 'user' : 'document';
-            var successMessage = isUser ? 'User berhasil dihapus!' : 'Document berhasil dihapus!';
+            var successMessage = isUser ? 'File berhasil dihapus!' : 'File berhasil dihapus!';
 
             // Lanjutkan dengan AJAX request langsung
             $.ajax({
@@ -593,10 +595,18 @@
 
                                 // Update cover image
                                 let coverCell = $('#row-' + id + ' td').eq(1); // Cover is second column (index 1)
-                                if (response.document.cover_image) {
-                                    coverCell.html(`<img src="/storage/${response.document.cover_image}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`);
+                                if (response.document.category.category_name == 'poster') {
+                                    if (response.document.file_url && ['png', 'jpg', 'jpeg', 'gif'].includes(response.document.file_url.split('.').pop().toLowerCase())) {
+                                        coverCell.html(`<img src="/storage/${response.document.file_url}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`);
+                                    } else {
+                                        coverCell.html(`<img src="/assets/img/undraw_posting_photo.svg" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`);
+                                    }
                                 } else {
-                                    coverCell.html(`<img src="{{ asset('assets/img/undraw_posting_photo.svg') }}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`);
+                                    if (response.document.cover_image) {
+                                        coverCell.html(`<img src="/storage/${response.document.cover_image}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`);
+                                    } else {
+                                        coverCell.html(`<img src="/assets/img/undraw_posting_photo.svg" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`);
+                                    }
                                 }
 
                                 Swal.fire({
@@ -663,9 +673,18 @@
                         form[0].reset();
 
                         // Tambahkan row baru ke tabel
-                        let coverHtml = response.document.cover_image ?
-                            `<img src="/storage/${response.document.cover_image}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">` :
-                            `<img src="{{ asset('assets/img/undraw_posting_photo.svg') }}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`;
+                        let coverHtml;
+                        if (response.document.category.category_name == 'poster') {
+                            if (response.document.file_url && ['png', 'jpg', 'jpeg', 'gif'].includes(response.document.file_url.split('.').pop().toLowerCase())) {
+                                coverHtml = `<img src="/storage/${response.document.file_url}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`;
+                            } else {
+                                coverHtml = `<img src="/assets/img/undraw_posting_photo.svg" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`;
+                            }
+                        } else {
+                            coverHtml = response.document.cover_image ?
+                                `<img src="/storage/${response.document.cover_image}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">` :
+                                `<img src="/assets/img/undraw_posting_photo.svg" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`;
+                        }
 
                         let abstractText = response.document.abstract ? response.document.abstract.substring(0, 50) + (response.document.abstract.length > 50 ? '...' : '') : '-';
 
@@ -682,8 +701,10 @@
                                     <a href="/storage/${response.document.file_url}" target="_blank">Lihat File</a>
                                 </td>
                                 <td>
-                                    <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#editDocumentModal${response.document.id}">Edit</button>
-                                    <button type="button" class="btn btn-danger btn-sm deleteBtn" data-toggle="modal" data-target="#confirmModal" data-url="/library/${response.document.id}">Hapus</button>
+                                    <div class="d-flex flex-column align-items-center gap-1">
+                                        <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#editDocumentModal${response.document.id}"><i class="fas fa-edit"></i></button>
+                                        <button type="button" class="btn btn-danger btn-sm deleteBtn" data-toggle="modal" data-target="#confirmModal" data-url="/library/${response.document.id}"><i class="fas fa-trash"></i></button>
+                                    </div>
                                 </td>
                             </tr>
                         `;
