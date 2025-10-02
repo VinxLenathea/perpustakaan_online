@@ -16,12 +16,12 @@
 
     <style>
         body {
-            background: url("assets/img/bg.png") no-repeat center center fixed;
+            background: url("assets/img/logo rsmn1.png") no-repeat center center fixed;
             background-size: cover;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.7);
             border-radius: 10px;
         }
     </style>

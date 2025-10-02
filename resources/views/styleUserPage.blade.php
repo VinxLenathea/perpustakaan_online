@@ -75,5 +75,25 @@
         footer {
             position: relative;
         }
+
+        /* New size classes for welcome.blade.php */
+        .logo-img {
+            max-width: 80px;
+            height: auto;
+        }
+
+        .card-max-height {
+            max-height: 250px;
+            overflow: hidden;
+        }
+
+        .cover-img {
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .card-title-small {
+            font-size: 1.1rem;
+        }
     </style>
 @endif

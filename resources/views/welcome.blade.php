@@ -38,16 +38,8 @@
                 <i class="fas fa-phone-alt me-1 text-success"></i> +62812-3079-7005
             </a>
 
-            <!-- Dropdown Akun -->
-            <div class="dropdown">
-                <button class="btn btn-success btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Akun
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="{{ route('login') }}">Login</a></li>
-                    <li><a class="dropdown-item" href="{{ route('register') }}">Register</a></li>
-                </ul>
-            </div>
+            <!-- Login Button -->
+            <a href="{{ route('login') }}" class="btn btn-success btn-sm">Login</a>
         </div>
     </div>
 
@@ -102,97 +94,121 @@
 
 
     <!-- Buku Unggulan / Hasil Pencarian -->
-    <div class="container my-4">
-        <h2 class="text-center mb-4 text-success">
-            @if(isset($isSearch) && $isSearch)
-                Hasil Pencarian
-            @else
-                Baru ditambahkan
-            @endif
-        </h2>
-
+   <!-- Baru Ditambahkan -->
+<div class="container my-4">
+    <h2 class="text-center mb-4 text-success">
         @if(isset($isSearch) && $isSearch)
-            @if($searchResults->count() > 0)
-                @foreach($searchResults as $doc)
-                    <div class="card shadow-sm border-0 rounded-3 card-hover mb-3" style="max-height: 250px; overflow: hidden;">
-                        <div class="row g-0">
-                            <!-- Cover Buku -->
-                            <div class="col-md-3">
-                                @if($doc->cover_image)
-                                    <img src="{{ asset('storage/' . $doc->cover_image) }}" class="img-fluid rounded-start" alt="Cover {{ $doc->title }}" style="height: 150px; object-fit: cover;">
-                                @else
-                                    <img src="assets/img/undraw_posting_photo.svg" class="img-fluid rounded-start" alt="Cover {{ $doc->title }}" style="height: 150px; object-fit: cover;">
-                                @endif
-                            </div>
-                            <!-- Detail Buku -->
-                            <div class="col-md-9">
-                                <div class="card-body py-2">
-                                    <h5 class="card-title text-danger fw-bold mb-2" style="font-size: 1.1rem;">{{ Str::limit($doc->title, 50) }}</h5>
-                                    <p class="mb-1 small"><strong>Jenis:</strong> {{ $doc->category->category_name }}</p>
-                                    <p class="mb-1 small"><strong>Penulis:</strong> {{ Str::limit($doc->author, 30) }}</p>
-                                    <p class="mb-1 small"><strong>Tahun:</strong> {{ $doc->year_published }}</p>
-                                    @if($doc->abstract)
-                                        <p class="mb-1 small"><strong>Abstrak:</strong> {{ Str::limit($doc->abstract, 60) }}</p>
-                                    @endif
-                                    <p class="mb-2 small">
-                                        <a href="{{ asset('storage/' . $doc->file_url) }}" target="_blank" class="text-primary">Lihat File</a>
-                                    </p>
-                                    <a href="{{ route('collection', $doc->category->category_name) }}" class="btn btn-success btn-sm">Koleksi</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-
-                <!-- Pagination untuk hasil pencarian -->
-                <div class="d-flex justify-content-center mt-4">
-                    {{ $searchResults->links() }}
-                </div>
-            @else
-                <div class="text-center">
-                    <p class="text-muted">Tidak ada dokumen yang ditemukan untuk kriteria pencarian Anda.</p>
-                    <a href="{{ url('/') }}" class="btn btn-success">Kembali ke Beranda</a>
-                </div>
-            @endif
+            Hasil Pencarian
         @else
-            @if($recentDocuments->count() > 0)
-                @foreach($recentDocuments as $doc)
-                    <div class="card shadow-sm border-0 rounded-3 card-hover mb-3" style="max-height: 250px; overflow: hidden;">
-                        <div class="row g-0">
-                            <!-- Cover Buku -->
-                            <div class="col-md-3">
-                                @if($doc->cover_image)
-                                    <img src="{{ asset('storage/' . $doc->cover_image) }}" class="img-fluid rounded-start" alt="Cover {{ $doc->title }}" style="height: 150px; object-fit: cover;">
-                                @else
-                                    <img src="assets/img/undraw_posting_photo.svg" class="img-fluid rounded-start" alt="Cover {{ $doc->title }}" style="height: 150px; object-fit: cover;">
-                                @endif
-                            </div>
-                            <!-- Detail Buku -->
-                            <div class="col-md-9">
-                                <div class="card-body py-2">
-                                    <h5 class="card-title text-danger fw-bold mb-2" style="font-size: 1.1rem;">{{ Str::limit($doc->title, 50) }}</h5>
-                                    <p class="mb-1 small"><strong>Jenis:</strong> {{ $doc->category->category_name }}</p>
-                                    <p class="mb-1 small"><strong>Penulis:</strong> {{ Str::limit($doc->author, 30) }}</p>
-                                    <p class="mb-1 small"><strong>Tahun:</strong> {{ $doc->year_published }}</p>
-                                    @if($doc->abstract)
-                                        <p class="mb-1 small"><strong>Abstrak:</strong> {{ Str::limit($doc->abstract, 60) }}</p>
-                                    @endif
-                                    <p class="mb-2 small">
-                                        <a href="{{ asset('storage/' . $doc->file_url) }}" target="_blank" class="text-primary">Lihat File</a>
-                                    </p>
-                                    <a href="{{ route('collection', $doc->category->category_name) }}" class="btn btn-success btn-sm">Koleksi</a>
-                                </div>
-                            </div>
+            Baru Ditambahkan
+        @endif
+    </h2>
+
+    @if(isset($isSearch) && $isSearch)
+        @if($searchResults->count() > 0)
+            @foreach($searchResults as $doc)
+                <div class="card shadow-sm border-0 rounded-3 mb-3 p-3">
+                    <div class="row g-3 align-items-center">
+                        <!-- Cover Buku -->
+                        <div class="col-md-3 col-12 text-center">
+                            @if($doc->cover_image)
+                                <img src="{{ asset('storage/' . $doc->cover_image) }}"
+                                     class="img-fluid rounded shadow-sm"
+                                     alt="Cover {{ $doc->title }}"
+                                     style="max-height: 220px; object-fit: cover;">
+                            @else
+                                <img src="assets/img/undraw_posting_photo.svg"
+                                     class="img-fluid rounded shadow-sm"
+                                     alt="Cover {{ $doc->title }}"
+                                     style="max-height: 220px; object-fit: cover;">
+                            @endif
+                        </div>
+
+                        <!-- Detail Buku -->
+                        <div class="col-md-9 col-12">
+                            <h5 class="fw-bold text-danger mb-2" style="font-size: 1.2rem;">
+                                {{ $doc->title }}
+                            </h5>
+                            <p class="mb-1"><strong>Jenis:</strong> {{ $doc->category->category_name }}</p>
+                            <p class="mb-1"><strong>Penulis:</strong> {{ $doc->author }}</p>
+                            <p class="mb-1"><strong>Tahun:</strong> {{ $doc->year_published }}</p>
+                            @if($doc->abstract)
+                                <p class="mb-2"><strong>Abstrak:</strong> {{ $doc->abstract }}</p>
+                            @endif
+                            <p class="mb-2">
+                                <strong>Konten Digital:</strong>
+                                <a href="{{ asset('storage/' . $doc->file_url) }}"
+                                   target="_blank"
+                                   class="text-primary">Lihat File</a>
+                            </p>
+                            <a href="{{ route('collection', $doc->category->category_name) }}"
+                               class="btn btn-success btn-sm">Koleksi</a>
                         </div>
                     </div>
-                @endforeach
-            @else
-                <div class="text-center">
-                    <p class="text-muted">Belum ada dokumen yang ditambahkan.</p>
                 </div>
-            @endif
+            @endforeach
+
+            <!-- Pagination -->
+            <div class="d-flex justify-content-center mt-4">
+                {{ $searchResults->links() }}
+            </div>
+        @else
+            <div class="text-center">
+                <p class="text-muted">Tidak ada dokumen yang ditemukan untuk kriteria pencarian Anda.</p>
+                <a href="{{ url('/') }}" class="btn btn-success">Kembali ke Beranda</a>
+            </div>
         @endif
-    </div>
+    @else
+        @if($recentDocuments->count() > 0)
+            @foreach($recentDocuments as $doc)
+                <div class="card shadow-sm border-0 rounded-3 mb-3 p-3">
+                    <div class="row g-3 align-items-center">
+                        <!-- Cover Buku -->
+                        <div class="col-md-3 col-12 text-center">
+                            @if($doc->cover_image)
+                                <img src="{{ asset('storage/' . $doc->cover_image) }}"
+                                     class="img-fluid rounded shadow-sm"
+                                     alt="Cover {{ $doc->title }}"
+                                     style="max-height: 220px; object-fit: cover;">
+                            @else
+                                <img src="assets/img/undraw_posting_photo.svg"
+                                     class="img-fluid rounded shadow-sm"
+                                     alt="Cover {{ $doc->title }}"
+                                     style="max-height: 220px; object-fit: cover;">
+                            @endif
+                        </div>
+
+                        <!-- Detail Buku -->
+                        <div class="col-md-9 col-12">
+                            <h5 class="fw-bold text-danger mb-2" style="font-size: 1.2rem;">
+                                {{ $doc->title }}
+                            </h5>
+                            <p class="mb-1"><strong>Jenis:</strong> {{ $doc->category->category_name }}</p>
+                            <p class="mb-1"><strong>Penulis:</strong> {{ $doc->author }}</p>
+                            <p class="mb-1"><strong>Tahun:</strong> {{ $doc->year_published }}</p>
+                            @if($doc->abstract)
+                                <p class="mb-2"><strong>Abstrak:</strong> {{ $doc->abstract }}</p>
+                            @endif
+                            <p class="mb-2">
+                                <strong>Konten Digital:</strong>
+                                <a href="{{ asset('storage/' . $doc->file_url) }}"
+                                   target="_blank"
+                                   class="text-primary">Lihat File</a>
+                            </p>
+                            <a href="{{ route('collection', $doc->category->category_name) }}"
+                               class="btn btn-success btn-sm">Koleksi</a>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        @else
+            <div class="text-center">
+                <p class="text-muted">Belum ada dokumen yang ditambahkan.</p>
+            </div>
+        @endif
+    @endif
+</div>
+
 
     <!-- Kategori Unggulan -->
     <div class="container featured-grid">
@@ -238,7 +254,7 @@
                         <i class="fas fa-microscope fa-3x text-success mb-3"></i>
                         <h5>Penelitian Internal</h5>
                         <p>Penelitian yang dilakukan secara internal.</p>
-                        <a href="{{ route('collection', 'penelitian_eksternal') }}" class="btn btn-success">Lihat Koleksi</a>
+                        <a href="{{ route('collection', 'penelitian_internal') }}" class="btn btn-success">Lihat Koleksi</a>
                     </div>
                 </div>
             </div>

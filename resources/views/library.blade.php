@@ -125,11 +125,11 @@
                                             </td>
                                             <td>
                                                 <button class="btn btn-success btn-sm" data-toggle="modal"
-                                                    data-target="#editDocumentModal{{ $doc->id }}">Edit</button>
+                                                    data-target="#editDocumentModal{{ $doc->id }}"><i class="fas fa-edit"></i></button>
                                                 <button type="button" class="btn btn-danger btn-sm deleteBtn"
                                                     data-toggle="modal" data-target="#confirmModal"
                                                     data-url="{{ route('library.destroy', $doc) }}">
-                                                    Hapus
+                                                    <i class="fas fa-trash"></i>
                                                 </button>
 
 
