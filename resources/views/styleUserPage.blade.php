@@ -112,5 +112,30 @@
         .card-title-small {
             font-size: 1.1rem;
         }
+
+        /* Custom pagination colors to match site theme */
+        .pagination .page-link {
+            color: #001f3f; /* navy color */
+            border-color: #001f3f;
+        }
+
+        .pagination .page-link:hover {
+            color: #004080;
+            background-color: #e6f0ff;
+            border-color: #004080;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #001f3f;
+            border-color: #001f3f;
+            color: white;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            color: #6c757d;
+            pointer-events: none;
+            background-color: #fff;
+            border-color: #dee2e6;
+        }
     </style>
 @endif

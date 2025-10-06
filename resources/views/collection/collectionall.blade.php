@@ -96,7 +96,7 @@
                         </div>
                     @endforeach
                 </div>
-                {{ $documents->links() }}
+                {{ $documents->links('pagination::bootstrap-5') }}
             @else
                 <div class="text-center">
                     <p class="text-muted">Belum ada dokumen dalam kategori ini.</p>
