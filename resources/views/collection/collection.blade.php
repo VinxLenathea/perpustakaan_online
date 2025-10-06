@@ -23,34 +23,7 @@
 <body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18]">
 
     <!-- Top Bar -->
-    <div class="top-bar d-flex justify-content-between align-items-center">
-        <!-- Logo kiri -->
-        <div class="d-flex align-items-center">
-            <img src="{{ asset('assets/img/logo rsmn.png') }}" alt="Logo Perpustakaan" class="img-fluid me-2" style="max-width: 80px; height: auto;">
-            <h5 class="m-0 text-success">Perpustakaan online RSMN</h5>
-        </div>
-
-        <!-- Kontak & Login kanan -->
-        <div class="d-flex align-items-center">
-            <a href="#" class="me-3 text-decoration-none text-dark">
-                <i class="fas fa-map-marker-alt me-1 text-success"></i> Jl. Bonorogo No.17 Pamekasan
-            </a>
-            <a href="tel:+6281234567890" class="me-3 text-decoration-none text-dark">
-                <i class="fas fa-phone-alt me-1 text-success"></i> +62812-3079-7005
-            </a>
-
-            <!-- Dropdown Akun -->
-            <div class="dropdown">
-                <button class="btn btn-success btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Akun
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="{{ route('login') }}">Login</a></li>
-                    <li><a class="dropdown-item" href="{{ route('register') }}">Register</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
+    @include('view component.headerWelcome')
 
     <!-- Hero Section -->
     <div class="hero-section">
@@ -88,44 +61,41 @@
             <div class="row">
                 @foreach($documents as $doc)
                     <div class="col-md-6 mb-4">
-                        <div class="card shadow-sm border-0 rounded-3 card-hover">
-                            <div class="row g-0">
-                                <!-- Cover Dokumen -->
-                                <div class="col-md-3">
-                                    @if($doc->category->category_name == 'poster')
-                                        @if($doc->file_url && in_array(pathinfo($doc->file_url, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg', 'gif']))
-                                            <img src="{{ asset('storage/' . $doc->file_url) }}" class="img-fluid rounded-start" alt="Cover {{ $doc->title }}">
-                                        @else
-                                            <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}" class="img-fluid rounded-start" alt="Cover {{ $doc->title }}">
-                                        @endif
+                        <div class="card shadow-sm border-0 rounded-3 card-hover d-flex flex-row h-100">
+                            <div class="col-md-3 d-flex align-items-stretch p-0">
+                                @if($doc->category->category_name == 'poster')
+                                    @if($doc->file_url && in_array(pathinfo($doc->file_url, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg', 'gif']))
+                                        <img src="{{ asset('storage/' . $doc->file_url) }}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Cover {{ $doc->title }}">
                                     @else
-                                        @if($doc->cover_image)
-                                            <img src="{{ asset('storage/' . $doc->cover_image) }}" class="img-fluid rounded-start" alt="Cover {{ $doc->title }}">
-                                        @else
-                                            <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}" class="img-fluid rounded-start" alt="Cover {{ $doc->title }}">
-                                        @endif
+                                        <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Cover {{ $doc->title }}">
                                     @endif
-                                </div>
-                                <!-- Detail Dokumen -->
-                                <div class="col-md-9">
-                                    <div class="card-body">
-                                        <h4 class="card-title text-danger fw-bold mb-3">{{ $doc->title }}</h4>
-                                        <p class="mb-1"><strong>Pengarang:</strong> {{ $doc->author }}</p>
-                                        <p class="mb-1"><strong>Tahun Terbit:</strong> {{ $doc->year_published }}</p>
-                                        @if($doc->abstract)
-                                            <p class="mb-1"><strong>Abstrak:</strong> {{ Str::limit($doc->abstract, 100) }}</p>
-                                        @endif
-                                        <p class="mb-3">
-                                            <strong>Konten Digital:</strong>
-                                            <a href="{{ asset('storage/' . $doc->file_url) }}" target="_blank" class="text-primary fw-semibold">Lihat File</a>
-                                        </p>
-                                    </div>
+                                @else
+                                    @if($doc->cover_image)
+                                        <img src="{{ asset('storage/' . $doc->cover_image) }}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Cover {{ $doc->title }}">
+                                    @else
+                                        <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Cover {{ $doc->title }}">
+                                    @endif
+                                @endif
+                            </div>
+                            <div class="col-md-9 d-flex flex-column">
+                                <div class="card-body d-flex flex-column flex-grow-1">
+                                    <h4 class="card-title text-danger fw-bold mb-3">{{ $doc->title }}</h4>
+                                    <p class="mb-1"><strong>Pengarang:</strong> {{ $doc->author }}</p>
+                                    <p class="mb-1"><strong>Tahun Terbit:</strong> {{ $doc->year_published }}</p>
+                                    @if($doc->abstract)
+                                        <p class="mb-1 text-truncate" style="max-height: 3.6em; overflow: hidden;"><strong>Abstrak:</strong> {{ $doc->abstract }}</p>
+                                    @endif
+                                    <p class="mb-3 mt-auto">
+                                        <strong>Konten Digital:</strong>
+                                        <a href="{{ asset('storage/' . $doc->file_url) }}" target="_blank" class="text-primary fw-semibold">Lihat File</a>
+                                    </p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 @endforeach
             </div>
+            {{ $documents->links() }}
         @else
             <div class="text-center">
                 <p class="text-muted">Belum ada dokumen dalam kategori ini.</p>
@@ -134,11 +104,7 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-dark text-white text-center py-3 mt-5">
-        <div class="container">
-            <p class="mb-0">&copy; 2024 Perpustakaan Online RSMN. All rights reserved.</p>
-        </div>
-    </footer>
+    @include('view component.footerWelcome')
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

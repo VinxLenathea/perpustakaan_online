@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CategoryModel;
-use App\Models\DocumentModel;
 use Illuminate\Http\Request;
+use App\Models\DocumentModel;
 
-class CollectionController extends Controller
+class CollectionAllController extends Controller
 {
-    public function index($category_name, Request $request)
+    public function index(Request $request)
     {
-        $category = CategoryModel::where('category_name', $category_name)->firstOrFail();
-
-        $query = DocumentModel::where('category_id', $category->id)->with('category');
+        $query = DocumentModel::with('category');
 
         // Handle search
         if ($request->has('keyword') && $request->keyword) {
@@ -34,8 +31,8 @@ class CollectionController extends Controller
 
         $documents = $query->paginate(10);
 
-        return view('collection.collection', compact('documents', 'category'));
-    }
+        $category = (object) ['category_name' => 'Semua Kategori'];
 
-    
+        return view('collection.collectionall', compact('documents', 'category'));
+    }
 }

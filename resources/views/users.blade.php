@@ -24,7 +24,7 @@
     <!-- Page Wrapper -->
     <div id="wrapper">
         <!-- Sidebar -->
-        @include('sidebar')
+        @include('view component.sidebar')
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -32,7 +32,7 @@
             <!-- Main Content -->
             <div id="content">
                 <!-- Topbar -->
-                @include('header')
+                @include('view component.header')
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
@@ -201,7 +201,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            @include('footer')
+            @include('view component.footer')
         </div>
         <!-- End of Content Wrapper -->
     </div>

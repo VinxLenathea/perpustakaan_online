@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WelcomeControllerController;
+use App\Http\Controllers\CollectionController;
 use Illuminate\Http\Request;
 
 Route::get('/', function (Request $request) {
@@ -40,7 +41,7 @@ Route::get('/', function (Request $request) {
         return view('welcome', compact('searchResults', 'isSearch'));
     } else {
         // Show recent documents
-        $recentDocuments = \App\Models\DocumentModel::with('category')->latest()->take(2)->get();
+        $recentDocuments = \App\Models\DocumentModel::with('category')->latest()->take(3)->get();
         $isSearch = false;
 
         return view('welcome', compact('recentDocuments', 'isSearch'));
@@ -48,6 +49,7 @@ Route::get('/', function (Request $request) {
 });
 
 Route::get('/collection/{category}', [App\Http\Controllers\CollectionController::class, 'index'])->name('collection');
+Route::get('/collectionall', [App\Http\Controllers\CollectionAllController::class, 'index'])->name('collectionall');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -76,4 +78,5 @@ Route::middleware('auth')->group(function () {
 
 });
 
+ Route::get('/test', function() { return 'Test route works'; });
 require __DIR__.'/auth.php';

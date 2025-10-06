@@ -73,7 +73,24 @@
         }
 
         footer {
-            position: relative;
+            position: relaitive;
+            margin-top: 100px;
+        }
+
+        /* Fix footer to bottom */
+        html, body {
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body > .container, body > .hero-section, body > .top-bar {
+            flex-shrink: 0;
+        }
+
+        body > footer {
+            margin-top: auto;
         }
 
         /* New size classes for welcome.blade.php */
