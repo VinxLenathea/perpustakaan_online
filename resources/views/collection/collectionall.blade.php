@@ -34,26 +34,45 @@
             </div>
         </div>
 
-        <!-- Search Bar -->
-        <div class="container my-4">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <form action="{{ route('collectionall') }}" method="GET" class="d-flex flex-wrap align-items-center justify-content-center bg-light p-3 rounded">
-                        <span class="me-2">Cari</span>
-                        <select name="filter" class="form-select form-select-sm me-2" style="width: auto;">
-                            <option value="judul" {{ request('filter') == 'judul' ? 'selected' : '' }}>Judul</option>
-                            <option value="penulis" {{ request('filter') == 'penulis' ? 'selected' : '' }}>Penulis</option>
-                            <option value="tahun" {{ request('filter') == 'tahun' ? 'selected' : '' }}>Tahun</option>
-                        </select>
-                        <span class="me-2">berdasarkan</span>
-                        <input type="text" name="keyword" class="form-control form-control-sm me-2" placeholder="Kata kunci..." value="{{ request('keyword') }}" style="max-width: 200px;">
-                        <button class="btn btn-success btn-sm" type="submit">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </form>
-                </div>
-            </div>
+   <!-- Search Section -->
+<div class="container-fluid">
+    <div class="row search-bar">
+        <div class="col-12 col-md-8 mx-auto">
+            <form class="d-flex flex-wrap align-items-center justify-content-center text-white"
+                  action="{{ route('collectionall') }}" method="GET">
+
+                <span class="me-2">Cari</span>
+
+                <select class="form-select form-select-sm me-2 mb-2 mb-md-0" name="search_by" style="width: auto;">
+                    <option value="judul" {{ request('search_by') == 'judul' ? 'selected' : '' }}>Judul</option>
+                    <option value="penulis" {{ request('search_by') == 'penulis' ? 'selected' : '' }}>Penulis</option>
+                    <option value="tahun" {{ request('search_by') == 'tahun' ? 'selected' : '' }}>Tahun</option>
+                </select>
+
+                <span class="me-2">berdasarkan</span>
+
+                <select class="form-select form-select-sm me-2 mb-2 mb-md-0" name="category" style="width: auto;">
+                    <option value="">Semua Kategori</option>
+                    <option value="karya_tulis_ilmiah" {{ request('category') == 'karya_tulis_ilmiah' ? 'selected' : '' }}>Karya Tulis Ilmiah</option>
+                    <option value="poster" {{ request('category') == 'poster' ? 'selected' : '' }}>Poster</option>
+                    <option value="penelitian_eksternal" {{ request('category') == 'penelitian_eksternal' ? 'selected' : '' }}>Penelitian Eksternal</option>
+                    <option value="penelitian_internal" {{ request('category') == 'penelitian_internal' ? 'selected' : '' }}>Penelitian Internal</option>
+                </select>
+
+                <input type="text"
+       class="form-control form-control-sm me-2"
+       name="query"
+       placeholder="Kata kunci..."
+       value="{{ request('query') }}"
+       style="max-width: 200px;">
+
+                <button class="btn btn-outline-light mb-2 mb-md-0" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
         </div>
+    </div>
+</div>
 
         <!-- Documents List -->
         <div class="container my-4 flex-grow-1 d-flex flex-column">

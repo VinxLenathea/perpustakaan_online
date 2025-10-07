@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\DocumentModel;
+use App\Models\CategoryModel;
 
 class CollectionAllController extends Controller
 {
@@ -12,24 +13,30 @@ class CollectionAllController extends Controller
         $query = DocumentModel::with('category');
 
         // Handle search
-        if ($request->has('keyword') && $request->keyword) {
-            $keyword = $request->keyword;
-            $filter = $request->filter ?? 'judul';
+        if ($request->has('query') && $request->query) {
+            $keyword = $request->input('query');
+            $filter = $request->input('search_by');
+            $categoryName = $request->input('category');
 
-            switch ($filter) {
-                case 'judul':
-                    $query->where('title', 'like', '%' . $keyword . '%');
-                    break;
-                case 'penulis':
-                    $query->where('author', 'like', '%' . $keyword . '%');
-                    break;
-                case 'tahun':
-                    $query->where('year_published', 'like', '%' . $keyword . '%');
-                    break;
+            if ($keyword && $filter) {
+                if ($filter == 'judul') {
+                    $query->where('title', 'LIKE', "%{$keyword}%");
+                } elseif ($filter == 'penulis') {
+                    $query->where('author', 'LIKE', "%{$keyword}%");
+                } elseif ($filter == 'tahun') {
+                    $query->where('year_published', 'LIKE', "%{$keyword}%");
+                }
+            }
+
+            if ($categoryName) {
+                $category = CategoryModel::where('category_name', $categoryName)->first();
+                if ($category) {
+                    $query->where('category_id', $category->id);
+                }
             }
         }
 
-        $documents = $query->paginate(10);
+        $documents = $query->paginate(10)->withQueryString();
 
         $category = (object) ['category_name' => 'Semua Kategori'];
 
