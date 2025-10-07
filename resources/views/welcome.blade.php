@@ -136,8 +136,6 @@
                                    target="_blank"
                                    class="text-primary">Lihat File</a>
                             </p>
-                            <a href="{{ route('collection', $doc->category->category_name) }}"
-                               class="btn btn-success btn-sm">Koleksi</a>
                         </div>
                     </div>
                 </div>
@@ -204,8 +202,7 @@
                                    target="_blank"
                                    class="text-primary">Lihat File</a>
                             </p>
-                            <a href="{{ route('collection', $doc->category->category_name) }}"
-                               class="btn btn-success btn-sm">Koleksi</a>
+                            
                         </div>
                     </div>
                 </div>
