@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,7 +30,8 @@
     <div class="hero-section">
         <div class="container">
             <h1 class="display-4 fw-bold">Koleksi {{ ucfirst(str_replace('_', ' ', $category->category_name)) }}</h1>
-            <p class="lead">Temukan koleksi {{ ucfirst(str_replace('_', ' ', $category->category_name)) }} terlengkap untuk mendukung pembelajaran dan penelitian Anda.</p>
+            <p class="lead">Temukan koleksi {{ ucfirst(str_replace('_', ' ', $category->category_name)) }} terlengkap
+                untuk mendukung pembelajaran dan penelitian Anda.</p>
         </div>
     </div>
 
@@ -37,7 +39,8 @@
     <div class="container my-4">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <form action="{{ route('collection', $category->category_name) }}" method="GET" class="d-flex flex-wrap align-items-center justify-content-center bg-light p-3 rounded">
+                <form action="{{ route('collection', $category->category_name) }}" method="GET"
+                    class="d-flex flex-wrap align-items-center justify-content-center bg-light p-3 rounded">
                     <span class="me-2">Cari</span>
                     <select name="filter" class="form-select form-select-sm me-2" style="width: auto;">
                         <option value="judul" {{ request('filter') == 'judul' ? 'selected' : '' }}>Judul</option>
@@ -45,7 +48,8 @@
                         <option value="tahun" {{ request('filter') == 'tahun' ? 'selected' : '' }}>Tahun</option>
                     </select>
                     <span class="me-2">berdasarkan</span>
-                    <input type="text" name="keyword" class="form-control form-control-sm me-2" placeholder="Kata kunci..." value="{{ request('keyword') }}" style="max-width: 200px;">
+                    <input type="text" name="keyword" class="form-control form-control-sm me-2"
+                        placeholder="Kata kunci..." value="{{ request('keyword') }}" style="max-width: 200px;">
                     <button class="btn btn-success btn-sm" type="submit">
                         <i class="fas fa-search"></i>
                     </button>
@@ -56,24 +60,33 @@
 
     <!-- Documents List -->
     <div class="container my-4">
-        <h2 class="text-center mb-4 text-success">Daftar {{ ucfirst(str_replace('_', ' ', $category->category_name)) }}</h2>
-        @if($documents->count() > 0)
+        <h2 class="text-center mb-4 text-success">Daftar {{ ucfirst(str_replace('_', ' ', $category->category_name)) }}
+        </h2>
+        @if ($documents->count() > 0)
             <div class="row">
-                @foreach($documents as $doc)
+                @foreach ($documents as $doc)
                     <div class="col-md-6 mb-4">
                         <div class="card shadow-sm border-0 rounded-3 card-hover d-flex flex-row h-100">
                             <div class="col-md-3 d-flex align-items-stretch p-0">
-                                @if($doc->category->category_name == 'poster')
-                                    @if($doc->file_url && in_array(pathinfo($doc->file_url, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg', 'gif']))
-                                        <img src="{{ asset('storage/' . $doc->file_url) }}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Cover {{ $doc->title }}">
+                                @if ($doc->category->category_name == 'poster')
+                                    @if ($doc->file_url && in_array(pathinfo($doc->file_url, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg', 'gif']))
+                                        <img src="{{ asset('storage/' . $doc->file_url) }}"
+                                            class="img-fluid rounded-start h-100 object-fit-cover"
+                                            alt="Cover {{ $doc->title }}">
                                     @else
-                                        <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Cover {{ $doc->title }}">
+                                        <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}"
+                                            class="img-fluid rounded-start h-100 object-fit-cover"
+                                            alt="Cover {{ $doc->title }}">
                                     @endif
                                 @else
-                                    @if($doc->cover_image)
-                                        <img src="{{ asset('storage/' . $doc->cover_image) }}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Cover {{ $doc->title }}">
+                                    @if ($doc->cover_image)
+                                        <img src="{{ asset('storage/' . $doc->cover_image) }}"
+                                            class="img-fluid rounded-start h-100 object-fit-cover"
+                                            alt="Cover {{ $doc->title }}">
                                     @else
-                                        <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Cover {{ $doc->title }}">
+                                        <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}"
+                                            class="img-fluid rounded-start h-100 object-fit-cover"
+                                            alt="Cover {{ $doc->title }}">
                                     @endif
                                 @endif
                             </div>
@@ -82,12 +95,15 @@
                                     <h4 class="card-title text-danger fw-bold mb-3">{{ $doc->title }}</h4>
                                     <p class="mb-1"><strong>Pengarang:</strong> {{ $doc->author }}</p>
                                     <p class="mb-1"><strong>Tahun Terbit:</strong> {{ $doc->year_published }}</p>
-                                    @if($doc->abstract)
-                                        <p class="mb-1 text-truncate" style="max-height: 3.6em; overflow: hidden;"><strong>Abstrak:</strong> {{ $doc->abstract }}</p>
+                                    @if ($doc->abstract)
+                                        <p class="mb-1 text-truncate" style="max-height: 3.6em; overflow: hidden;">
+                                            <strong>Abstrak:</strong> {{ $doc->abstract }}</p>
                                     @endif
-                                    <p class="mb-3 mt-auto">
+                                    <p class="mb-1"><strong>Dilihat:</strong> {{ $doc->views }} kali</p>
+                                    <p class="mb-2">
                                         <strong>Konten Digital:</strong>
-                                        <a href="{{ asset('storage/' . $doc->file_url) }}" target="_blank" class="text-primary fw-semibold">Lihat File</a>
+                                        <a href="{{ route('documents.view', $doc->id) }}" target="_blank"
+                                            class="text-primary">Lihat File</a>
                                     </p>
                                 </div>
                             </div>
@@ -95,7 +111,7 @@
                     </div>
                 @endforeach
             </div>
-                {{ $documents->links('pagination::bootstrap-5') }}
+            {{ $documents->links('pagination::bootstrap-5') }}
         @else
             <div class="text-center">
                 <p class="text-muted">Belum ada dokumen dalam kategori ini.</p>
@@ -110,4 +126,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
+
 </html>

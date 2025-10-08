@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WelcomeControllerController;
 use App\Http\Controllers\CollectionController;
 use Illuminate\Http\Request;
+use PharIo\Manifest\Library;
 
 Route::get('/', function (Request $request) {
     // Check if search parameters are present
@@ -65,6 +66,8 @@ Route::middleware('auth')->group(function () {
     route::delete('/library/{id}', [LibraryController::class, 'destroy'])->name('library.destroy');
     Route::get('/library/{document}/edit', [LibraryController::class, 'edit'])->name('library.edit');
     Route::put('/library/{document}', [LibraryController::class, 'update'])->name('library.update');
+    Route::get('/lihat-file/{id}', [LibraryController::class, 'viewFile'])->name('documents.view');
+
     // user management
     Route::get('/users', [UserController::class, 'index'])->name('users.index');          // daftar user
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create'); // form tambah

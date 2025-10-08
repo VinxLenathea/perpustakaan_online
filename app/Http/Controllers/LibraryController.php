@@ -67,7 +67,7 @@ class LibraryController extends Controller
             'author'          => 'required|string|max:255',
             'year_published'  => 'required|integer|min:1900|max:2099',
             'category_id'     => 'required|exists:categories,id',
-            'file'            => 'nullable|mimes:pdf,png|max:2048',
+            'file'            => 'nullable|mimes:pdf,png,jpg,jpeg|max:2048',
             'cover_image'     => 'nullable|image|
             :jpeg,png,jpg,gif|max:2048',
             'abstract'        => 'nullable|string',
@@ -134,7 +134,7 @@ class LibraryController extends Controller
             'year_published'  => 'required|integer|min:1900|max:2099',
             'category_id'     => 'required|exists:categories,id',
             'abstract'        => 'nullable|string',
-            'file'            => 'nullable|mimes:pdf,png|max:2048',
+            'file'            => 'nullable|mimes:pdf,png,jpg,jpeg|max:2048',
             'cover_image'     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -214,6 +214,11 @@ class LibraryController extends Controller
         ]);
     }
 
-
+    public function viewFile($id)
+    {
+        $document = DocumentModel::findOrFail($id);
+        $document->increment('views');
+        return redirect(asset('storage/' . $document->file_url));
+    }
 
 }

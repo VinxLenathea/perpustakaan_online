@@ -94,6 +94,7 @@
                                         <th>Pembuat</th>
                                         <th>Abstrak</th>
                                         <th>File</th>
+                                        <th>Dilihat</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -131,6 +132,7 @@
                                                 <a href="{{ asset('storage/' . $doc->file_url) }}"
                                                     target="_blank">Lihat File</a>
                                             </td>
+                                            <td class="views">{{ $doc->views }}X dilihat</td>
                                             <td>
                                                 <div class="d-flex flex-column align-items-center gap-1">
                                                     <button class="btn btn-success btn-sm" data-toggle="modal"
@@ -195,7 +197,8 @@
                                         <div class="form-group">
                                             <label for="file">Upload File (PDF,PNG)</label>
                                             <input type="file" class="form-control" name="file"
-                                                accept=".pdf,.png" required>
+                                                accept=".pdf,.png,.jpg,.jpeg" required>
+                                            <small class="text-muted">Opsional. Format: JPG, PNG, GIF. Max 2MB.</small>
                                         </div>
                                         <div class="form-group">
                                             <label for="cover_image">Upload Cover Image</label>
