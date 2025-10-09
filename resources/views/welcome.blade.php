@@ -57,7 +57,7 @@
                         <option value="karya_tulis_ilmiah"
                             {{ request('category') == 'karya_tulis_ilmiah' ? 'selected' : '' }}>Karya Tulis Ilmiah
                         </option>
-                        <option value="poster" {{ request('category') == 'poster' ? 'selected' : '' }}>Poster</option>
+                        <option value="Poster" {{ request('category') == 'poster' ? 'selected' : '' }}>Poster</option>
                         <option value="penelitian_eksternal"
                             {{ request('category') == 'penelitian_eksternal' ? 'selected' : '' }}>Penelitian Eksternal
                         </option>
@@ -96,7 +96,7 @@
                         <div class="row g-3 align-items-center">
                             <!-- Cover Buku -->
                             <div class="col-md-3 col-12 text-center">
-                                @if ($doc->category->category_name == 'poster')
+                                @if ($doc->category->category_name == 'Poster')
                                     @if ($doc->file_url && in_array(pathinfo($doc->file_url, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg', 'gif']))
                                         <img src="{{ asset('storage/' . $doc->file_url) }}"
                                             class="img-fluid rounded shadow-sm" alt="Cover {{ $doc->title }}"
@@ -157,7 +157,7 @@
                         <div class="row g-3 align-items-center">
                             <!-- Cover Buku -->
                             <div class="col-md-3 col-12 text-center">
-                                @if ($doc->category->category_name == 'poster')
+                                @if ($doc->category->category_name == 'Poster')
                                     @if ($doc->file_url && in_array(pathinfo($doc->file_url, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg', 'gif']))
                                         <img src="{{ asset('storage/' . $doc->file_url) }}"
                                             class="img-fluid rounded shadow-sm" alt="Cover {{ $doc->title }}"

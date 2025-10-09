@@ -68,7 +68,7 @@
                     <div class="col-md-6 mb-4">
                         <div class="card shadow-sm border-0 rounded-3 card-hover d-flex flex-row h-100">
                             <div class="col-md-3 d-flex align-items-stretch p-0">
-                                @if ($doc->category->category_name == 'poster')
+                                @if ($doc->category->category_name == 'Poster')
                                     @if ($doc->file_url && in_array(pathinfo($doc->file_url, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg', 'gif']))
                                         <img src="{{ asset('storage/' . $doc->file_url) }}"
                                             class="img-fluid rounded-start h-100 object-fit-cover"

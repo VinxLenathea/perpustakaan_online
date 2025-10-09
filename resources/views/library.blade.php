@@ -103,7 +103,7 @@
                                         <tr id="row-{{ $doc->id }}">
                                             <td>{{ $doc->id }}</td>
                                             <td>
-                                                @if($doc->category->category_name == 'poster')
+                                                @if($doc->category->category_name == 'Poster')
                                                     @if($doc->file_url && in_array(pathinfo($doc->file_url, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg', 'gif']))
                                                         <img src="{{ asset('storage/' . $doc->file_url) }}" alt="Cover {{ $doc->title }}" style="width: 50px; height: 70px; object-fit: cover;">
                                                     @else
@@ -171,44 +171,62 @@
                                     </div>
                                     <div class="modal-body">
                                         <!-- Form Input -->
-                                        <div class="form-group">
-                                            <label for="title">Judul</label>
-                                            <input type="text" class="form-control" name="title" required>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="title">Judul</label>
+                                                    <input type="text" class="form-control" name="title" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="author">Penulis</label>
+                                                    <input type="text" class="form-control" name="author" required>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="author">Penulis</label>
-                                            <input type="text" class="form-control" name="author" required>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="year_published">Tahun Terbit</label>
+                                                    <input type="number" class="form-control" name="year_published"
+                                                        min="1900" max="2099" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="category_id">Kategori</label>
+                                                    <select class="form-control" name="category_id" required>
+                                                        <option value="">-- Pilih Kategori --</option>
+                                                        @foreach ($categories as $cat)
+                                                            <option value="{{ $cat->id }}">{{ $cat->category_name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="year_published">Tahun Terbit</label>
-                                            <input type="number" class="form-control" name="year_published"
-                                                min="1900" max="2099" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="category_id">Kategori</label>
-                                            <select class="form-control" name="category_id" required>
-                                                <option value="">-- Pilih Kategori --</option>
-                                                @foreach ($categories as $cat)
-                                                    <option value="{{ $cat->id }}">{{ $cat->category_name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="file">Upload File (PDF,PNG)</label>
-                                            <input type="file" class="form-control" name="file"
-                                                accept=".pdf,.png,.jpg,.jpeg" required>
-                                            <small class="text-muted">Opsional. Format: JPG, PNG, GIF. Max 2MB.</small>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="cover_image">Upload Cover Image</label>
-                                            <input type="file" class="form-control" name="cover_image"
-                                                accept="image/*">
-                                            <small class="text-muted">Opsional. Format: JPG, PNG, GIF. Max 2MB.</small>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="file">Upload File (PDF,PNG)</label>
+                                                    <input type="file" class="form-control" name="file"
+                                                        accept=".pdf,.png,.jpg,.jpeg" required>
+                                                    <small class="text-muted">Opsional. Format: JPG, PNG, GIF. Max 2MB.</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="cover_image">Upload Cover Image</label>
+                                                    <input type="file" class="form-control" name="cover_image"
+                                                        accept="image/*">
+                                                    <small class="text-muted">Opsional. Format: JPG, PNG, GIF. Max 2MB.</small>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="abstract">Abstrak</label>
-                                            <textarea class="form-control" name="abstract" rows="4"
+                                            <textarea class="form-control" name="abstract" rows="2"
                                                 placeholder="Masukkan abstrak dokumen..."></textarea>
                                         </div>
                                     </div>
@@ -241,49 +259,67 @@
                                                 aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                         </div>
                                         <div class="modal-body">
-                                            <div class="form-group">
-                                                <label for="title">Judul</label>
-                                                <input type="text" class="form-control" name="title"
-                                                    value="{{ $doc->title }}" required>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="title">Judul</label>
+                                                        <input type="text" class="form-control" name="title"
+                                                            value="{{ $doc->title }}" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="author">Penulis</label>
+                                                        <input type="text" class="form-control" name="author"
+                                                            value="{{ $doc->author }}" required>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="author">Penulis</label>
-                                                <input type="text" class="form-control" name="author"
-                                                    value="{{ $doc->author }}" required>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="year_published">Tahun Terbit</label>
+                                                        <input type="number" class="form-control" name="year_published"
+                                                            value="{{ $doc->year_published }}" min="1900" max="2099"
+                                                            required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="category_id">Kategori</label>
+                                                        <select class="form-control" name="category_id" required>
+                                                            @foreach ($categories as $cat)
+                                                                <option value="{{ $cat->id }}"
+                                                                    {{ $doc->category_id == $cat->id ? 'selected' : '' }}>
+                                                                    {{ $cat->category_name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="year_published">Tahun Terbit</label>
-                                                <input type="number" class="form-control" name="year_published"
-                                                    value="{{ $doc->year_published }}" min="1900" max="2099"
-                                                    required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="category_id">Kategori</label>
-                                                <select class="form-control" name="category_id" required>
-                                                    @foreach ($categories as $cat)
-                                                        <option value="{{ $cat->id }}"
-                                                            {{ $doc->category_id == $cat->id ? 'selected' : '' }}>
-                                                            {{ $cat->category_name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="file">Ganti File (Opsional)</label>
-                                                <input type="file" class="form-control" name="file"
-                                                    accept=".pdf,.doc,.docx">
-                                                <small class="text-muted">Kosongkan jika tidak ingin mengganti
-                                                    file.</small>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="cover_image">Ganti Cover Image (Opsional)</label>
-                                                <input type="file" class="form-control" name="cover_image"
-                                                    accept="image/*">
-                                                <small class="text-muted">Kosongkan jika tidak ingin mengganti cover. Format: JPG, PNG, GIF. Max 2MB.</small>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="file">Ganti File (Opsional)</label>
+                                                        <input type="file" class="form-control" name="file"
+                                                            accept=".pdf,.doc,.docx">
+                                                        <small class="text-muted">Kosongkan jika tidak ingin mengganti
+                                                            file.</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="cover_image">Ganti Cover Image (Opsional)</label>
+                                                        <input type="file" class="form-control" name="cover_image"
+                                                            accept="image/*">
+                                                        <small class="text-muted">Kosongkan jika tidak ingin mengganti cover. Format: JPG, PNG, GIF. Max 2MB.</small>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="form-group">
                                                 <label for="abstract">Abstrak</label>
-                                                <textarea class="form-control" name="abstract" rows="4"
+                                                <textarea class="form-control" name="abstract" rows="2"
                                                     placeholder="Masukkan abstrak dokumen...">{{ $doc->abstract }}</textarea>
                                             </div>
                                         </div>
@@ -598,18 +634,14 @@
 
                                 // Update cover image
                                 let coverCell = $('#row-' + id + ' td').eq(1); // Cover is second column (index 1)
-                                if (response.document.category.category_name == 'poster') {
-                                    if (response.document.file_url && ['png', 'jpg', 'jpeg', 'gif'].includes(response.document.file_url.split('.').pop().toLowerCase())) {
-                                        coverCell.html(`<img src="/storage/${response.document.file_url}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`);
-                                    } else {
-                                        coverCell.html(`<img src="/assets/img/undraw_posting_photo.svg" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`);
-                                    }
+                                if (response.document.category.category_name == 'Poster') {
+                                    coverCell.html(response.document.file_url ?
+                                        `<img src="/storage/${response.document.file_url}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">` :
+                                        `<img src="/assets/img/undraw_posting_photo.svg" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`);
                                 } else {
-                                    if (response.document.cover_image) {
-                                        coverCell.html(`<img src="/storage/${response.document.cover_image}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`);
-                                    } else {
-                                        coverCell.html(`<img src="/assets/img/undraw_posting_photo.svg" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`);
-                                    }
+                                    coverCell.html(response.document.cover_image ?
+                                        `<img src="/storage/${response.document.cover_image}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">` :
+                                        `<img src="/assets/img/undraw_posting_photo.svg" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`);
                                 }
 
                                 Swal.fire({
@@ -677,12 +709,10 @@
 
                         // Tambahkan row baru ke tabel
                         let coverHtml;
-                        if (response.document.category.category_name == 'poster') {
-                            if (response.document.file_url && ['png', 'jpg', 'jpeg', 'gif'].includes(response.document.file_url.split('.').pop().toLowerCase())) {
-                                coverHtml = `<img src="/storage/${response.document.file_url}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`;
-                            } else {
-                                coverHtml = `<img src="/assets/img/undraw_posting_photo.svg" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`;
-                            }
+                        if (response.document.category.category_name == 'Poster') {
+                            coverHtml = response.document.file_url ?
+                                `<img src="/storage/${response.document.file_url}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">` :
+                                `<img src="/assets/img/undraw_posting_photo.svg" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`;
                         } else {
                             coverHtml = response.document.cover_image ?
                                 `<img src="/storage/${response.document.cover_image}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">` :
@@ -756,8 +786,8 @@
                 var categorySelect = form.find('select[name="category_id"]');
                 var selectedCategoryText = categorySelect.find('option:selected').text().trim();
 
-                // Show fields for all categories except poster
-                if (selectedCategoryText !== 'poster') {
+                // Show fields for all categories except Poster
+                if (selectedCategoryText !== 'Poster') {
                     form.find('input[name="cover_image"]').closest('.form-group').show();
                     form.find('textarea[name="abstract"]').closest('.form-group').show();
                 } else {
