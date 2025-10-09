@@ -95,6 +95,8 @@
                                         <th>Abstrak</th>
                                         <th>File</th>
                                         <th>Dilihat</th>
+                                        <th>Kampus</th>
+                                        <th>Prodi</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -133,6 +135,8 @@
                                                     target="_blank">Lihat File</a>
                                             </td>
                                             <td class="views">{{ $doc->views }}X dilihat</td>
+                                            <td class="kampus">{{ $doc->kampus }}</td>
+                                            <td class="prodi">{{ $doc->prodi }}</td>
                                             <td>
                                                 <div class="d-flex flex-column align-items-center gap-1">
                                                     <button class="btn btn-success btn-sm" data-toggle="modal"
@@ -229,6 +233,20 @@
                                             <textarea class="form-control" name="abstract" rows="2"
                                                 placeholder="Masukkan abstrak dokumen..."></textarea>
                                         </div>
+                                        <div class="row kampus-prodi-row" style="display: none;">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="kampus">Kampus</label>
+                                                    <input type="text" class="form-control" name="kampus">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="prodi">Prodi</label>
+                                                    <input type="text" class="form-control" name="prodi">
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
@@ -321,6 +339,20 @@
                                                 <label for="abstract">Abstrak</label>
                                                 <textarea class="form-control" name="abstract" rows="2"
                                                     placeholder="Masukkan abstrak dokumen...">{{ $doc->abstract }}</textarea>
+                                            </div>
+                                            <div class="row kampus-prodi-row" style="display: none;">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="kampus">Kampus</label>
+                                                        <input type="text" class="form-control" name="kampus" value="{{ $doc->kampus }}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="prodi">Prodi</label>
+                                                        <input type="text" class="form-control" name="prodi" value="{{ $doc->prodi }}">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -780,7 +812,7 @@
     </script>
 
     <script>
-        // Show/hide abstract and cover image fields based on category selection
+        // Show/hide abstract, cover image, kampus, and prodi fields based on category selection
         $(document).ready(function() {
             function toggleFields(form) {
                 var categorySelect = form.find('select[name="category_id"]');
@@ -793,6 +825,13 @@
                 } else {
                     form.find('input[name="cover_image"]').closest('.form-group').hide();
                     form.find('textarea[name="abstract"]').closest('.form-group').hide();
+                }
+
+                // Show kampus and prodi only for 'penelitian eksternal'
+                if (selectedCategoryText === 'Penelitian Eksternal') {
+                    form.find('.kampus-prodi-row').show();
+                } else {
+                    form.find('.kampus-prodi-row').hide();
                 }
             }
 

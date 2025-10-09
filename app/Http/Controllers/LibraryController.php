@@ -68,9 +68,10 @@ class LibraryController extends Controller
             'year_published'  => 'required|integer|min:1900|max:2099',
             'category_id'     => 'required|exists:categories,id',
             'file'            => 'nullable|mimes:pdf,png,jpg,jpeg|max:2048',
-            'cover_image'     => 'nullable|image|
-            :jpeg,png,jpg,gif|max:2048',
+            'cover_image'     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'abstract'        => 'nullable|string',
+            'kampus'          => 'nullable|string|max:255',
+            'prodi'           => 'nullable|string|max:255',
         ]);
 
         // Additional validation for categories that require abstract and cover image (all except poster)
@@ -100,6 +101,8 @@ class LibraryController extends Controller
             'file_url'       => $filePath,
             'cover_image'    => $coverPath,
             'abstract'       => $request->abstract,
+            'kampus'         => $request->kampus,
+            'prodi'          => $request->prodi,
         ]);
 
         if ($request->ajax()) {
@@ -136,6 +139,8 @@ class LibraryController extends Controller
             'abstract'        => 'nullable|string',
             'file'            => 'nullable|mimes:pdf,png,jpg,jpeg|max:2048',
             'cover_image'     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'kampus'          => 'nullable|string|max:255',
+            'prodi'           => 'nullable|string|max:255',
         ]);
 
         // Additional validation for categories that require abstract and cover image
@@ -152,6 +157,8 @@ class LibraryController extends Controller
         $document->year_published = $request->year_published;
         $document->category_id    = $request->category_id;
         $document->abstract       = $request->abstract;
+        $document->kampus         = $request->kampus;
+        $document->prodi          = $request->prodi;
 
         // 📂 Jika ada file baru
         if ($request->hasFile('file')) {
