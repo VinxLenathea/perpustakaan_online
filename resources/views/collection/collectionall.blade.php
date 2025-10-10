@@ -91,8 +91,31 @@
                 {{ ucfirst(str_replace('_', ' ', $category->category_name)) }}</h2>
             @if ($documents->count() > 0)
                 <div class="row flex-grow-1">
+                    @php
+                        $sortOptions = [
+                            'tahun_desc' => ['icon' => 'fas fa-calendar-alt', 'label' => 'Tahun Terbaru'],
+                            'tahun_asc' => ['icon' => 'fas fa-calendar', 'label' => 'Tahun Terlama'],
+                            'judul_asc' => ['icon' => 'fas fa-sort-alpha-down', 'label' => 'A - Z'],
+                            'judul_desc' => ['icon' => 'fas fa-sort-alpha-up', 'label' => 'Z - A'],
+                            'views' => ['icon' => 'fas fa-eye', 'label' => 'Paling Sering Dibaca'],
+                        ];
+                        $currentSort = request('sort_by') ?: 'tahun_desc';
+                    @endphp
+                    <div class="d-flex align-items-center mb-3">
+                        <label class="me-2 fw-bold">Urutkan:</label>
+                        <div class="dropdown">
+                            <button class="btn btn-success dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="{{ $sortOptions[$currentSort]['icon'] }}"></i> {{ $sortOptions[$currentSort]['label'] }}
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+                                @foreach ($sortOptions as $key => $option)
+                                    <li><a class="dropdown-item {{ $key == $currentSort ? 'active' : '' }}" href="{{ route('collectionall', array_merge(request()->query(), ['sort_by' => $key])) }}"><i class="{{ $option['icon'] }}"></i> {{ $option['label'] }}</a></li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
                     @foreach ($documents as $doc)
-                        <div class="col-md-6 mb-4 d-flex">
+                        <div class="col-md-6 mb-4 d-flex" style="margin-top: 20px;">
                             <div class="card shadow-sm border-0 rounded-3 card-hover d-flex flex-row h-100 w-100">
                                 <div class="col-md-3 d-flex align-items-stretch p-0">
                                     @if ($doc->category->category_name == 'Poster')
@@ -130,7 +153,7 @@
                                         <p class="mb-1"><strong>Dilihat:</strong> {{ $doc->views }} kali</p>
                                         <p class="mb-2">
                                             <strong>Konten Digital:</strong>
-                                            <a href="{{ route('documents.view', $doc->id) }}" target="_blank"
+                                            <a href="{{ route('collectionall.view', $doc->id) }}" target="_blank"
                                                 class="text-primary">Lihat File</a>
                                         </p>
                                     </div>

@@ -12,7 +12,7 @@ class CollectionAllController extends Controller
     {
         $query = DocumentModel::with('category');
 
-        // Handle search
+        // 🔍 Handle search
         if ($request->has('query') && $request->query) {
             $keyword = $request->input('query');
             $filter = $request->input('search_by');
@@ -36,10 +36,48 @@ class CollectionAllController extends Controller
             }
         }
 
+        // 📌 Sorting
+        if ($request->filled('sort_by')) {
+            switch ($request->sort_by) {
+                case 'tahun_desc': // Tahun terbaru
+                    $query->orderBy('year_published', 'desc');
+                    break;
+
+                case 'tahun_asc': // Tahun terlama
+                    $query->orderBy('year_published', 'asc');
+                    break;
+
+                case 'judul_asc': // Judul A-Z
+                    $query->orderBy('title', 'asc');
+                    break;
+
+                case 'judul_desc': // Judul Z-A
+                    $query->orderBy('title', 'desc');
+                    break;
+
+                case 'views': // Paling sering dibaca
+                    $query->orderBy('views', 'desc');
+                    break;
+
+                default:
+                    $query->latest();
+                    break;
+            }
+        } else {
+            $query->latest();
+        }
+
         $documents = $query->paginate(10)->withQueryString();
 
         $category = (object) ['category_name' => 'Semua Kategori'];
 
         return view('collection.collectionall', compact('documents', 'category'));
+    }
+
+     public function view($id)
+    {
+        $document = DocumentModel::findOrFail($id);
+        $document->increment('views');
+        return redirect(asset('storage/' . $document->file_url));
     }
 }

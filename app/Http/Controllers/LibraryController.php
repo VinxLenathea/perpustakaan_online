@@ -19,6 +19,7 @@ class LibraryController extends Controller
         $query = DocumentModel::with(['category']);
 
         // 🔍 Search keyword
+
         if ($request->filled('keyword') && $request->filled('filter')) {
             $keyword = $request->keyword;
             $filter = $request->filter;
@@ -35,6 +36,37 @@ class LibraryController extends Controller
         // 📂 Filter kategori
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
+        }
+
+        // 📌 Sorting
+        if ($request->filled('sort_by')) {
+            switch ($request->sort_by) {
+                case 'tahun_desc': // Tahun terbaru
+                    $query->orderBy('year_published', 'desc');
+                    break;
+
+                case 'tahun_asc': // Tahun terlama
+                    $query->orderBy('year_published', 'asc');
+                    break;
+
+                case 'judul_asc': // Judul A-Z
+                    $query->orderBy('title', 'asc');
+                    break;
+
+                case 'judul_desc': // Judul Z-A
+                    $query->orderBy('title', 'desc');
+                    break;
+
+                case 'views': // Paling sering dibaca
+                    $query->orderBy('views', 'desc');
+                    break;
+
+                default:
+                    $query->latest();
+                    break;
+            }
+        } else {
+            $query->latest();
         }
 
         // ✅ Pagination (10 data per halaman)
@@ -221,6 +253,9 @@ class LibraryController extends Controller
         ]);
     }
 
+    /**
+     * View file and increment views
+     */
     public function viewFile($id)
     {
         $document = DocumentModel::findOrFail($id);

@@ -225,7 +225,7 @@
                         <i class="fas fa-book fa-3x text-success mb-3"></i>
                         <h5>Karya Tulis Ilmiah</h5>
                         <p>Koleksi penelitian dan artikel ilmiah terbaru.</p>
-                        <a href="{{ route('collection', 'karya_tulis_ilmiah') }}" class="btn btn-success">Lihat
+                        <a href="{{ route('collection', 'Karya Tulis Ilmiah') }}" class="btn btn-success">Lihat
                             Koleksi</a>
                     </div>
                 </div>
@@ -237,7 +237,7 @@
                         <i class="fas fa-image fa-3x text-success mb-3"></i>
                         <h5>Poster</h5>
                         <p>Poster penelitian dan presentasi visual.</p>
-                        <a href="{{ route('collection', 'poster') }}" class="btn btn-success">Lihat Koleksi</a>
+                        <a href="{{ route('collection', 'Poster') }}" class="btn btn-success">Lihat Koleksi</a>
                     </div>
                 </div>
             </div>
@@ -248,7 +248,7 @@
                         <i class="fas fa-flask fa-3x text-success mb-3"></i>
                         <h5>Penelitian Eksternal</h5>
                         <p>Hasil penelitian dari kolaborasi eksternal.</p>
-                        <a href="{{ route('collection', 'penelitian_eksternal') }}" class="btn btn-success">Lihat
+                        <a href="{{ route('collection', 'Penelitian Eksternal') }}" class="btn btn-success">Lihat
                             Koleksi</a>
                     </div>
                 </div>
@@ -260,7 +260,7 @@
                         <i class="fas fa-microscope fa-3x text-success mb-3"></i>
                         <h5>Penelitian Internal</h5>
                         <p>Penelitian yang dilakukan secara internal.</p>
-                        <a href="{{ route('collection', 'penelitian_internal') }}" class="btn btn-success">Lihat
+                        <a href="{{ route('collection', 'Penelitian Internal') }}" class="btn btn-success">Lihat
                             Koleksi</a>
                     </div>
                 </div>

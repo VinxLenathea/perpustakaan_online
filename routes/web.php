@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CollectionAllController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LibraryController;
@@ -50,7 +51,9 @@ Route::get('/', function (Request $request) {
 });
 
 Route::get('/collection/{category}', [App\Http\Controllers\CollectionController::class, 'index'])->name('collection');
+Route::get('/collection/view/{id}', [CollectionController::class, 'view'])->name('collection.view');
 Route::get('/collectionall', [App\Http\Controllers\CollectionAllController::class, 'index'])->name('collectionall');
+Route::get('/collectionall/view/{id}', [CollectionAllController::class, 'view'])->name('collectionall.view');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

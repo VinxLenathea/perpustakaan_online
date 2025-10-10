@@ -47,7 +47,8 @@
                         <div class="card-body bg-light">
                             <div class="d-flex justify-content-between align-items-center flex-wrap">
                                 <!-- Form Pencarian -->
-                                <form action="{{ route('library') }}" method="GET" class="form-inline mb-2">
+                                <form action="{{ route('library') }}" method="GET"
+                                    class="form-inline mb-2 d-flex align-items-center">
                                     <input type="text" name="keyword" class="form-control mr-2"
                                         placeholder="Kata Kunci" value="{{ request('keyword') }}"
                                         style="min-width:200px;">
@@ -70,8 +71,35 @@
                                             </option>
                                         @endforeach
                                     </select>
-
                                     <button type="submit" class="btn btn-success">Cari</button>
+
+                                    @php
+                                        $sortOptions = [
+                                            'tahun_desc' => [
+                                                'icon' => 'fas fa-calendar-alt',
+                                                'label' => 'Tahun Terbaru',
+                                            ],
+                                            'tahun_asc' => ['icon' => 'fas fa-calendar', 'label' => 'Tahun Terlama'],
+                                            'judul_asc' => ['icon' => 'fas fa-sort-alpha-down', 'label' => 'A - Z'],
+                                            'judul_desc' => ['icon' => 'fas fa-sort-alpha-up', 'label' => 'Z - A'],
+                                            'views' => ['icon' => 'fas fa-eye', 'label' => 'Paling Sering Dibaca'],
+                                        ];
+                                        $currentSort = request('sort_by') ?: 'tahun_desc';
+                                    @endphp
+                                    <div class="dropdown mr-2" style="margin-left: 10px;">
+                                        <button class="btn btn-success dropdown-toggle" type="button" id="sortDropdown"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="{{ $sortOptions[$currentSort]['icon'] }}"></i>
+                                            {{ $sortOptions[$currentSort]['label'] }}
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="sortDropdown">
+                                            @foreach ($sortOptions as $key => $option)
+                                                <a class="dropdown-item {{ $key == $currentSort ? 'active' : '' }}"
+                                                    href="{{ route('library') . '?' . http_build_query(array_merge(request()->query(), ['sort_by' => $key])) }}"><i
+                                                        class="{{ $option['icon'] }}"></i> {{ $option['label'] }}</a>
+                                            @endforeach
+                                        </div>
+                                    </div>
                                 </form>
 
 
@@ -105,17 +133,25 @@
                                         <tr id="row-{{ $doc->id }}">
                                             <td>{{ $doc->id }}</td>
                                             <td>
-                                                @if($doc->category->category_name == 'Poster')
-                                                    @if($doc->file_url && in_array(pathinfo($doc->file_url, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg', 'gif']))
-                                                        <img src="{{ asset('storage/' . $doc->file_url) }}" alt="Cover {{ $doc->title }}" style="width: 50px; height: 70px; object-fit: cover;">
+                                                @if ($doc->category->category_name == 'Poster')
+                                                    @if ($doc->file_url && in_array(pathinfo($doc->file_url, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg', 'gif']))
+                                                        <img src="{{ asset('storage/' . $doc->file_url) }}"
+                                                            alt="Cover {{ $doc->title }}"
+                                                            style="width: 50px; height: 70px; object-fit: cover;">
                                                     @else
-                                                        <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}" alt="Cover {{ $doc->title }}" style="width: 50px; height: 70px; object-fit: cover;">
+                                                        <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}"
+                                                            alt="Cover {{ $doc->title }}"
+                                                            style="width: 50px; height: 70px; object-fit: cover;">
                                                     @endif
                                                 @else
-                                                    @if($doc->cover_image)
-                                                        <img src="{{ asset('storage/' . $doc->cover_image) }}" alt="Cover {{ $doc->title }}" style="width: 50px; height: 70px; object-fit: cover;">
+                                                    @if ($doc->cover_image)
+                                                        <img src="{{ asset('storage/' . $doc->cover_image) }}"
+                                                            alt="Cover {{ $doc->title }}"
+                                                            style="width: 50px; height: 70px; object-fit: cover;">
                                                     @else
-                                                        <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}" alt="Cover {{ $doc->title }}" style="width: 50px; height: 70px; object-fit: cover;">
+                                                        <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}"
+                                                            alt="Cover {{ $doc->title }}"
+                                                            style="width: 50px; height: 70px; object-fit: cover;">
                                                     @endif
                                                 @endif
                                             </td>
@@ -124,7 +160,7 @@
                                             <td class="year">{{ $doc->year_published }}</td>
                                             <td class="author">{{ $doc->author }}</td>
                                             <td class="abstract">
-                                                @if($doc->abstract)
+                                                @if ($doc->abstract)
                                                     {{ Str::limit($doc->abstract, 50) }}
                                                 @else
                                                     -
@@ -140,9 +176,11 @@
                                             <td>
                                                 <div class="d-flex flex-column align-items-center gap-1">
                                                     <button class="btn btn-success btn-sm" data-toggle="modal"
-                                                        data-target="#editDocumentModal{{ $doc->id }}"><i class="fas fa-edit"></i></button>
+                                                        data-target="#editDocumentModal{{ $doc->id }}"><i
+                                                            class="fas fa-edit"></i></button>
                                                     <button type="button" class="btn btn-danger btn-sm"
-                                                        data-toggle="modal" style="margin-top: 5px" data-target="#confirmModal"
+                                                        data-toggle="modal" style="margin-top: 5px"
+                                                        data-target="#confirmModal"
                                                         data-url="{{ route('library.destroy', $doc) }}">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
@@ -164,12 +202,14 @@
                     <div class="modal fade" id="tambahDocumentModal" tabindex="-1" role="dialog"
                         aria-labelledby="tambahDocumentLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
-                            <form action="{{ route('library.store') }}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('library.store') }}" method="POST"
+                                enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="tambahDocumentLabel">Tambah Document</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <button type="button" class="close" data-dismiss="modal"
+                                            aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
@@ -179,13 +219,15 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="title">Judul</label>
-                                                    <input type="text" class="form-control" name="title" required>
+                                                    <input type="text" class="form-control" name="title"
+                                                        required>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="author">Penulis</label>
-                                                    <input type="text" class="form-control" name="author" required>
+                                                    <input type="text" class="form-control" name="author"
+                                                        required>
                                                 </div>
                                             </div>
                                         </div>
@@ -203,7 +245,8 @@
                                                     <select class="form-control" name="category_id" required>
                                                         <option value="">-- Pilih Kategori --</option>
                                                         @foreach ($categories as $cat)
-                                                            <option value="{{ $cat->id }}">{{ $cat->category_name }}
+                                                            <option value="{{ $cat->id }}">
+                                                                {{ $cat->category_name }}
                                                             </option>
                                                         @endforeach
                                                     </select>
@@ -216,7 +259,8 @@
                                                     <label for="file">Upload File (PDF,PNG)</label>
                                                     <input type="file" class="form-control" name="file"
                                                         accept=".pdf,.png,.jpg,.jpeg" required>
-                                                    <small class="text-muted">Opsional. Format: JPG, PNG, GIF. Max 2MB.</small>
+                                                    <small class="text-muted">Opsional. Format: JPG, PNG, GIF. Max
+                                                        2MB.</small>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -224,14 +268,14 @@
                                                     <label for="cover_image">Upload Cover Image</label>
                                                     <input type="file" class="form-control" name="cover_image"
                                                         accept="image/*">
-                                                    <small class="text-muted">Opsional. Format: JPG, PNG, GIF. Max 2MB.</small>
+                                                    <small class="text-muted">Opsional. Format: JPG, PNG, GIF. Max
+                                                        2MB.</small>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="abstract">Abstrak</label>
-                                            <textarea class="form-control" name="abstract" rows="2"
-                                                placeholder="Masukkan abstrak dokumen..."></textarea>
+                                            <textarea class="form-control" name="abstract" rows="2" placeholder="Masukkan abstrak dokumen..."></textarea>
                                         </div>
                                         <div class="row kampus-prodi-row" style="display: none;">
                                             <div class="col-md-6">
@@ -297,9 +341,9 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="year_published">Tahun Terbit</label>
-                                                        <input type="number" class="form-control" name="year_published"
-                                                            value="{{ $doc->year_published }}" min="1900" max="2099"
-                                                            required>
+                                                        <input type="number" class="form-control"
+                                                            name="year_published" value="{{ $doc->year_published }}"
+                                                            min="1900" max="2099" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -331,26 +375,28 @@
                                                         <label for="cover_image">Ganti Cover Image (Opsional)</label>
                                                         <input type="file" class="form-control" name="cover_image"
                                                             accept="image/*">
-                                                        <small class="text-muted">Kosongkan jika tidak ingin mengganti cover. Format: JPG, PNG, GIF. Max 2MB.</small>
+                                                        <small class="text-muted">Kosongkan jika tidak ingin mengganti
+                                                            cover. Format: JPG, PNG, GIF. Max 2MB.</small>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label for="abstract">Abstrak</label>
-                                                <textarea class="form-control" name="abstract" rows="2"
-                                                    placeholder="Masukkan abstrak dokumen...">{{ $doc->abstract }}</textarea>
+                                                <textarea class="form-control" name="abstract" rows="2" placeholder="Masukkan abstrak dokumen...">{{ $doc->abstract }}</textarea>
                                             </div>
                                             <div class="row kampus-prodi-row" style="display: none;">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="kampus">Kampus</label>
-                                                        <input type="text" class="form-control" name="kampus" value="{{ $doc->kampus }}">
+                                                        <input type="text" class="form-control" name="kampus"
+                                                            value="{{ $doc->kampus }}">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="prodi">Prodi</label>
-                                                        <input type="text" class="form-control" name="prodi" value="{{ $doc->prodi }}">
+                                                        <input type="text" class="form-control" name="prodi"
+                                                            value="{{ $doc->prodi }}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -655,25 +701,36 @@
                                 $('#editDocumentModal' + id).modal('hide');
 
                                 // update data di tabel langsung
-                                $('#row-' + id + ' .title').text(response.document.title);
-                                $('#row-' + id + ' .author').text(response.document.author);
-                                $('#row-' + id + ' .year').text(response.document.year_published);
-                                $('#row-' + id + ' .category').text(response.document.category.category_name);
+                                $('#row-' + id + ' .title').text(response.document
+                                    .title);
+                                $('#row-' + id + ' .author').text(response.document
+                                    .author);
+                                $('#row-' + id + ' .year').text(response.document
+                                    .year_published);
+                                $('#row-' + id + ' .category').text(response.document
+                                    .category.category_name);
 
                                 // Update abstract
-                                let abstractText = response.document.abstract ? response.document.abstract.substring(0, 50) + (response.document.abstract.length > 50 ? '...' : '') : '-';
+                                let abstractText = response.document.abstract ? response
+                                    .document.abstract.substring(0, 50) + (response
+                                        .document.abstract.length > 50 ? '...' : '') :
+                                    '-';
                                 $('#row-' + id + ' .abstract').text(abstractText);
 
                                 // Update cover image
-                                let coverCell = $('#row-' + id + ' td').eq(1); // Cover is second column (index 1)
-                                if (response.document.category.category_name == 'Poster') {
+                                let coverCell = $('#row-' + id + ' td').eq(
+                                1); // Cover is second column (index 1)
+                                if (response.document.category.category_name ==
+                                    'Poster') {
                                     coverCell.html(response.document.file_url ?
                                         `<img src="/storage/${response.document.file_url}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">` :
-                                        `<img src="/assets/img/undraw_posting_photo.svg" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`);
+                                        `<img src="/assets/img/undraw_posting_photo.svg" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`
+                                        );
                                 } else {
                                     coverCell.html(response.document.cover_image ?
                                         `<img src="/storage/${response.document.cover_image}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">` :
-                                        `<img src="/assets/img/undraw_posting_photo.svg" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`);
+                                        `<img src="/assets/img/undraw_posting_photo.svg" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`
+                                        );
                                 }
 
                                 Swal.fire({
@@ -751,7 +808,9 @@
                                 `<img src="/assets/img/undraw_posting_photo.svg" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`;
                         }
 
-                        let abstractText = response.document.abstract ? response.document.abstract.substring(0, 50) + (response.document.abstract.length > 50 ? '...' : '') : '-';
+                        let abstractText = response.document.abstract ? response.document
+                            .abstract.substring(0, 50) + (response.document.abstract.length >
+                                50 ? '...' : '') : '-';
 
                         let newRow = `
                             <tr id="row-${response.document.id}">
