@@ -11,6 +11,7 @@ use App\Http\Controllers\ExportController;
 use Illuminate\Http\Request;
 use PharIo\Manifest\Library;
 
+
 Route::get('/', function (Request $request) {
     // Check if search parameters are present
     if ($request->has('query') || $request->has('search_by') || $request->has('category')) {
@@ -53,12 +54,19 @@ Route::get('/', function (Request $request) {
 
 Route::get('/collection/{category}', [App\Http\Controllers\CollectionController::class, 'index'])->name('collection');
 Route::get('/collection/view/{id}', [CollectionController::class, 'view'])->name('collection.view');
+Route::get('/collection/readonly/{id}', [CollectionController::class, 'viewReadOnly'])->name('collection.readonly');
 Route::get('/collectionall', [App\Http\Controllers\CollectionAllController::class, 'index'])->name('collectionall');
 Route::get('/collectionall/view/{id}', [CollectionAllController::class, 'view'])->name('collectionall.view');
+Route::get('/collectionall/readonly/{id}', [CollectionAllController::class, 'viewReadOnly'])->name('collectionall.readonly');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+
+Route::get('/document/readonly/{id}', [LibraryController::class, 'viewReadOnly'])
+    ->name('documents.readonly');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -71,6 +79,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/library/{document}/edit', [LibraryController::class, 'edit'])->name('library.edit');
     Route::put('/library/{document}', [LibraryController::class, 'update'])->name('library.update');
     Route::get('/lihat-file/{id}', [LibraryController::class, 'viewFile'])->name('documents.view');
+
 
     // user management
     Route::get('/users', [UserController::class, 'index'])->name('users.index');          // daftar user

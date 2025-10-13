@@ -14,6 +14,20 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
+    @hasSection('readonly')
+<style>
+    body {
+        user-select: none !important;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+    }
+    @media print {
+        body { display: none !important; }
+    }
+</style>
+@endhasSection
+
+
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
             @include('layouts.navigation')
@@ -32,5 +46,48 @@
                 {{ $slot }}
             </main>
         </div>
+        @hasSection('readonly')
+<script>
+    // Blok klik kanan
+    document.addEventListener("contextmenu", e => e.preventDefault());
+
+    // Blok kombinasi keyboard
+    document.onkeydown = function(e) {
+        if (
+            e.ctrlKey && ['s','S','u','U','p','P','c','C'].includes(e.key) ||
+            e.key === 'PrintScreen' || e.key === 'F12'
+        ) {
+            e.preventDefault();
+            alert("Aksi ini dinonaktifkan!");
+            return false;
+        }
+    };
+
+    // Deteksi PrintScreen
+    document.addEventListener('keyup', function(e) {
+        if (e.key === 'PrintScreen') {
+            navigator.clipboard.writeText('');
+            alert('Print screen dinonaktifkan!');
+        }
+    });
+
+    // Blok print
+    window.print = function() {
+        alert('Print telah dinonaktifkan!');
+        return false;
+    };
+
+    // Blok DevTools
+    (function() {
+        let devtools = function() {};
+        devtools.toString = function() {
+            alert('Developer Tools dinonaktifkan!');
+        };
+        console.log('%c', devtools);
+    })();
+</script>
+@endhasSection
+
+
     </body>
 </html>

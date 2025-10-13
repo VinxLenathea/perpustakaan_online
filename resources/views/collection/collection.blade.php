@@ -130,8 +130,8 @@
                                     <p class="mb-1"><strong>Dilihat:</strong> {{ $doc->views }} kali</p>
                                     <p class="mb-2">
                                         <strong>Konten Digital:</strong>
-                                        <a href="{{ route('collection.view', $doc->id) }}" target="_blank"
-                                            class="text-primary">Lihat File</a>
+                                        <a href="{{ route('documents.readonly', $doc->id) }}" class="text-primary">Lihat File</a>
+
                                     </p>
                                 </div>
                             </div>

@@ -97,4 +97,22 @@ class CollectionAllController extends Controller
         // Jika tidak bisa preview (misal docx, xlsx), paksa download
         return response()->download($path);
     }
+
+    /**
+     * View file in readonly mode (without incrementing views)
+     */
+    public function viewReadOnly($id)
+    {
+        $document = DocumentModel::findOrFail($id);
+
+        // Pastikan file ada
+        $filePath = storage_path('app/public/' . $document->file_url);
+
+        if (!file_exists($filePath)) {
+            abort(404, 'File tidak ditemukan.');
+        }
+
+        // Kirim data ke tampilan readonly tanpa tombol kembali
+        return view('library.readonly', compact('document') + ['showBackButton' => false]);
+    }
 }

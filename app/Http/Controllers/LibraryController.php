@@ -256,6 +256,24 @@ class LibraryController extends Controller
     /**
      * View file without incrementing views (for library admin view)
      */
+    public function viewReadOnly($id)
+    {
+        $document = \App\Models\DocumentModel::findOrFail($id);
+
+        // Pastikan file ada
+        $filePath = storage_path('app/public/' . $document->file_url);
+
+        if (!file_exists($filePath)) {
+            abort(404, 'File tidak ditemukan.');
+        }
+
+        // Kirim data ke tampilan readonly dengan tombol kembali
+        return view('library.readonly', compact('document') + ['showBackButton' => true]);
+    }
+
+    /**
+     * View file directly (without readonly restrictions)
+     */
     public function viewFile($id)
     {
         $document = DocumentModel::findOrFail($id);
@@ -276,5 +294,9 @@ class LibraryController extends Controller
         // Jika tidak bisa preview (misal docx, xlsx), paksa download
         return response()->download($path);
     }
+
+
+
+
 
 }
