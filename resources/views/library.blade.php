@@ -103,12 +103,20 @@
                                 </form>
 
 
+
                                 <!-- Tombol Tambah Document -->
                                 <button class="btn btn-sm btn-success shadow-sm mb-2" data-toggle="modal"
                                     data-target="#tambahDocumentModal">
                                     <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Document
                                 </button>
                             </div>
+
+                                <div class="text-end mb-3">
+                                    <a href="{{ route('book.export.monthly', ['month' => date('m')]) }}" class="btn btn-success">
+                                    <i class="fas fa-file-excel me-2"></i> Export Buku Bulan Ini
+                                    </a>
+                                </div>
+
 
                             <!-- Table -->
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">

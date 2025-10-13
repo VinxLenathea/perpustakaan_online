@@ -7,6 +7,7 @@ use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WelcomeControllerController;
 use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\ExportController;
 use Illuminate\Http\Request;
 use PharIo\Manifest\Library;
 
@@ -81,6 +82,10 @@ Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/welcome', [LibraryController::class, 'index'])->name('welcome');
+
+
+
+    Route::get('/export/buku/{month}', [ExportController::class, 'exportMonthly'])->name('book.export.monthly');
 
 });
 
