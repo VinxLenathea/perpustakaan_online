@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'Perpustakaan Online') }}</title>
+    <title>{{ config('app.name', 'Perpustakaan Online') }}</title
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -132,8 +132,8 @@
                                 @endif
                                 <p class="mb-2">
                                     <strong>Konten Digital:</strong>
-                                    <a href="{{ asset('storage/' . $doc->file_url) }}" target="_blank"
-                                        class="text-primary">Lihat File</a>
+                                    <a href="{{ route('collection.view', $doc->id) }}" target="_blank"
+                                            class="text-primary">Lihat File</a>
                                 </p>
                             </div>
                         </div>
@@ -194,8 +194,8 @@
                                 <p class="mb-1"><strong>Dilihat:</strong> {{ $doc->views }} kali</p>
                                 <p class="mb-2">
                                     <strong>Konten Digital:</strong>
-                                    <a href="{{ route('documents.view', $doc->id) }}" target="_blank"
-                                        class="text-primary">Lihat File</a>
+                                    <a href="{{ route('collectionall.view', $doc->id) }}" target="_blank"
+                                                class="text-primary">Lihat File</a>
                                 </p>
 
                             </div>

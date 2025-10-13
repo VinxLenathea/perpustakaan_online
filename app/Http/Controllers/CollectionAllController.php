@@ -77,7 +77,24 @@ class CollectionAllController extends Controller
      public function view($id)
     {
         $document = DocumentModel::findOrFail($id);
+
+        // Increment views
         $document->increment('views');
-        return redirect(asset('storage/' . $document->file_url));
+
+        $path = storage_path('app/public/' . $document->file_url);
+
+        if (!file_exists($path)) {
+            abort(404, 'File tidak ditemukan.');
+        }
+
+        $mimeType = mime_content_type($path);
+
+        // Untuk file yang bisa ditampilkan langsung (pdf, png, jpg, gif)
+        if (in_array($mimeType, ['application/pdf', 'image/png', 'image/jpeg', 'image/gif'])) {
+            return response()->file($path);
+        }
+
+        // Jika tidak bisa preview (misal docx, xlsx), paksa download
+        return response()->download($path);
     }
 }

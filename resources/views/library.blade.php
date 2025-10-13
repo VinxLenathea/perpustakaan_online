@@ -167,7 +167,7 @@
                                                 @endif
                                             </td>
                                             <td class="file">
-                                                <a href="{{ asset('storage/' . $doc->file_url) }}"
+                                                <a href="{{ route('documents.view', $doc->id) }}"
                                                     target="_blank">Lihat File</a>
                                             </td>
                                             <td class="views">{{ $doc->views }}X dilihat</td>

@@ -110,8 +110,8 @@ class LibraryController extends Controller
         $category = CategoryModel::find($request->category_id);
         if ($category && $category->category_name !== 'poster') {
             $request->validate([
-                'cover_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'abstract'    => 'required|string',
+                'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'abstract'    => 'nullable|string',
             ]);
         }
 
@@ -179,8 +179,8 @@ class LibraryController extends Controller
         $category = CategoryModel::find($request->category_id);
         if ($category && in_array($category->category_name, ['karya tulis ilmiah', 'penelitian eksternal', 'penelitian internal'])) {
             $request->validate([
-                'cover_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'abstract'    => 'required|string',
+                'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'abstract'    => 'nullable|string',
             ]);
         }
 
@@ -254,13 +254,27 @@ class LibraryController extends Controller
     }
 
     /**
-     * View file and increment views
+     * View file without incrementing views (for library admin view)
      */
     public function viewFile($id)
     {
         $document = DocumentModel::findOrFail($id);
-        $document->increment('views');
-        return redirect(asset('storage/' . $document->file_url));
+
+        $path = storage_path('app/public/' . $document->file_url);
+
+        if (!file_exists($path)) {
+            abort(404, 'File tidak ditemukan.');
+        }
+
+        $mimeType = mime_content_type($path);
+
+        // Untuk file yang bisa ditampilkan langsung (pdf, png, jpg, gif)
+        if (in_array($mimeType, ['application/pdf', 'image/png', 'image/jpeg', 'image/gif'])) {
+            return response()->file($path);
+        }
+
+        // Jika tidak bisa preview (misal docx, xlsx), paksa download
+        return response()->download($path);
     }
 
 }
