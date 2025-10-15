@@ -64,6 +64,7 @@
                         <option value="penelitian_internal"
                             {{ request('category') == 'penelitian_internal' ? 'selected' : '' }}>Penelitian Internal
                         </option>
+                        <option value="e_book" {{ request('category') == 'e_book' ? 'selected' : '' }}>E Book</option>
                     </select>
 
                     <input type="text" class="form-control form-control-sm me-2" name="query"
@@ -188,6 +189,11 @@
                     </div>
                 @endforeach
 
+                <!-- Tombol Lihat Selengkapnya -->
+                <div class="text-center mt-4">
+                    <a href="{{ route('collectionall') }}" class="btn btn-success btn-lg">Lihat Selengkapnya</a>
+                </div>
+
             @else
                 <div class="text-center">
                     <p class="text-muted">Belum ada dokumen yang ditambahkan.</p>
@@ -200,51 +206,59 @@
     <!-- Kategori Unggulan -->
     <div class="container featured-grid">
         <h2 class="text-center mb-4 text-success">Kategori Unggulan</h2>
-        <div class="row">
+        <div class="row justify-content-center">
             <!-- Item kategori -->
-            <div class="col-md-3 mb-4">
-                <div class="card card-hover text-center h-100">
-                    <div class="card-body">
+            <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
+                <div class="card card-hover text-center h-100 shadow-sm">
+                    <div class="card-body d-flex flex-column">
                         <i class="fas fa-book fa-3x text-success mb-3"></i>
-                        <h5>Karya Tulis Ilmiah</h5>
-                        <p>Koleksi penelitian dan artikel ilmiah terbaru.</p>
-                        <a href="{{ route('collection', 'Karya Tulis Ilmiah') }}" class="btn btn-success">Lihat
-                            Koleksi</a>
+                        <h5 class="card-title">Karya Tulis Ilmiah</h5>
+                        <p class="card-text flex-grow-1">Koleksi penelitian dan artikel ilmiah terbaru.</p>
+                        <a href="{{ route('collection', 'Karya Tulis Ilmiah') }}" class="btn btn-success mt-auto">Lihat Koleksi</a>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-3 mb-4">
-                <div class="card card-hover text-center h-100">
-                    <div class="card-body">
+            <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
+                <div class="card card-hover text-center h-100 shadow-sm">
+                    <div class="card-body d-flex flex-column">
                         <i class="fas fa-image fa-3x text-success mb-3"></i>
-                        <h5>Poster</h5>
-                        <p>Poster penelitian dan presentasi visual.</p>
-                        <a href="{{ route('collection', 'Poster') }}" class="btn btn-success">Lihat Koleksi</a>
+                        <h5 class="card-title">Poster</h5>
+                        <p class="card-text flex-grow-1">Poster penelitian dan presentasi visual.</p>
+                        <a href="{{ route('collection', 'Poster') }}" class="btn btn-success mt-auto">Lihat Koleksi</a>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-3 mb-4">
-                <div class="card card-hover text-center h-100">
-                    <div class="card-body">
+            <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
+                <div class="card card-hover text-center h-100 shadow-sm">
+                    <div class="card-body d-flex flex-column">
                         <i class="fas fa-flask fa-3x text-success mb-3"></i>
-                        <h5>Penelitian Eksternal</h5>
-                        <p>Hasil penelitian dari kolaborasi eksternal.</p>
-                        <a href="{{ route('collection', 'Penelitian Eksternal') }}" class="btn btn-success">Lihat
-                            Koleksi</a>
+                        <h5 class="card-title">Penelitian Eksternal</h5>
+                        <p class="card-text flex-grow-1">Hasil penelitian dari kolaborasi eksternal.</p>
+                        <a href="{{ route('collection', 'Penelitian Eksternal') }}" class="btn btn-success mt-auto">Lihat Koleksi</a>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-3 mb-4">
-                <div class="card card-hover text-center h-100">
-                    <div class="card-body">
+            <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
+                <div class="card card-hover text-center h-100 shadow-sm">
+                    <div class="card-body d-flex flex-column">
                         <i class="fas fa-microscope fa-3x text-success mb-3"></i>
-                        <h5>Penelitian Internal</h5>
-                        <p>Penelitian yang dilakukan secara internal.</p>
-                        <a href="{{ route('collection', 'Penelitian Internal') }}" class="btn btn-success">Lihat
-                            Koleksi</a>
+                        <h5 class="card-title">Penelitian Internal</h5>
+                        <p class="card-text flex-grow-1">Penelitian yang dilakukan secara internal.</p>
+                        <a href="{{ route('collection', 'Penelitian Internal') }}" class="btn btn-success mt-auto">Lihat Koleksi</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
+                <div class="card card-hover text-center h-100 shadow-sm">
+                    <div class="card-body d-flex flex-column">
+                        <i class="fas fa-book-open fa-3x text-success mb-3"></i>
+                        <h5 class="card-title">E Book</h5>
+                        <p class="card-text flex-grow-1">Koleksi buku elektronik dan digital.</p>
+                        <a href="{{ route('collection', 'E Book') }}" class="btn btn-success mt-auto">Lihat Koleksi</a>
                     </div>
                 </div>
             </div>

@@ -30,6 +30,11 @@ class CategorySeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'category_name' => 'e_book',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ];
 
         CategoryModel::insert($categories);

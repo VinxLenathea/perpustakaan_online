@@ -67,7 +67,7 @@
                                         @foreach ($categories as $cat)
                                             <option value="{{ $cat->id }}"
                                                 {{ request('category_id') == $cat->id ? 'selected' : '' }}>
-                                                {{ $cat->category_name }}
+                                                {{ ucfirst(str_replace('_', ' ', $cat->category_name)) }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -254,7 +254,7 @@
                                                         <option value="">-- Pilih Kategori --</option>
                                                         @foreach ($categories as $cat)
                                                             <option value="{{ $cat->id }}">
-                                                                {{ $cat->category_name }}
+                                                                {{ ucfirst(str_replace('_', ' ', $cat->category_name)) }}
                                                             </option>
                                                         @endforeach
                                                     </select>
@@ -361,7 +361,7 @@
                                                             @foreach ($categories as $cat)
                                                                 <option value="{{ $cat->id }}"
                                                                     {{ $doc->category_id == $cat->id ? 'selected' : '' }}>
-                                                                    {{ $cat->category_name }}
+                                                                    {{ ucfirst(str_replace('_', ' ', $cat->category_name)) }}
                                                                 </option>
                                                             @endforeach
                                                         </select>

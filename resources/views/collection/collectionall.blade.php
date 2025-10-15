@@ -72,6 +72,8 @@
                             <option value="penelitian_internal"
                                 {{ request('category') == 'penelitian_internal' ? 'selected' : '' }}>Penelitian
                                 Internal</option>
+                            <option value="e_book" {{ request('category') == 'e_book' ? 'selected' : '' }}>E Book
+                            </option>
                         </select>
 
                         <input type="text" class="form-control form-control-sm me-2" name="query"
