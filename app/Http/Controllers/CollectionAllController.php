@@ -105,6 +105,9 @@ class CollectionAllController extends Controller
     {
         $document = DocumentModel::findOrFail($id);
 
+        // Increment views
+        $document->increment('views');
+
         // Pastikan file ada
         $filePath = storage_path('app/public/' . $document->file_url);
 

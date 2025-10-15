@@ -45,6 +45,7 @@
                     <!-- Search Bar -->
                     <div class="card shadow mb-4">
                         <div class="card-body bg-light">
+                            <div class="container-fluid">
                             <div class="d-flex justify-content-between align-items-center flex-wrap">
                                 <!-- Form Pencarian -->
                                 <form action="{{ route('library') }}" method="GET"
@@ -105,10 +106,12 @@
 
 
                                 <!-- Tombol Tambah Document -->
-                                <button class="btn btn-sm btn-success shadow-sm mb-2" data-toggle="modal"
-                                    data-target="#tambahDocumentModal">
-                                    <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Document
-                                </button>
+                                <div class="d-flex align-items-center">
+                                    <button style="margin-right: 100px" class="btn btn-sm btn-success shadow-sm mb-2" data-toggle="modal"
+                                        data-target="#tambahDocumentModal">
+                                        <i class="fas fa-plus fa-sm text-white-50"></i>
+                                    </button>
+                                </div>
                             </div>
 
                                 <div class="text-end mb-3">
@@ -118,8 +121,16 @@
                                 </div>
 
 
-                            <!-- Table -->
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Table Container -->
+                    <div class="card shadow mb-4">
+                        <div class="card-body">
+                            <div class="container-fluid">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -197,12 +208,13 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
-                            </table>
-                            <!-- ✅ Pagination -->
-                            <div class="d-flex justify-content-center">
-                                {{ $documents->onEachSide(1)->links('pagination::bootstrap-4') }}
+                                    </table>
+                                </div>
+                                <!-- ✅ Pagination -->
+                                <div class="d-flex justify-content-center mt-3">
+                                    {{ $documents->onEachSide(1)->links('pagination::bootstrap-4') }}
+                                </div>
                             </div>
-
                         </div>
                     </div>
 
