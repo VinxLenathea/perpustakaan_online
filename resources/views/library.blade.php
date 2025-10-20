@@ -115,9 +115,27 @@
                             </div>
 
                                 <div class="text-end mb-3">
-                                    <a href="{{ route('book.export.monthly', ['month' => date('m')]) }}" class="btn btn-success">
-                                    <i class="fas fa-file-excel me-2"></i> Export Buku Bulan Ini
-                                    </a>
+                                    <form action="{{ route('book.export.monthly', ['month' => request('month', date('m')), 'year' => request('year', date('Y'))]) }}" method="GET" class="d-inline" id="exportForm">
+                                        <select name="month" class="form-control d-inline" style="width: auto; margin-right: 10px;">
+                                            <option value="">Pilih Bulan</option>
+                                            @for ($i = 1; $i <= 12; $i++)
+                                                <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}" {{ request('month') == str_pad($i, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}>
+                                                    {{ date('F', mktime(0, 0, 0, $i, 1)) }}
+                                                </option>
+                                            @endfor
+                                        </select>
+                                        <select name="year" class="form-control d-inline" style="width: auto; margin-right: 10px;">
+                                            <option value="">Pilih Tahun</option>
+                                            @for ($y = date('Y'); $y >= 2020; $y--)
+                                                <option value="{{ $y }}" {{ request('year') == $y ? 'selected' : '' }}>
+                                                    {{ $y }}
+                                                </option>
+                                            @endfor
+                                        </select>
+                                        <button type="submit" class="btn btn-success" id="exportBtn" disabled>
+                                            <i class="fas fa-file-excel me-2"></i> Export Buku
+                                        </button>
+                                    </form>
                                 </div>
 
 
@@ -931,6 +949,8 @@
             $('[id^="editDocumentModal"] select[name="category_id"]').on('change', function() {
                 toggleFields($(this).closest('form'));
             });
+
+
         });
     </script>
 

@@ -32,5 +32,8 @@ class DocumentModel extends Model
         return $this->belongsTo(CategoryModel::class, 'category_id', 'id');
     }
 
-
+    public function client()
+    {
+        return $this->belongsTo(ClientModel::class, 'client_id');
+    }
 }

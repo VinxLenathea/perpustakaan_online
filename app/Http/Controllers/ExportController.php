@@ -7,8 +7,8 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ExportController extends Controller
 {
-    public function exportMonthly($month)
+    public function exportMonthly($month, $year)
     {
-        return Excel::download(new BookExport($month), 'data_buku_bulan_'.$month.'.xlsx');
+        return Excel::download(new BookExport($month, $year), 'data_buku_bulan_'.$month.'_tahun_'.$year.'.xlsx');
     }
 }

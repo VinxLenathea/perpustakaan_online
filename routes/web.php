@@ -92,9 +92,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/welcome', [LibraryController::class, 'index'])->name('welcome');
 
+    // logs management
+    Route::get('/logs', [App\Http\Controllers\LogController::class, 'index'])->name('logs.index');
+    Route::post('/logs/{id}/approve', [App\Http\Controllers\LogController::class, 'approve'])->name('logs.approve');
+    Route::post('/logs/{id}/reject', [App\Http\Controllers\LogController::class, 'reject'])->name('logs.reject');
 
-
-    Route::get('/export/buku/{month}', [ExportController::class, 'exportMonthly'])->name('book.export.monthly');
+    Route::get('/export/buku/{month}/{year}', [ExportController::class, 'exportMonthly'])->name('book.export.monthly');
 
 });
 

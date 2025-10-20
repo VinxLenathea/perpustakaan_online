@@ -10,17 +10,21 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 class BookExport implements FromCollection, WithHeadings, WithMapping
 {
     protected $month;
+    protected $year;
 
-    // Konstruktor untuk filter bulanan
-    public function __construct($month)
+    // Konstruktor untuk filter bulanan dan tahunan
+    public function __construct($month, $year)
     {
         $this->month = $month;
+        $this->year = $year;
     }
 
     // Ambil data dari database
     public function collection()
     {
-        return DocumentModel::whereMonth('created_at', $this->month)->get();
+        return DocumentModel::whereMonth('created_at', $this->month)
+                           ->whereYear('created_at', $this->year)
+                           ->get();
     }
 
     // Tentukan kolom Excel

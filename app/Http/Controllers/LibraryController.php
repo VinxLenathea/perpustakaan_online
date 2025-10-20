@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\DocumentModel;
 use App\Models\CategoryModel;
-
+use App\Models\ClientModel;
 use Illuminate\Http\Request;
+use App\Models\UploadLogModel;
 use Illuminate\Support\Facades\Storage;
 
 class LibraryController extends Controller
@@ -83,8 +84,7 @@ class LibraryController extends Controller
      */
     public function create()
     {
-        $categories = CategoryModel::all();
-        ;
+        $categories = CategoryModel::all();;
 
         return view('library_create', compact('categories'));
     }
@@ -136,6 +136,15 @@ class LibraryController extends Controller
             'kampus'         => $request->kampus,
             'prodi'          => $request->prodi,
         ]);
+        // Log the upload action
+        UploadLogModel::create([
+            'document_id' => $document->id,
+            'user_id'     => optional(auth()->user())->id,
+            'client_id'   => null, // admin interface
+            'action'      => 'upload',
+            'status'      => 'approved',
+        ]);
+
 
         if ($request->ajax()) {
             return response()->json([
@@ -218,6 +227,15 @@ class LibraryController extends Controller
 
         $document->save();
 
+        // Log the update action
+        UploadLogModel::create([
+            'document_id' => $document->id,
+            'user_id'     => optional(auth()->user())->id,
+            'client_id'   => null, // admin interface
+            'action'      => 'update',
+            'status'      => 'approved',
+        ]);
+
         if ($request->ajax()) {
             return response()->json([
                 'success'  => true,
@@ -244,6 +262,15 @@ class LibraryController extends Controller
         if ($document->cover_image && Storage::disk('public')->exists($document->cover_image)) {
             Storage::disk('public')->delete($document->cover_image);
         }
+
+        // Log the delete action before deleting
+        UploadLogModel::create([
+            'document_id' => $document->id,
+            'user_id'     => optional(auth()->user())->id,
+            'client_id'   => null, // admin interface
+            'action'      => 'delete',
+            'status'      => 'approved',
+        ]);
 
         $document->delete();
 
@@ -298,8 +325,36 @@ class LibraryController extends Controller
         return response()->download($path);
     }
 
+    public function storeApi(Request $request)
+    {
+        // 🔹 Validasi API token
+        $token = $request->bearerToken();
+        $client = ClientModel::where('api_token', $token)->first();
 
+        if (! $client) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
 
+        // 🔹 Validasi input file (contoh minimal)
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'file_url' => 'required|string|max:255',
+        ]);
 
+        // 🔹 Simpan dokumen
+        $document = documentModel::create([
+            'title' => $request->title,
+            'author' => $request->author,
+            'year_published' => $request->year_published,
+            'category_id' => $request->category_id,
+            'abstract' => $request->abstract,
+            'file_url' => $request->file_url,
+            'client_id' => $client->id, // isi dari client yang valid
+        ]);
 
+        return response()->json([
+            'message' => 'Upload berhasil, menunggu persetujuan admin',
+            'document' => $document
+        ]);
+    }
 }

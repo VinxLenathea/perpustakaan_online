@@ -38,4 +38,12 @@
         </a>
     </li>
 
+    <!-- Nav Item - Logs -->
+    <li class="nav-item {{ Request::is('logs*') ? 'active' : '' }}">
+        <a class="nav-link text-primary {{ Request::is('logs*') ? 'fw-bold bg-light rounded' : '' }}" href="{{ route('logs.index') }}">
+            <i class="fas fa-history me-2 text-primary"></i>
+            <span>Logs</span>
+        </a>
+    </li>
+
 </ul>
