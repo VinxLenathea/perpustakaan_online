@@ -86,7 +86,7 @@
             @if (isset($isSearch) && $isSearch)
                 Hasil Pencarian
             @else
-                Baru Ditambahkan
+                Populer
             @endif
         </h2>
 
@@ -136,8 +136,8 @@
                 </div>
             @endif
         @else
-            @if ($recentDocuments->count() > 0)
-                @foreach ($recentDocuments as $doc)
+            @if ($topViewedDocuments->count() > 0)
+                @foreach ($topViewedDocuments as $doc)
                     <div class="card shadow-sm border-0 rounded-3 mb-3 p-3">
                         <div class="row g-3 align-items-center">
                             <!-- Cover Buku -->

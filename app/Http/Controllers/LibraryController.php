@@ -8,6 +8,7 @@ use App\Models\ClientModel;
 use Illuminate\Http\Request;
 use App\Models\UploadLogModel;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class LibraryController extends Controller
 {
@@ -16,68 +17,45 @@ class LibraryController extends Controller
      */
     public function index(Request $request)
     {
-        // Awali dengan query builder
-        $query = DocumentModel::with(['category']);
+        $query = DocumentModel::with('category');
 
-        // 🔍 Search keyword
-
+        // Search
         if ($request->filled('keyword') && $request->filled('filter')) {
-            $keyword = $request->keyword;
+            $key = $request->keyword;
             $filter = $request->filter;
 
-            if ($filter == 'judul') {
-                $query->where('title', 'LIKE', "%{$keyword}%");
-            } elseif ($filter == 'penulis') {
-                $query->where('author', 'LIKE', "%{$keyword}%");
-            } elseif ($filter == 'tahun') {
-                $query->where('year_published', 'LIKE', "%{$keyword}%");
+            if ($filter === 'judul') {
+                $query->where('title', 'LIKE', "%{$key}%");
+            } elseif ($filter === 'penulis') {
+                $query->where('author', 'LIKE', "%{$key}%");
+            } elseif ($filter === 'tahun') {
+                $query->where('year_published', 'LIKE', "%{$key}%");
             }
         }
 
-        // 📂 Filter kategori
+        // Filter kategori
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }
 
-        // 📌 Sorting
-        if ($request->filled('sort_by')) {
-            switch ($request->sort_by) {
-                case 'tahun_desc': // Tahun terbaru
-                    $query->orderBy('year_published', 'desc');
-                    break;
-
-                case 'tahun_asc': // Tahun terlama
-                    $query->orderBy('year_published', 'asc');
-                    break;
-
-                case 'judul_asc': // Judul A-Z
-                    $query->orderBy('title', 'asc');
-                    break;
-
-                case 'judul_desc': // Judul Z-A
-                    $query->orderBy('title', 'desc');
-                    break;
-
-                case 'views': // Paling sering dibaca
-                    $query->orderBy('views', 'desc');
-                    break;
-
-                default:
-                    $query->latest();
-                    break;
-            }
+        // Sorting berdasarkan views descending, lalu title ascending untuk handle ties
+        $sortBy = $request->get('sort_by', 'views');
+        if ($sortBy === 'views') {
+            $query->orderBy('views', 'desc')->orderBy('title', 'asc');
         } else {
-            $query->latest();
+            $query->orderBy($sortBy, 'asc');
         }
 
-        // ✅ Pagination (10 data per halaman)
+        // Data
         $documents = $query->paginate(10)->withQueryString();
+
+
 
         $categories = CategoryModel::all();
 
-
         return view('library', compact('documents', 'categories'));
     }
+
 
     /**
      * Form tambah document
@@ -139,7 +117,7 @@ class LibraryController extends Controller
         // Log the upload action
         UploadLogModel::create([
             'document_id' => $document->id,
-            'user_id'     => optional(auth()->user())->id,
+            'user_id' => Auth::id(),
             'client_id'   => null, // admin interface
             'action'      => 'upload',
             'status'      => 'approved',
@@ -230,7 +208,7 @@ class LibraryController extends Controller
         // Log the update action
         UploadLogModel::create([
             'document_id' => $document->id,
-            'user_id'     => optional(auth()->user())->id,
+            'user_id' => Auth::id(),
             'client_id'   => null, // admin interface
             'action'      => 'update',
             'status'      => 'approved',
@@ -266,7 +244,7 @@ class LibraryController extends Controller
         // Log the delete action before deleting
         UploadLogModel::create([
             'document_id' => $document->id,
-            'user_id'     => optional(auth()->user())->id,
+            'user_id' => Auth::id(),
             'client_id'   => null, // admin interface
             'action'      => 'delete',
             'status'      => 'approved',
@@ -307,6 +285,9 @@ class LibraryController extends Controller
     public function viewFile($id)
     {
         $document = DocumentModel::findOrFail($id);
+
+        // Increment views
+        $document->increment('views');
 
         $path = storage_path('app/public/' . $document->file_url);
 

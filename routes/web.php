@@ -44,11 +44,15 @@ Route::get('/', function (Request $request) {
 
         return view('welcome', compact('searchResults', 'isSearch'));
     } else {
-        // Show recent documents
-        $recentDocuments = \App\Models\DocumentModel::with('category')->latest()->take(3)->get();
+        // Show top viewed documents, sorted by views desc, then title asc
+        $topViewedDocuments = \App\Models\DocumentModel::with('category')
+            ->orderBy('views', 'desc')
+            ->orderBy('title', 'asc')
+            ->take(3)
+            ->get();
         $isSearch = false;
 
-        return view('welcome', compact('recentDocuments', 'isSearch'));
+        return view('welcome', compact('topViewedDocuments', 'isSearch'));
     }
 });
 
@@ -78,8 +82,7 @@ Route::middleware('auth')->group(function () {
     route::delete('/library/{id}', [LibraryController::class, 'destroy'])->name('library.destroy');
     Route::get('/library/{document}/edit', [LibraryController::class, 'edit'])->name('library.edit');
     Route::put('/library/{document}', [LibraryController::class, 'update'])->name('library.update');
-    Route::get('/lihat-file/{id}', [LibraryController::class, 'viewFile'])->name('documents.view');
-
+    Route::get('/library/view-file/{id}', [LibraryController::class, 'viewFile'])->name('library.viewFile');
 
     // user management
     Route::get('/users', [UserController::class, 'index'])->name('users.index');          // daftar user

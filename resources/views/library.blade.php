@@ -42,73 +42,46 @@
                         <h1 class="h3 mb-0 text-gray-800">Perpustakaan RSUD Mohammad Noer</h1>
                     </div>
 
+
+
                     <!-- Search Bar -->
                     <div class="card shadow mb-4">
                         <div class="card-body bg-light">
                             <div class="container-fluid">
                             <div class="d-flex justify-content-between align-items-center flex-wrap">
                                 <!-- Form Pencarian -->
-                                <form action="{{ route('library') }}" method="GET"
+                               <form action="{{ route('library') }}" method="GET"
                                     class="form-inline mb-2 d-flex align-items-center">
-                                    <input type="text" name="keyword" class="form-control mr-2"
+                                     <input type="text" name="keyword" class="form-control mr-2"
                                         placeholder="Kata Kunci" value="{{ request('keyword') }}"
-                                        style="min-width:200px;">
+                                     style="min-width:200px;">
 
-                                    <select name="filter" class="form-control mr-2">
-                                        <option value="judul" {{ request('filter') == 'judul' ? 'selected' : '' }}>
-                                            Judul</option>
-                                        <option value="penulis" {{ request('filter') == 'penulis' ? 'selected' : '' }}>
-                                            Penulis</option>
-                                        <option value="tahun" {{ request('filter') == 'tahun' ? 'selected' : '' }}>
-                                            Tahun</option>
-                                    </select>
+    <select name="filter" class="form-control mr-2">
+        <option value="judul" {{ request('filter') == 'judul' ? 'selected' : '' }}>Judul</option>
+        <option value="penulis" {{ request('filter') == 'penulis' ? 'selected' : '' }}>Penulis</option>
+        <option value="tahun" {{ request('filter') == 'tahun' ? 'selected' : '' }}>Tahun</option>
+    </select>
 
-                                    <select name="category_id" class="form-control mr-2">
-                                        <option value="">Semua Kategori</option>
-                                        @foreach ($categories as $cat)
-                                            <option value="{{ $cat->id }}"
-                                                {{ request('category_id') == $cat->id ? 'selected' : '' }}>
-                                                {{ ucfirst(str_replace('_', ' ', $cat->category_name)) }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <button type="submit" class="btn btn-success">Cari</button>
+    <select name="category_id" class="form-control mr-2">
+        <option value="">Semua Kategori</option>
+        @foreach ($categories as $cat)
+        <option value="{{ $cat->id }}"
+            {{ request('category_id') == $cat->id ? 'selected' : '' }}>
+            {{ ucfirst(str_replace('_', ' ', $cat->category_name)) }}
+        </option>
+        @endforeach
+    </select>
 
-                                    @php
-                                        $sortOptions = [
-                                            'tahun_desc' => [
-                                                'icon' => 'fas fa-calendar-alt',
-                                                'label' => 'Tahun Terbaru',
-                                            ],
-                                            'tahun_asc' => ['icon' => 'fas fa-calendar', 'label' => 'Tahun Terlama'],
-                                            'judul_asc' => ['icon' => 'fas fa-sort-alpha-down', 'label' => 'A - Z'],
-                                            'judul_desc' => ['icon' => 'fas fa-sort-alpha-up', 'label' => 'Z - A'],
-                                            'views' => ['icon' => 'fas fa-eye', 'label' => 'Paling Sering Dibaca'],
-                                        ];
-                                        $currentSort = request('sort_by') ?: 'tahun_desc';
-                                    @endphp
-                                    <div class="dropdown mr-2" style="margin-left: 10px;">
-                                        <button class="btn btn-success dropdown-toggle" type="button" id="sortDropdown"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="{{ $sortOptions[$currentSort]['icon'] }}"></i>
-                                            {{ $sortOptions[$currentSort]['label'] }}
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="sortDropdown">
-                                            @foreach ($sortOptions as $key => $option)
-                                                <a class="dropdown-item {{ $key == $currentSort ? 'active' : '' }}"
-                                                    href="{{ route('library') . '?' . http_build_query(array_merge(request()->query(), ['sort_by' => $key])) }}"><i
-                                                        class="{{ $option['icon'] }}"></i> {{ $option['label'] }}</a>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </form>
+    {{-- ✅ ini untuk mempertahankan urutan berdasarkan views --}}
+    <input type="hidden" name="sort_by" value="{{ request('sort_by', 'views') }}">
 
+    <button type="submit" class="btn btn-success">Cari</button>
 
 
                                 <!-- Tombol Tambah Document -->
                                 <div class="d-flex align-items-center">
                                     <button style="margin-right: 100px" class="btn btn-sm btn-success shadow-sm mb-2" data-toggle="modal"
-                                        data-target="#tambahDocumentModal">
+                                        data-target="#tambahDocumentModal" type="button">
                                         <i class="fas fa-plus fa-sm text-white-50"></i>
                                     </button>
                                 </div>
@@ -204,7 +177,7 @@
                                                 @endif
                                             </td>
                                             <td class="file">
-                                                <a href="{{ route('documents.view', $doc->id) }}"
+                                                <a href="{{ route('library.viewFile', $doc->id) }}"
                                                     target="_blank">Lihat File</a>
                                             </td>
                                             <td class="views">{{ $doc->views }}X dilihat</td>
@@ -240,7 +213,7 @@
                     <div class="modal fade" id="tambahDocumentModal" tabindex="-1" role="dialog"
                         aria-labelledby="tambahDocumentLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
-                            <form action="{{ route('library.store') }}" method="POST"
+                            <form id="addDocumentForm" action="{{ route('library.store') }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-content">
@@ -811,11 +784,13 @@
     <script>
         // Handle add document form submission dengan AJAX
         $(document).ready(function() {
-            $('#tambahDocumentModal form').on('submit', function(e) {
+            $('#addDocumentForm').on('submit', function(e) {
                 e.preventDefault();
 
                 let form = $(this);
                 let formData = new FormData(this);
+
+                console.log('Form submitted, sending AJAX request...');
 
                 // Lanjutkan dengan AJAX request langsung
                 $.ajax({
@@ -825,9 +800,12 @@
                     processData: false,
                     contentType: false,
                     headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'X-Requested-With': 'XMLHttpRequest'
                     },
                     success: function(response) {
+                        console.log('Success response:', response);
+
                         // Tutup modal
                         $('#tambahDocumentModal').modal('hide');
 
@@ -838,7 +816,7 @@
                         let coverHtml;
                         if (response.document.category.category_name == 'Poster') {
                             coverHtml = response.document.file_url ?
-                                `<img src="/storage/${response.document.file_url}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">` :
+                                `<img src="/storage/${response.document.file_url}" alt="Cover ${response.document.file_url}" style="width: 50px; height: 70px; object-fit: cover;">` :
                                 `<img src="/assets/img/undraw_posting_photo.svg" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`;
                         } else {
                             coverHtml = response.document.cover_image ?
@@ -860,8 +838,11 @@
                                 <td class="author">${response.document.author}</td>
                                 <td class="abstract">${abstractText}</td>
                                 <td class="file">
-                                    <a href="/storage/${response.document.file_url}" target="_blank">Lihat File</a>
+                                   <a href="/library/view-file/${response.document.id}" target="_blank">Lihat File</a>
                                 </td>
+                                <td class="views">0X dilihat</td>
+                                <td class="kampus">${response.document.kampus || '-'}</td>
+                                <td class="prodi">${response.document.prodi || '-'}</td>
                                 <td>
                                     <div class="d-flex flex-column align-items-center gap-1">
                                         <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#editDocumentModal${response.document.id}"><i class="fas fa-edit"></i></button>
@@ -883,7 +864,14 @@
                             showConfirmButton: false
                         });
                     },
-                    error: function(xhr) {
+                    error: function(xhr, status, error) {
+                        console.log('Error response:', xhr.responseText);
+                        console.log('Status:', status);
+                        console.log('Error:', error);
+
+                        // Jangan tutup modal jika ada error
+                        // $('#tambahDocumentModal').modal('hide');
+
                         let errors = xhr.responseJSON?.errors;
                         let message = xhr.responseJSON?.message ?? 'Terjadi kesalahan';
 
