@@ -48,59 +48,101 @@
                     <div class="card shadow mb-4">
                         <div class="card-body bg-light">
                             <div class="container-fluid">
-                            <div class="d-flex justify-content-between align-items-center flex-wrap">
-                                <!-- Form Pencarian -->
-                               <form action="{{ route('library') }}" method="GET"
-                                    class="form-inline mb-2 d-flex align-items-center">
-                                     <input type="text" name="keyword" class="form-control mr-2"
-                                        placeholder="Kata Kunci" value="{{ request('keyword') }}"
-                                     style="min-width:200px;">
+                                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                                    <!-- Form Pencarian -->
+                                    <form action="{{ route('library') }}" method="GET"
+                                        class="form-inline mb-2 d-flex align-items-center">
+                                        <input type="text" name="keyword" class="form-control mr-2"
+                                            placeholder="Kata Kunci" value="{{ request('keyword') }}"
+                                            style="min-width:200px;">
 
-    <select name="filter" class="form-control mr-2">
-        <option value="judul" {{ request('filter') == 'judul' ? 'selected' : '' }}>Judul</option>
-        <option value="penulis" {{ request('filter') == 'penulis' ? 'selected' : '' }}>Penulis</option>
-        <option value="tahun" {{ request('filter') == 'tahun' ? 'selected' : '' }}>Tahun</option>
-    </select>
+                                        <select name="filter" class="form-control mr-2">
+                                            <option value="judul" {{ request('filter') == 'judul' ? 'selected' : '' }}>
+                                                Judul</option>
+                                            <option value="penulis"
+                                                {{ request('filter') == 'penulis' ? 'selected' : '' }}>Penulis</option>
+                                            <option value="tahun" {{ request('filter') == 'tahun' ? 'selected' : '' }}>
+                                                Tahun</option>
+                                        </select>
 
-    <select name="category_id" class="form-control mr-2">
-        <option value="">Semua Kategori</option>
-        @foreach ($categories as $cat)
-        <option value="{{ $cat->id }}"
-            {{ request('category_id') == $cat->id ? 'selected' : '' }}>
-            {{ ucfirst(str_replace('_', ' ', $cat->category_name)) }}
-        </option>
-        @endforeach
-    </select>
+                                        <select name="category_id" class="form-control mr-2">
+                                            <option value="">Semua Kategori</option>
+                                            @foreach ($categories as $cat)
+                                                <option value="{{ $cat->id }}"
+                                                    {{ request('category_id') == $cat->id ? 'selected' : '' }}>
+                                                    {{ ucfirst(str_replace('_', ' ', $cat->category_name)) }}
+                                                </option>
+                                            @endforeach
+                                        </select>
 
-    {{-- ✅ ini untuk mempertahankan urutan berdasarkan views --}}
-    <input type="hidden" name="sort_by" value="{{ request('sort_by', 'views') }}">
+                                        {{-- ✅ ini untuk mempertahankan urutan berdasarkan views --}}
+                                        <input type="hidden" name="sort_by" value="{{ request('sort_by', 'views') }}">
 
-    <button type="submit" class="btn btn-success">Cari</button>
+                                        <button type="submit" class="btn btn-success">Cari</button>
 
+                                        @php
+                                            $sortOptions = [
+                                                'tahun_desc' => [
+                                                    'icon' => 'fas fa-calendar-alt',
+                                                    'label' => 'Tahun Terbaru',
+                                                ],
+                                                'tahun_asc' => [
+                                                    'icon' => 'fas fa-calendar',
+                                                    'label' => 'Tahun Terlama',
+                                                ],
+                                                'judul_asc' => ['icon' => 'fas fa-sort-alpha-down', 'label' => 'A - Z'],
+                                                'judul_desc' => ['icon' => 'fas fa-sort-alpha-up', 'label' => 'Z - A'],
+                                                'views' => ['icon' => 'fas fa-eye', 'label' => 'Paling Sering Dibaca'],
+                                            ];
+                                            $currentSort = request('sort_by') ?: 'tahun_desc';
+                                        @endphp
+                                        <div class="dropdown mr-2" style="margin-left: 10px;">
+                                            <button class="btn btn-success dropdown-toggle" type="button"
+                                                id="sortDropdown" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
+                                                <i class="{{ $sortOptions[$currentSort]['icon'] }}"></i>
+                                                {{ $sortOptions[$currentSort]['label'] }}
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="sortDropdown">
+                                                @foreach ($sortOptions as $key => $option)
+                                                    <a class="dropdown-item {{ $key == $currentSort ? 'active' : '' }}"
+                                                        href="{{ route('library') . '?' . http_build_query(array_merge(request()->query(), ['sort_by' => $key])) }}"><i
+                                                            class="{{ $option['icon'] }}"></i>
+                                                        {{ $option['label'] }}</a>
+                                                @endforeach
+                                            </div>
+                                        </div>
 
-                                <!-- Tombol Tambah Document -->
-                                <div class="d-flex align-items-center">
-                                    <button style="margin-right: 100px" class="btn btn-sm btn-success shadow-sm mb-2" data-toggle="modal"
-                                        data-target="#tambahDocumentModal" type="button">
-                                        <i class="fas fa-plus fa-sm text-white-50"></i>
-                                    </button>
+                                        <!-- Tombol Tambah Document -->
+                                        <div class="d-flex align-items-center">
+                                            <button style="margin-right: 100px "
+                                                class="btn btn-sm btn-success shadow-sm mb-2" data-toggle="modal"
+                                                data-target="#tambahDocumentModal" type="button">
+                                                <i class="fas fa-plus fa-sm text-white-50"></i>
+                                            </button>
+                                        </div>
                                 </div>
-                            </div>
 
                                 <div class="text-end mb-3">
-                                    <form action="{{ route('book.export.monthly', ['month' => request('month', date('m')), 'year' => request('year', date('Y'))]) }}" method="GET" class="d-inline" id="exportForm">
-                                        <select name="month" class="form-control d-inline" style="width: auto; margin-right: 10px;">
+                                    <form
+                                        action="{{ route('book.export.monthly', ['month' => request('month', date('m')), 'year' => request('year', date('Y'))]) }}"
+                                        method="GET" class="d-inline" id="exportForm">
+                                        <select name="month" class="form-control d-inline"
+                                            style="width: auto; margin-right: 10px;">
                                             <option value="">Pilih Bulan</option>
                                             @for ($i = 1; $i <= 12; $i++)
-                                                <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}" {{ request('month') == str_pad($i, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}>
+                                                <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}"
+                                                    {{ request('month') == str_pad($i, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}>
                                                     {{ date('F', mktime(0, 0, 0, $i, 1)) }}
                                                 </option>
                                             @endfor
                                         </select>
-                                        <select name="year" class="form-control d-inline" style="width: auto; margin-right: 10px;">
+                                        <select name="year" class="form-control d-inline"
+                                            style="width: auto; margin-right: 10px;">
                                             <option value="">Pilih Tahun</option>
                                             @for ($y = date('Y'); $y >= 2020; $y--)
-                                                <option value="{{ $y }}" {{ request('year') == $y ? 'selected' : '' }}>
+                                                <option value="{{ $y }}"
+                                                    {{ request('year') == $y ? 'selected' : '' }}>
                                                     {{ $y }}
                                                 </option>
                                             @endfor
@@ -108,6 +150,7 @@
                                         <button type="submit" class="btn btn-success" id="exportBtn" disabled>
                                             <i class="fas fa-file-excel me-2"></i> Export Buku
                                         </button>
+
                                     </form>
                                 </div>
 
@@ -122,83 +165,83 @@
                             <div class="container-fluid">
                                 <div class="table-responsive">
                                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Cover</th>
-                                        <th>Judul</th>
-                                        <th>Kategori</th>
-                                        <th>Tahun</th>
-                                        <th>Pembuat</th>
-                                        <th>Abstrak</th>
-                                        <th>File</th>
-                                        <th>Dilihat</th>
-                                        <th>Kampus</th>
-                                        <th>Prodi</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($documents as $doc)
-                                        <tr id="row-{{ $doc->id }}">
-                                            <td>{{ $doc->id }}</td>
-                                            <td>
-                                                @if ($doc->category->category_name == 'Poster')
-                                                    @if ($doc->file_url && in_array(pathinfo($doc->file_url, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg', 'gif']))
-                                                        <img src="{{ asset('storage/' . $doc->file_url) }}"
-                                                            alt="Cover {{ $doc->title }}"
-                                                            style="width: 50px; height: 70px; object-fit: cover;">
-                                                    @else
-                                                        <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}"
-                                                            alt="Cover {{ $doc->title }}"
-                                                            style="width: 50px; height: 70px; object-fit: cover;">
-                                                    @endif
-                                                @else
-                                                    @if ($doc->cover_image)
-                                                        <img src="{{ asset('storage/' . $doc->cover_image) }}"
-                                                            alt="Cover {{ $doc->title }}"
-                                                            style="width: 50px; height: 70px; object-fit: cover;">
-                                                    @else
-                                                        <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}"
-                                                            alt="Cover {{ $doc->title }}"
-                                                            style="width: 50px; height: 70px; object-fit: cover;">
-                                                    @endif
-                                                @endif
-                                            </td>
-                                            <td class="title">{{ $doc->title }}</td>
-                                            <td class="category">{{ $doc->category->category_name }}</td>
-                                            <td class="year">{{ $doc->year_published }}</td>
-                                            <td class="author">{{ $doc->author }}</td>
-                                            <td class="abstract">
-                                                @if ($doc->abstract)
-                                                    {{ Str::limit($doc->abstract, 50) }}
-                                                @else
-                                                    -
-                                                @endif
-                                            </td>
-                                            <td class="file">
-                                                <a href="{{ route('library.viewFile', $doc->id) }}"
-                                                    target="_blank">Lihat File</a>
-                                            </td>
-                                            <td class="views">{{ $doc->views }}X dilihat</td>
-                                            <td class="kampus">{{ $doc->kampus }}</td>
-                                            <td class="prodi">{{ $doc->prodi }}</td>
-                                            <td>
-                                                <div class="d-flex flex-column align-items-center gap-1">
-                                                    <button class="btn btn-success btn-sm" data-toggle="modal"
-                                                        data-target="#editDocumentModal{{ $doc->id }}"><i
-                                                            class="fas fa-edit"></i></button>
-                                                    <button type="button" class="btn btn-danger btn-sm"
-                                                        data-toggle="modal" style="margin-top: 5px"
-                                                        data-target="#confirmModal"
-                                                        data-url="{{ route('library.destroy', $doc) }}">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Cover</th>
+                                                <th>Judul</th>
+                                                <th>Kategori</th>
+                                                <th>Tahun</th>
+                                                <th>Pembuat</th>
+                                                <th>Abstrak</th>
+                                                <th>File</th>
+                                                <th>Dilihat</th>
+                                                <th>Kampus</th>
+                                                <th>Prodi</th>
+                                                <th>Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($documents as $doc)
+                                                <tr id="row-{{ $doc->id }}">
+                                                    <td>{{ $doc->id }}</td>
+                                                    <td>
+                                                        @if ($doc->category->category_name == 'Poster')
+                                                            @if ($doc->file_url && in_array(pathinfo($doc->file_url, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg', 'gif']))
+                                                                <img src="{{ asset('storage/' . $doc->file_url) }}"
+                                                                    alt="Cover {{ $doc->title }}"
+                                                                    style="width: 50px; height: 70px; object-fit: cover;">
+                                                            @else
+                                                                <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}"
+                                                                    alt="Cover {{ $doc->title }}"
+                                                                    style="width: 50px; height: 70px; object-fit: cover;">
+                                                            @endif
+                                                        @else
+                                                            @if ($doc->cover_image)
+                                                                <img src="{{ asset('storage/' . $doc->cover_image) }}"
+                                                                    alt="Cover {{ $doc->title }}"
+                                                                    style="width: 50px; height: 70px; object-fit: cover;">
+                                                            @else
+                                                                <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}"
+                                                                    alt="Cover {{ $doc->title }}"
+                                                                    style="width: 50px; height: 70px; object-fit: cover;">
+                                                            @endif
+                                                        @endif
+                                                    </td>
+                                                    <td class="title">{{ $doc->title }}</td>
+                                                    <td class="category">{{ $doc->category->category_name }}</td>
+                                                    <td class="year">{{ $doc->year_published }}</td>
+                                                    <td class="author">{{ $doc->author }}</td>
+                                                    <td class="abstract">
+                                                        @if ($doc->abstract)
+                                                            {{ Str::limit($doc->abstract, 50) }}
+                                                        @else
+                                                            -
+                                                        @endif
+                                                    </td>
+                                                    <td class="file">
+                                                        <a href="{{ route('library.viewFile', $doc->id) }}"
+                                                            target="_blank">Lihat File</a>
+                                                    </td>
+                                                    <td class="views">{{ $doc->views }}X dilihat</td>
+                                                    <td class="kampus">{{ $doc->kampus }}</td>
+                                                    <td class="prodi">{{ $doc->prodi }}</td>
+                                                    <td>
+                                                        <div class="d-flex flex-column align-items-center gap-1">
+                                                            <button class="btn btn-success btn-sm" data-toggle="modal"
+                                                                data-target="#editDocumentModal{{ $doc->id }}"><i
+                                                                    class="fas fa-edit"></i></button>
+                                                            <button type="button" class="btn btn-danger btn-sm"
+                                                                data-toggle="modal" style="margin-top: 5px"
+                                                                data-target="#confirmModal"
+                                                                data-url="{{ route('library.destroy', $doc) }}">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
                                     </table>
                                 </div>
                                 <!-- ✅ Pagination -->
@@ -730,18 +773,18 @@
 
                                 // Update cover image
                                 let coverCell = $('#row-' + id + ' td').eq(
-                                1); // Cover is second column (index 1)
+                                    1); // Cover is second column (index 1)
                                 if (response.document.category.category_name ==
                                     'Poster') {
                                     coverCell.html(response.document.file_url ?
                                         `<img src="/storage/${response.document.file_url}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">` :
                                         `<img src="/assets/img/undraw_posting_photo.svg" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`
-                                        );
+                                    );
                                 } else {
                                     coverCell.html(response.document.cover_image ?
                                         `<img src="/storage/${response.document.cover_image}" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">` :
                                         `<img src="/assets/img/undraw_posting_photo.svg" alt="Cover ${response.document.title}" style="width: 50px; height: 70px; object-fit: cover;">`
-                                        );
+                                    );
                                 }
 
                                 Swal.fire({

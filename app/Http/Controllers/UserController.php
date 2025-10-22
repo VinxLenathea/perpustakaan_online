@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\UploadLogModel;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -12,7 +14,6 @@ class UserController extends Controller
     {
         $users = \App\Models\User::all();
         return view('users', compact('users'));
-
     }
 
     public function create()
@@ -32,6 +33,15 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+        ]);
+
+        // Log the create user action
+        UploadLogModel::create([
+            'document_id' => null, // no document involved
+            'user_id' => Auth::id(),
+            'client_id' => null, // admin interface
+            'action' => 'create_user',
+            'status' => 'approved',
         ]);
 
         if ($request->ajax()) {
@@ -65,6 +75,15 @@ class UserController extends Controller
 
         $user->update($data);
 
+        // Log the update user action
+        UploadLogModel::create([
+            'document_id' => null, // no document involved
+            'user_id' => Auth::id(),
+            'client_id' => null, // admin interface
+            'action' => 'update_user',
+            'status' => 'approved',
+        ]);
+
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
@@ -80,8 +99,16 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        // Log the delete user action before deleting
+        UploadLogModel::create([
+            'document_id' => null, // no document involved
+            'user_id' => Auth::id(),
+            'client_id' => null, // admin interface
+            'action' => 'delete_user',
+            'status' => 'approved',
+        ]);
+
         $user->delete();
         return redirect()->route('users.index')->with('success', 'User berhasil dihapus.');
     }
-
 }

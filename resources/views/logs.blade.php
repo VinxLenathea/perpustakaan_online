@@ -52,9 +52,14 @@
                                         class="form-inline mb-2 d-flex align-items-center">
                                         <select name="status" class="form-control mr-2">
                                             <option value="">Semua Status</option>
-                                            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                                            <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Approved</option>
-                                            <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                                            <option value="pending"
+                                                {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                                            <option value="approved"
+                                                {{ request('status') == 'approved' ? 'selected' : '' }}>Approved
+                                            </option>
+                                            <option value="rejected"
+                                                {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected
+                                            </option>
                                         </select>
 
                                         <input type="date" name="date_from" class="form-control mr-2"
@@ -83,6 +88,7 @@
                                                 <th>Document</th>
                                                 <th>Uploader</th>
                                                 <th>Client</th>
+                                                <th>Action</th>
                                                 <th>Status</th>
                                                 <th>Tanggal Upload</th>
                                                 <th>Aksi</th>
@@ -93,15 +99,16 @@
                                                 <tr id="logRow{{ $log->id }}">
                                                     <td>{{ $log->id }}</td>
                                                     <td>
-                                                        @if($log->document)
+                                                        @if ($log->document)
                                                             <strong>{{ $log->document->title }}</strong><br>
-                                                            <small class="text-muted">{{ $log->document->author }}</small>
+                                                            <small
+                                                                class="text-muted">{{ $log->document->author }}</small>
                                                         @else
                                                             <em class="text-muted">Document tidak ditemukan</em>
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        @if($log->user)
+                                                        @if ($log->user)
                                                             {{ $log->user->name }}<br>
                                                             <small class="text-muted">{{ $log->user->email }}</small>
                                                         @else
@@ -109,25 +116,30 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        @if($log->client)
+                                                        @if ($log->client)
                                                             {{ $log->client->name }}<br>
-                                                            <small class="text-muted">{{ $log->client->api_token ? substr($log->client->api_token, 0, 10) . '...' : '-' }}</small>
+                                                            <small
+                                                                class="text-muted">{{ $log->client->api_token ? substr($log->client->api_token, 0, 10) . '...' : '-' }}</small>
                                                         @else
                                                             <em class="text-muted">-</em>
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <span class="badge
-                                                            @if($log->status == 'approved') badge-success
+                                                        <span
+                                                            class="badge badge-info">{{ ucfirst(str_replace('_', ' ', $log->action)) }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span
+                                                            class="badge
+                                                            @if ($log->status == 'approved') badge-success
                                                             @elseif($log->status == 'rejected') badge-danger
-                                                            @else badge-warning
-                                                            @endif">
+                                                            @else badge-warning @endif">
                                                             {{ ucfirst($log->status) }}
                                                         </span>
                                                     </td>
                                                     <td>{{ $log->created_at->format('d/m/Y H:i') }}</td>
                                                     <td>
-                                                        @if($log->status == 'pending')
+                                                        @if ($log->status == 'pending')
                                                             <div class="d-flex flex-column align-items-center gap-1">
                                                                 <button class="btn btn-success btn-sm approveBtn"
                                                                     data-id="{{ $log->id }}"
@@ -205,8 +217,11 @@
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             success: function(response) {
-                                $('#logRow' + logId + ' .badge').removeClass('badge-warning').addClass('badge-success').text('Approved');
-                                $('#logRow' + logId + ' td:last-child').html('<em class="text-muted">Sudah diproses</em>');
+                                $('#logRow' + logId + ' .badge').removeClass(
+                                    'badge-warning').addClass('badge-success').text(
+                                    'Approved');
+                                $('#logRow' + logId + ' td:last-child').html(
+                                    '<em class="text-muted">Sudah diproses</em>');
 
                                 Swal.fire({
                                     icon: 'success',
@@ -220,7 +235,8 @@
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Gagal!',
-                                    text: xhr.responseJSON?.message || 'Terjadi kesalahan'
+                                    text: xhr.responseJSON?.message ||
+                                        'Terjadi kesalahan'
                                 });
                             }
                         });
@@ -251,8 +267,11 @@
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             success: function(response) {
-                                $('#logRow' + logId + ' .badge').removeClass('badge-warning').addClass('badge-danger').text('Rejected');
-                                $('#logRow' + logId + ' td:last-child').html('<em class="text-muted">Sudah diproses</em>');
+                                $('#logRow' + logId + ' .badge').removeClass(
+                                    'badge-warning').addClass('badge-danger').text(
+                                    'Rejected');
+                                $('#logRow' + logId + ' td:last-child').html(
+                                    '<em class="text-muted">Sudah diproses</em>');
 
                                 Swal.fire({
                                     icon: 'success',
@@ -266,7 +285,8 @@
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Gagal!',
-                                    text: xhr.responseJSON?.message || 'Terjadi kesalahan'
+                                    text: xhr.responseJSON?.message ||
+                                        'Terjadi kesalahan'
                                 });
                             }
                         });

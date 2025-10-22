@@ -40,10 +40,26 @@ class LibraryController extends Controller
 
         // Sorting berdasarkan views descending, lalu title ascending untuk handle ties
         $sortBy = $request->get('sort_by', 'views');
-        if ($sortBy === 'views') {
-            $query->orderBy('views', 'desc')->orderBy('title', 'asc');
-        } else {
-            $query->orderBy($sortBy, 'asc');
+
+        switch ($sortBy) {
+            case 'tahun_desc':
+                $query->orderBy('year_published', 'desc');
+                break;
+            case 'tahun_asc':
+                $query->orderBy('year_published', 'asc');
+                break;
+            case 'judul_asc':
+                $query->orderBy('title', 'asc');
+                break;
+            case 'judul_desc':
+                $query->orderBy('title', 'desc');
+                break;
+            case 'views':
+                $query->orderBy('views', 'desc')->orderBy('title', 'asc');
+                break;
+            default:
+                $query->orderBy('views', 'desc')->orderBy('title', 'asc');
+                break;
         }
 
         // Data
