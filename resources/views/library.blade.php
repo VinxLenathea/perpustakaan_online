@@ -124,11 +124,9 @@
                                 </div>
 
                                 <div class="text-end mb-3">
-                                    <form
-                                        action="{{ route('book.export.monthly', ['month' => request('month', date('m')), 'year' => request('year', date('Y'))]) }}"
-                                        method="GET" class="d-inline" id="exportForm">
+                                    <form action="" method="GET" class="d-inline" id="exportForm">
                                         <select name="month" class="form-control d-inline"
-                                            style="width: auto; margin-right: 10px;">
+                                            style="width: auto; margin-right: 10px;" id="monthSelect">
                                             <option value="">Pilih Bulan</option>
                                             @for ($i = 1; $i <= 12; $i++)
                                                 <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}"
@@ -138,7 +136,7 @@
                                             @endfor
                                         </select>
                                         <select name="year" class="form-control d-inline"
-                                            style="width: auto; margin-right: 10px;">
+                                            style="width: auto; margin-right: 10px;" id="yearSelect">
                                             <option value="">Pilih Tahun</option>
                                             @for ($y = date('Y'); $y >= 2020; $y--)
                                                 <option value="{{ $y }}"
@@ -147,7 +145,7 @@
                                                 </option>
                                             @endfor
                                         </select>
-                                        <button type="submit" class="btn btn-success" id="exportBtn" disabled>
+                                        <button type="button" class="btn btn-success disabled" id="exportBtn">
                                             <i class="fas fa-file-excel me-2"></i> Export Buku
                                         </button>
 
@@ -164,7 +162,8 @@
                         <div class="card-body">
                             <div class="container-fluid">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <table class="table table-bordered" id="dataTable" width="100%"
+                                        cellspacing="0">
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
@@ -982,6 +981,52 @@
             });
 
 
+        });
+    </script>
+
+    <script>
+        // Enable/disable export button based on month and year selection
+        $(document).ready(function() {
+            console.log('Export button script loaded');
+
+            function toggleExportBtn() {
+                var month = $('#monthSelect').val();
+                var year = $('#yearSelect').val();
+                console.log('Month value:', month);
+                console.log('Year value:', year);
+
+                if (month && year && month !== "" && year !== "") {
+                    $('#exportBtn').removeClass('disabled').prop('disabled', false);
+                    console.log('Button enabled');
+                } else {
+                    $('#exportBtn').addClass('disabled').prop('disabled', true);
+                    console.log('Button disabled');
+                }
+            }
+
+            $('#monthSelect').on('change', function() {
+                console.log('Month select changed');
+                toggleExportBtn();
+            });
+
+            $('#yearSelect').on('change', function() {
+                console.log('Year select changed');
+                toggleExportBtn();
+            });
+
+            // Handle export button click
+            $('#exportBtn').on('click', function() {
+                var month = $('#monthSelect').val();
+                var year = $('#yearSelect').val();
+
+                if (month && year) {
+                    // Redirect to export URL
+                    window.location.href = '/export/buku/' + month + '/' + year;
+                }
+            });
+
+            // Initial check
+            toggleExportBtn();
         });
     </script>
 
