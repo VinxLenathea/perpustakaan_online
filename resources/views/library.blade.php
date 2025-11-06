@@ -113,14 +113,12 @@
                                             </div>
                                         </div>
 
-                                        <!-- Tombol Tambah Document -->
-                                        <div class="d-flex align-items-center">
-                                            <button style="margin-right: 100px "
-                                                class="btn btn-sm btn-success shadow-sm mb-2" data-toggle="modal"
-                                                data-target="#tambahDocumentModal" type="button">
-                                                <i class="fas fa-plus fa-sm text-white-50"></i>
-                                            </button>
-                                        </div>
+                                        <button type="button"
+                                            class="btn btn-success"
+                                            data-toggle="modal"
+                                            data-target="#tambahDocumentModal">
+                                            <i class="fas fa-plus fa-sm text-white-50"></i>
+                                        </button>
                                 </div>
 
                                 <div class="text-end mb-3">
@@ -231,7 +229,7 @@
                                                                 data-target="#editDocumentModal{{ $doc->id }}"><i
                                                                     class="fas fa-edit"></i></button>
                                                             <button type="button" class="btn btn-danger btn-sm"
-                                                                data-toggle="modal" style="margin-top: 5px"
+                                                                data-toggle="modal" style="margin-top: 5px; width: 32px"
                                                                 data-target="#confirmModal"
                                                                 data-url="{{ route('library.destroy', $doc) }}">
                                                                 <i class="fas fa-trash"></i>
@@ -278,7 +276,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for="author">Penulis</label>
+                                                    <label for="author">Pembuat</label>
                                                     <input type="text" class="form-control" name="author"
                                                         required>
                                                 </div>
@@ -296,7 +294,7 @@
                                                 <div class="form-group">
                                                     <label for="category_id">Kategori</label>
                                                     <select class="form-control" name="category_id" required>
-                                                        <option value="">-- Pilih Kategori --</option>
+                                                        <option value="">Pilih Kategori</option>
                                                         @foreach ($categories as $cat)
                                                             <option value="{{ $cat->id }}">
                                                                 {{ ucfirst(str_replace('_', ' ', $cat->category_name)) }}
@@ -312,8 +310,8 @@
                                                     <label for="file">Upload File (PDF,PNG)</label>
                                                     <input type="file" class="form-control" name="file"
                                                         accept=".pdf,.png,.jpg,.jpeg" required>
-                                                    <small class="text-muted">Opsional. Format: JPG, PNG, GIF. Max
-                                                        2MB.</small>
+                                                    <small class="text-muted">Opsional: JPG, JPEG. Max
+                                                        10MB.</small>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">

@@ -93,7 +93,7 @@ class LibraryController extends Controller
             'author'          => 'required|string|max:255',
             'year_published'  => 'required|integer|min:1900|max:2099',
             'category_id'     => 'required|exists:categories,id',
-            'file'            => 'nullable|mimes:pdf,png,jpg,jpeg|max:2048',
+            'file'            => 'nullable|mimes:pdf,png,jpg,jpeg|max:10240',
             'cover_image'     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'abstract'        => 'nullable|string',
             'kampus'          => 'nullable|string|max:255',
