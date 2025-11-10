@@ -51,12 +51,13 @@
                                 <div class="d-flex justify-content-between align-items-center flex-wrap">
                                     <!-- Form Pencarian -->
                                     <form action="{{ route('library') }}" method="GET"
-                                        class="form-inline mb-2 d-flex align-items-center">
-                                        <input type="text" name="keyword" class="form-control mr-2"
+                                        class="form-inline mb-2 d-flex align-items-center flex-wrap">
+                                        <input type="text" name="keyword" class="form-control form-control-sm mr-2"
                                             placeholder="Kata Kunci" value="{{ request('keyword') }}"
-                                            style="min-width:200px;">
+                                            style="min-width:150px;">
 
-                                        <select name="filter" class="form-control mr-2">
+                                        <select name="filter" class="form-control form-control-sm mr-2"
+                                            style="width: auto;">
                                             <option value="judul" {{ request('filter') == 'judul' ? 'selected' : '' }}>
                                                 Judul</option>
                                             <option value="penulis"
@@ -65,7 +66,8 @@
                                                 Tahun</option>
                                         </select>
 
-                                        <select name="category_id" class="form-control mr-2">
+                                        <select name="category_id" class="form-control form-control-sm mr-2"
+                                            style="width: auto;">
                                             <option value="">Semua Kategori</option>
                                             @foreach ($categories as $cat)
                                                 <option value="{{ $cat->id }}"
@@ -78,7 +80,7 @@
                                         {{-- ✅ ini untuk mempertahankan urutan berdasarkan views --}}
                                         <input type="hidden" name="sort_by" value="{{ request('sort_by', 'views') }}">
 
-                                        <button type="submit" class="btn btn-success">Cari</button>
+                                        <button type="submit" class="btn btn-success btn-sm">Cari</button>
 
                                         @php
                                             $sortOptions = [
@@ -97,7 +99,7 @@
                                             $currentSort = request('sort_by') ?: 'tahun_desc';
                                         @endphp
                                         <div class="dropdown mr-2" style="margin-left: 10px;">
-                                            <button class="btn btn-success dropdown-toggle" type="button"
+                                            <button class="btn btn-success btn-sm dropdown-toggle" type="button"
                                                 id="sortDropdown" data-toggle="dropdown" aria-haspopup="true"
                                                 aria-expanded="false">
                                                 <i class="{{ $sortOptions[$currentSort]['icon'] }}"></i>
@@ -113,9 +115,7 @@
                                             </div>
                                         </div>
 
-                                        <button type="button"
-                                            class="btn btn-success"
-                                            data-toggle="modal"
+                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
                                             data-target="#tambahDocumentModal">
                                             <i class="fas fa-plus fa-sm text-white-50"></i>
                                         </button>
@@ -123,7 +123,7 @@
 
                                 <div class="text-end mb-3">
                                     <form action="" method="GET" class="d-inline" id="exportForm">
-                                        <select name="month" class="form-control d-inline"
+                                        <select name="month" class="form-control form-control-sm d-inline"
                                             style="width: auto; margin-right: 10px;" id="monthSelect">
                                             <option value="">Pilih Bulan</option>
                                             @for ($i = 1; $i <= 12; $i++)
@@ -133,7 +133,7 @@
                                                 </option>
                                             @endfor
                                         </select>
-                                        <select name="year" class="form-control d-inline"
+                                        <select name="year" class="form-control form-control-sm d-inline"
                                             style="width: auto; margin-right: 10px;" id="yearSelect">
                                             <option value="">Pilih Tahun</option>
                                             @for ($y = date('Y'); $y >= 2020; $y--)
@@ -143,7 +143,7 @@
                                                 </option>
                                             @endfor
                                         </select>
-                                        <button type="button" class="btn btn-success disabled" id="exportBtn">
+                                        <button type="button" class="btn btn-success btn-sm disabled" id="exportBtn">
                                             <i class="fas fa-file-excel me-2"></i> Export Buku
                                         </button>
 
@@ -169,7 +169,7 @@
                                                 <th>Judul</th>
                                                 <th>Kategori</th>
                                                 <th>Tahun</th>
-                                                <th>Pembuat</th>
+                                                <th>Penulis</th>
                                                 <th>Abstrak</th>
                                                 <th>File</th>
                                                 <th>Dilihat</th>
@@ -229,7 +229,8 @@
                                                                 data-target="#editDocumentModal{{ $doc->id }}"><i
                                                                     class="fas fa-edit"></i></button>
                                                             <button type="button" class="btn btn-danger btn-sm"
-                                                                data-toggle="modal" style="margin-top: 5px; width: 32px"
+                                                                data-toggle="modal"
+                                                                style="margin-top: 5px; width: 32px"
                                                                 data-target="#confirmModal"
                                                                 data-url="{{ route('library.destroy', $doc) }}">
                                                                 <i class="fas fa-trash"></i>
@@ -640,7 +641,7 @@
             var itemType = isUser ? 'user' : 'document';
             var successMessage = isUser ? 'File berhasil dihapus!' : 'File berhasil dihapus!';
 
-            // Lanjutkan dengan AJAX request langsung
+            // Lanjutkan dengan F request langsung
             $.ajax({
                 url: url,
                 type: "POST", // spoofing pakai _method=DELETE

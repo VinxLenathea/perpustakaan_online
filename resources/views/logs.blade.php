@@ -49,8 +49,10 @@
                                 <div class="d-flex justify-content-between align-items-center flex-wrap">
                                     <!-- Form Filter -->
                                     <form action="{{ route('logs.index') }}" method="GET"
-                                        class="form-inline mb-2 d-flex align-items-center">
-                                        <select name="status" class="form-control mr-2">
+                                        class="form-inline mb-2 d-flex align-items-center flex-wrap">
+                                        <label for="status" class="mr-1">Status:</label>
+                                        <select name="status" id="status" class="form-control form-control-sm mr-2"
+                                            style="width: auto;">
                                             <option value="">Semua Status</option>
                                             <option value="pending"
                                                 {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
@@ -62,14 +64,19 @@
                                             </option>
                                         </select>
 
-                                        <input type="date" name="date_from" class="form-control mr-2"
-                                            value="{{ request('date_from') }}" placeholder="Dari Tanggal">
+                                        <label for="date_from" class="mr-1 ml-2">Dari:</label>
+                                        <input type="date" name="date_from" id="date_from"
+                                            class="form-control form-control-sm mr-2" value="{{ request('date_from') }}"
+                                            style="width: auto;">
 
-                                        <input type="date" name="date_to" class="form-control mr-2"
-                                            value="{{ request('date_to') }}" placeholder="Sampai Tanggal">
+                                        <label for="date_to" class="mr-1 ml-2">Sampai:</label>
+                                        <input type="date" name="date_to" id="date_to"
+                                            class="form-control form-control-sm mr-2" value="{{ request('date_to') }}"
+                                            style="width: auto;">
 
-                                        <button type="submit" class="btn btn-success">Filter</button>
-                                        <a href="{{ route('logs.index') }}" class="btn btn-secondary ml-2">Reset</a>
+                                        <button type="submit" class="btn btn-success btn-sm ml-2">Filter</button>
+                                        <a href="{{ route('logs.index') }}"
+                                            class="btn btn-secondary btn-sm ml-2">Reset</a>
                                     </form>
                                 </div>
                             </div>

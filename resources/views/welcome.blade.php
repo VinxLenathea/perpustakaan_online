@@ -4,9 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'Perpustakaan Online') }}</title
-
-    <!-- Fonts -->
+    <title>{{ config('app.name', 'Perpustakaan Online') }}</title <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet">
 
@@ -120,7 +118,27 @@
                                 @endif
                             </div>
 
+                            <!-- Detail Buku -->
+                            <div class="col-md-9 col-12">
+                                <h5 class="fw-bold text-danger mb-2" style="font-size: 1.2rem;">
+                                    {{ $doc->title }}
+                                </h5>
+                                <p class="mb-1"><strong>Jenis:</strong> {{ $doc->category->category_name }}</p>
+                                <p class="mb-1"><strong>Penulis:</strong> {{ $doc->author }}</p>
+                                <p class="mb-1"><strong>Tahun:</strong> {{ $doc->year_published }}</p>
+                                @if ($doc->abstract)
+                                    <p class="mb-2"><strong>Abstrak:</strong> {{ $doc->abstract }}</p>
+                                @endif
+                                <p class="mb-1"><strong>Dilihat:</strong> {{ $doc->views }} kali</p>
+                                <p class="mb-2">
+                                    <strong>Konten Digital:</strong>
+                                    <a href="{{ route('documents.readonly', $doc->id) }}" class="text-primary">Lihat
+                                        File</a>
 
+
+                                </p>
+
+                            </div>
                         </div>
                     </div>
                 @endforeach
@@ -179,7 +197,8 @@
                                 <p class="mb-1"><strong>Dilihat:</strong> {{ $doc->views }} kali</p>
                                 <p class="mb-2">
                                     <strong>Konten Digital:</strong>
-                                   <a href="{{ route('documents.readonly', $doc->id) }}" class="text-primary">Lihat File</a>
+                                    <a href="{{ route('documents.readonly', $doc->id) }}" class="text-primary">Lihat
+                                        File</a>
 
 
                                 </p>
@@ -193,7 +212,6 @@
                 <div class="text-center mt-4">
                     <a href="{{ route('collectionall') }}" class="btn btn-success btn-lg">Lihat Selengkapnya</a>
                 </div>
-
             @else
                 <div class="text-center">
                     <p class="text-muted">Belum ada dokumen yang ditambahkan.</p>
@@ -214,7 +232,8 @@
                         <i class="fas fa-book fa-3x text-success mb-3"></i>
                         <h5 class="card-title">Karya Tulis Ilmiah</h5>
                         <p class="card-text flex-grow-1">Koleksi penelitian dan artikel ilmiah terbaru.</p>
-                        <a href="{{ route('collection', 'Karya Tulis Ilmiah') }}" class="btn btn-success mt-auto">Lihat Koleksi</a>
+                        <a href="{{ route('collection', 'Karya Tulis Ilmiah') }}"
+                            class="btn btn-success mt-auto">Lihat Koleksi</a>
                     </div>
                 </div>
             </div>
@@ -225,7 +244,8 @@
                         <i class="fas fa-image fa-3x text-success mb-3"></i>
                         <h5 class="card-title">Poster</h5>
                         <p class="card-text flex-grow-1">Poster penelitian dan presentasi visual.</p>
-                        <a href="{{ route('collection', 'Poster') }}" class="btn btn-success mt-auto">Lihat Koleksi</a>
+                        <a href="{{ route('collection', 'Poster') }}" class="btn btn-success mt-auto">Lihat
+                            Koleksi</a>
                     </div>
                 </div>
             </div>
@@ -236,7 +256,8 @@
                         <i class="fas fa-flask fa-3x text-success mb-3"></i>
                         <h5 class="card-title">Penelitian Eksternal</h5>
                         <p class="card-text flex-grow-1">Hasil penelitian dari kolaborasi eksternal.</p>
-                        <a href="{{ route('collection', 'Penelitian Eksternal') }}" class="btn btn-success mt-auto">Lihat Koleksi</a>
+                        <a href="{{ route('collection', 'Penelitian Eksternal') }}"
+                            class="btn btn-success mt-auto">Lihat Koleksi</a>
                     </div>
                 </div>
             </div>
@@ -247,7 +268,8 @@
                         <i class="fas fa-microscope fa-3x text-success mb-3"></i>
                         <h5 class="card-title">Penelitian Internal</h5>
                         <p class="card-text flex-grow-1">Penelitian yang dilakukan secara internal.</p>
-                        <a href="{{ route('collection', 'Penelitian Internal') }}" class="btn btn-success mt-auto">Lihat Koleksi</a>
+                        <a href="{{ route('collection', 'Penelitian Internal') }}"
+                            class="btn btn-success mt-auto">Lihat Koleksi</a>
                     </div>
                 </div>
             </div>
@@ -258,7 +280,8 @@
                         <i class="fas fa-book-open fa-3x text-success mb-3"></i>
                         <h5 class="card-title">E Book</h5>
                         <p class="card-text flex-grow-1">Koleksi buku elektronik dan digital.</p>
-                        <a href="{{ route('collection', 'E Book') }}" class="btn btn-success mt-auto">Lihat Koleksi</a>
+                        <a href="{{ route('collection', 'E Book') }}" class="btn btn-success mt-auto">Lihat
+                            Koleksi</a>
                     </div>
                 </div>
             </div>
