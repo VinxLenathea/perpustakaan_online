@@ -99,6 +99,11 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        // Prevent deletion of master admin user
+        if ($user->name === 'admin') {
+            return redirect()->route('users.index')->with('error', 'User admin tidak dapat dihapus.');
+        }
+
         // Log the delete user action before deleting
         UploadLogModel::create([
             'document_id' => null, // no document involved

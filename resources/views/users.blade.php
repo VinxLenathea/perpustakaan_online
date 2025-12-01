@@ -75,13 +75,13 @@
                                                     data-target="#editUserModal{{ $user->id }}">Edit</button>
 
                                                 <!-- Tombol Hapus -->
-
-
+                                                @if($user->name !== 'admin')
                                                 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
                                                     data-target="#confirmModal"
                                                     data-url="{{ route('users.destroy', $user->id) }}">
                                                     Hapus
                                                 </button>
+                                                @endif
 
                                             </td>
                                         </tr>
