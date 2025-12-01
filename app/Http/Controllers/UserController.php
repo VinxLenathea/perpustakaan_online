@@ -62,6 +62,17 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
+        // Prevent editing of master admin user
+        if ($user->name === 'admin') {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User admin tidak dapat diedit.'
+                ], 403);
+            }
+            return redirect()->route('users.index')->with('error', 'User admin tidak dapat diedit.');
+        }
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,

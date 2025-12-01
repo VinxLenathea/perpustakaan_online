@@ -71,8 +71,10 @@
                                             <td>{{ $user->email }}</td>
                                             <td>
                                                 <!-- Tombol Edit -->
+                                                @if($user->name !== 'admin')
                                                 <button class="btn btn-success btn-sm" data-toggle="modal"
                                                     data-target="#editUserModal{{ $user->id }}">Edit</button>
+                                                @endif
 
                                                 <!-- Tombol Hapus -->
                                                 @if($user->name !== 'admin')
