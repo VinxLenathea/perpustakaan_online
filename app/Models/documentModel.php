@@ -20,7 +20,12 @@ class DocumentModel extends Model
         'category_id',
         'abstract',
         'file_url',
-        'cover_image'
+        'cover_image',
+        'kampus',
+        'prodi',
+        'views',
+        'client_id',
+        'status'
     ];
 
     /**

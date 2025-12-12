@@ -10,6 +10,8 @@ class ClientModel extends Model
 {
     use HasFactory;
 
+    protected $table = 'clients';
+
     protected $fillable = [
         'name',
         'api_token',
