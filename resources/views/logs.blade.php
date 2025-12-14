@@ -153,7 +153,7 @@
                                                                     data-title="{{ $log->document ? $log->document->title : 'Unknown' }}">
                                                                     <i class="fas fa-check"></i> Approve
                                                                 </button>
-                                                                <button class="btn btn-danger btn-sm rejectBtn"
+                                                                <button class="btn btn-danger btn-sm rejectBtn" style="margin-top: 5px; width: 90px;"
                                                                     data-id="{{ $log->id }}"
                                                                     data-title="{{ $log->document ? $log->document->title : 'Unknown' }}">
                                                                     <i class="fas fa-times"></i> Reject
