@@ -33,7 +33,7 @@ class BookExport implements FromCollection, WithHeadings, WithMapping
         return [
             'ID',
             'Judul',
-            'Penulis',
+            'Pembuat',
             'Tahun Terbit',
             'Kategori',
             'Tanggal Upload'

@@ -26,7 +26,7 @@ class LibraryController extends Controller
 
         if ($filter === 'judul') {
             $query->where('title', 'LIKE', "%{$key}%");
-        } elseif ($filter === 'penulis') {
+        } elseif ($filter === 'pembuat') {
             $query->where('author', 'LIKE', "%{$key}%");
         } elseif ($filter === 'tahun') {
             $query->where('year_published', 'LIKE', "%{$key}%");
@@ -305,7 +305,6 @@ public function welcome()
         $document = DocumentModel::findOrFail($id);
 
         // Increment views
-        $document->increment('views');
 
         $path = storage_path('app/public/' . $document->file_url);
 

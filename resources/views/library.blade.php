@@ -60,8 +60,8 @@
                                             style="width: auto;">
                                             <option value="judul" {{ request('filter') == 'judul' ? 'selected' : '' }}>
                                                 Judul</option>
-                                            <option value="penulis"
-                                                {{ request('filter') == 'penulis' ? 'selected' : '' }}>Penulis</option>
+                                            <option value="pembuat"
+                                                {{ request('filter') == 'pembuat' ? 'selected' : '' }}>Pembuat</option>
                                             <option value="tahun" {{ request('filter') == 'tahun' ? 'selected' : '' }}>
                                                 Tahun</option>
                                         </select>
@@ -158,7 +158,7 @@
                                                             @endfor
                                                 </select>
                                                     <button type="button" class="btn btn-success btn-sm disabled" id="exportBtn">
-                                                        <i class="fas fa-file-excel me-2"></i> Export Buku
+                                                        <i class="fas fa-file-excel me-2"></i> Export Data Buku
                                                     </button>
                                             </form>
                                         </div>
@@ -289,7 +289,7 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for="year_published">Tahun Terbit</label>
+                                                    <label for="year_published">Tahun</label>
                                                     <input type="number" class="form-control" name="year_published"
                                                         min="1900" max="2099" required>
                                                 </div>
@@ -386,7 +386,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="author">Penulis</label>
+                                                        <label for="author">Pembuat</label>
                                                         <input type="text" class="form-control" name="author"
                                                             value="{{ $doc->author }}" required>
                                                     </div>
@@ -613,7 +613,7 @@
                 var detailsHtml = `
                     <div class="alert alert-light">
                         <strong>Judul:</strong> ${itemName}<br>
-                        <strong>Penulis:</strong> ${itemDetail}
+                        <strong>Pembuat:</strong> ${itemDetail}
                     </div>
                 `;
 
@@ -723,7 +723,7 @@
                 // Buat pesan konfirmasi
                 let confirmMessage = `Apakah Anda yakin ingin mengupdate document ini?\n\n`;
                 confirmMessage += `Judul: ${title}\n`;
-                confirmMessage += `Penulis: ${author}\n`;
+                confirmMessage += `Pembuat: ${author}\n`;
                 confirmMessage += `Tahun: ${year}\n`;
                 confirmMessage += `Kategori: ${category}\n`;
                 if (hasNewFile) {
