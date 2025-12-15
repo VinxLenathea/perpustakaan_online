@@ -172,7 +172,7 @@
                                                 <th>Judul</th>
                                                 <th>Kategori</th>
                                                 <th>Tahun</th>
-                                                <th>Penulis</th>
+                                                <th>Pembuat</th>
                                                 <th>Abstrak</th>
                                                 <th>File</th>
                                                 <th>Dilihat</th>
