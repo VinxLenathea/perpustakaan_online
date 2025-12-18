@@ -44,7 +44,7 @@
 
                     <select class="form-select form-select-sm me-2 mb-2 mb-md-0" name="search_by" style="width: auto;">
                         <option value="judul">Judul</option>
-                        <option value="penulis">Penulis</option>
+                        <option value="penulis">Pembuat</option>
                         <option value="tahun">Tahun</option>
                     </select>
 
@@ -124,7 +124,7 @@
                                     {{ $doc->title }}
                                 </h5>
                                 <p class="mb-1"><strong>Jenis:</strong> {{ $doc->category->category_name }}</p>
-                                <p class="mb-1"><strong>Penulis:</strong> {{ $doc->author }}</p>
+                                <p class="mb-1"><strong>Pembuat:</strong> {{ $doc->author }}</p>
                                 <p class="mb-1"><strong>Tahun:</strong> {{ $doc->year_published }}</p>
                                 @if ($doc->abstract)
                                     <p class="mb-2"><strong>Abstrak:</strong> {{ $doc->abstract }}</p>
@@ -189,7 +189,7 @@
                                     {{ $doc->title }}
                                 </h5>
                                 <p class="mb-1"><strong>Jenis:</strong> {{ $doc->category->category_name }}</p>
-                                <p class="mb-1"><strong>Penulis:</strong> {{ $doc->author }}</p>
+                                <p class="mb-1"><strong>Pembuat:</strong> {{ $doc->author }}</p>
                                 <p class="mb-1"><strong>Tahun:</strong> {{ $doc->year_published }}</p>
                                 @if ($doc->abstract)
                                     <p class="mb-2"><strong>Abstrak:</strong> {{ $doc->abstract }}</p>

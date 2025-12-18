@@ -44,7 +44,7 @@
                     <span class="me-2">Cari</span>
                     <select name="filter" class="form-select form-select-sm me-2" style="width: auto;">
                         <option value="judul" {{ request('filter') == 'judul' ? 'selected' : '' }}>Judul</option>
-                        <option value="penulis" {{ request('filter') == 'penulis' ? 'selected' : '' }}>Penulis</option>
+                        <option value="penulis" {{ request('filter') == 'penulis' ? 'selected' : '' }}>Pembuat</option>
                         <option value="tahun" {{ request('filter') == 'tahun' ? 'selected' : '' }}>Tahun</option>
                     </select>
                     <span class="me-2">berdasarkan</span>
@@ -120,7 +120,7 @@
                             <div class="col-md-9 d-flex flex-column">
                                 <div class="card-body d-flex flex-column flex-grow-1">
                                     <h4 class="card-title text-danger fw-bold mb-3">{{ $doc->title }}</h4>
-                                    <p class="mb-1"><strong>Penulis:</strong> {{ $doc->author }}</p>
+                                    <p class="mb-1"><strong>Pembuat:</strong> {{ $doc->author }}</p>
                                     <p class="mb-1"><strong>Tahun:</strong> {{ $doc->year_published }}</p>
                                     @if ($doc->abstract)
                                         <p class="mb-1 text-truncate" style="max-height: 3.6em; overflow: hidden;">

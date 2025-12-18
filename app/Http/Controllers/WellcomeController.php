@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DocumentModel;
 use Illuminate\Http\Request;
 
-class HomeController extends Controller
+class WellcomeController extends Controller
 {
     public function index(Request $request)
     {
