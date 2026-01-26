@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\DocumentModel;
+use App\Models\User;
+use App\Models\ClientModel;
 
 class UploadLogModel extends Model
 {
@@ -18,16 +21,16 @@ class UploadLogModel extends Model
 
     public function document()
     {
-        return $this->belongsTo(documentModel::class);
+        return $this->belongsTo(DocumentModel::class, 'document_id');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function client()
     {
-        return $this->belongsTo(ClientModel::class);
+        return $this->belongsTo(ClientModel::class, 'client_id');
     }
 }

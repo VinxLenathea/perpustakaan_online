@@ -4,15 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\CategoryModel;
+use App\Models\ClientModel;
+use App\Models\UploadLogModel;
 
 class DocumentModel extends Model
 {
     use HasFactory;
 
-    // Nama tabel
     protected $table = 'documents';
 
-    // Kolom yang boleh diisi (mass assignment)
     protected $fillable = [
         'title',
         'author',
@@ -28,17 +29,21 @@ class DocumentModel extends Model
         'status'
     ];
 
-    /**
-     * Relasi ke tabel Category
-     * Satu dokumen hanya punya satu kategori
-     */
+    // ✅ RELASI KE CATEGORY
     public function category()
     {
         return $this->belongsTo(CategoryModel::class, 'category_id', 'id');
     }
 
+    // ✅ RELASI KE CLIENT
     public function client()
     {
         return $this->belongsTo(ClientModel::class, 'client_id');
+    }
+
+    // ✅ RELASI KE UPLOAD LOGS (INI YANG WAJIB ADA)
+    public function uploadLogs()
+    {
+        return $this->hasMany(UploadLogModel::class, 'document_id', 'id');
     }
 }

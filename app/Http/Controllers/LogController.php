@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\UploadLogModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class LogController extends Controller
 {
@@ -12,25 +11,34 @@ class LogController extends Controller
     {
         $query = UploadLogModel::with(['document', 'user', 'client']);
 
-        // Filter berdasarkan status
-        if ($request->has('status') && $request->status !== '') {
+        // 🔹 Filter berdasarkan status
+        if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
-        // Filter berdasarkan tanggal
-        if ($request->has('date_from') && $request->date_from) {
+        // 🔹 Filter berdasarkan tanggal
+        $useDateFilter = false;
+
+        if ($request->filled('date_from')) {
             $query->whereDate('created_at', '>=', $request->date_from);
+            $useDateFilter = true;
         }
-        if ($request->has('date_to') && $request->date_to) {
+
+        if ($request->filled('date_to')) {
             $query->whereDate('created_at', '<=', $request->date_to);
+            $useDateFilter = true;
         }
 
-        // Sorting
-        $sortBy = $request->get('sort_by', 'created_at');
-        $sortDirection = $request->get('sort_direction', 'desc');
-        $query->orderBy($sortBy, $sortDirection);
+        // 🔹 SORTING LOGIC
+        if ($useDateFilter) {
+            // Kalau pakai filter tanggal → urut dari lama ke baru
+            $query->orderBy('created_at', 'asc');
+        } else {
+            // Default → data terbaru dulu
+            $query->orderBy('created_at', 'desc');
+        }
 
-        $logs = $query->paginate(15);
+        $logs = $query->paginate(15)->withQueryString();
 
         return view('logs', compact('logs'));
     }
@@ -40,7 +48,9 @@ class LogController extends Controller
         $log = UploadLogModel::findOrFail($id);
         $log->update(['status' => 'approved']);
 
-        return response()->json(['message' => 'Log berhasil diapprove']);
+        return response()->json([
+            'message' => 'Log berhasil diapprove'
+        ]);
     }
 
     public function reject($id)
@@ -48,6 +58,8 @@ class LogController extends Controller
         $log = UploadLogModel::findOrFail($id);
         $log->update(['status' => 'rejected']);
 
-        return response()->json(['message' => 'Log berhasil direject']);
+        return response()->json([
+            'message' => 'Log berhasil direject'
+        ]);
     }
 }

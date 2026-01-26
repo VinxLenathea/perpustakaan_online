@@ -16,61 +16,63 @@ class LibraryController extends Controller
      * Tampilkan halaman utama library dengan pencarian, filter, dan pagination
      */
     public function index(Request $request)
-    {
-        $query = DocumentModel::with('category');
+{
+    $query = DocumentModel::with('category');
 
-        // Search
-        if ($request->filled('keyword') && $request->filled('filter')) {
-            $key = $request->keyword;
-            $filter = $request->filter;
+    // 🔍 Search
+    if ($request->filled('keyword') && $request->filled('filter')) {
+        $key = $request->keyword;
+        $filter = $request->filter;
 
-            if ($filter === 'judul') {
-                $query->where('title', 'LIKE', "%{$key}%");
-            } elseif ($filter === 'penulis') {
-                $query->where('author', 'LIKE', "%{$key}%");
-            } elseif ($filter === 'tahun') {
-                $query->where('year_published', 'LIKE', "%{$key}%");
-            }
+        if ($filter === 'judul') {
+            $query->where('title', 'LIKE', "%{$key}%");
+        } elseif ($filter === 'pembuat') {
+            $query->where('author', 'LIKE', "%{$key}%");
+        } elseif ($filter === 'tahun') {
+            $query->where('year_published', 'LIKE', "%{$key}%");
         }
-
-        // Filter kategori
-        if ($request->filled('category_id')) {
-            $query->where('category_id', $request->category_id);
-        }
-
-        // Sorting berdasarkan views descending, lalu title ascending untuk handle ties
-        $sortBy = $request->get('sort_by', 'views');
-
-        switch ($sortBy) {
-            case 'tahun_desc':
-                $query->orderBy('year_published', 'desc');
-                break;
-            case 'tahun_asc':
-                $query->orderBy('year_published', 'asc');
-                break;
-            case 'judul_asc':
-                $query->orderBy('title', 'asc');
-                break;
-            case 'judul_desc':
-                $query->orderBy('title', 'desc');
-                break;
-            case 'views':
-                $query->orderBy('views', 'desc')->orderBy('title', 'asc');
-                break;
-            default:
-                $query->orderBy('views', 'desc')->orderBy('title', 'asc');
-                break;
-        }
-
-        // Data
-        $documents = $query->paginate(10)->withQueryString();
-
-
-
-        $categories = CategoryModel::all();
-
-        return view('library', compact('documents', 'categories'));
     }
+
+    // 🎯 Filter kategori
+    if ($request->filled('category_id')) {
+        $query->where('category_id', $request->category_id);
+    }
+
+    // 🆕 DEFAULT: TERBARU
+    $sortBy = $request->get('sort_by', 'terbaru');
+
+    switch ($sortBy) {
+        case 'views':
+            $query->orderBy('views', 'desc');
+            break;
+        case 'judul_asc':
+            $query->orderBy('title', 'asc');
+            break;
+        case 'tahun_desc':
+            $query->orderBy('year_published', 'desc');
+            break;
+        default:
+            $query->orderBy('created_at', 'desc');
+            break;
+    }
+
+    $documents = $query->paginate(10)->withQueryString();
+    $categories = CategoryModel::all();
+
+    return view('library', compact('documents', 'categories'));
+}
+
+public function welcome()
+{
+    $popularDocuments = DocumentModel::with('category')
+        ->orderBy('views', 'desc')
+        ->orderBy('title', 'asc')
+        ->limit(8)
+        ->get();
+
+    return view('welcome', compact('popularDocuments'));
+}
+
 
 
     /**
@@ -303,7 +305,6 @@ class LibraryController extends Controller
         $document = DocumentModel::findOrFail($id);
 
         // Increment views
-        $document->increment('views');
 
         $path = storage_path('app/public/' . $document->file_url);
 

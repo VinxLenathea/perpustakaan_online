@@ -50,7 +50,7 @@
                             style="width: auto;">
                             <option value="judul" {{ request('search_by') == 'judul' ? 'selected' : '' }}>Judul
                             </option>
-                            <option value="penulis" {{ request('search_by') == 'penulis' ? 'selected' : '' }}>Penulis
+                            <option value="penulis" {{ request('search_by') == 'penulis' ? 'selected' : '' }}>Pembuat
                             </option>
                             <option value="tahun" {{ request('search_by') == 'tahun' ? 'selected' : '' }}>Tahun
                             </option>
@@ -145,7 +145,7 @@
                                 <div class="col-md-9 d-flex flex-column">
                                     <div class="card-body d-flex flex-column flex-grow-1">
                                         <h4 class="card-title text-danger fw-bold mb-3">{{ $doc->title }}</h4>
-                                        <p class="mb-1"><strong>Penulis:</strong> {{ $doc->author }}</p>
+                                        <p class="mb-1"><strong>Pembuat:</strong> {{ $doc->author }}</p>
                                         <p class="mb-1"><strong>Tahun:</strong> {{ $doc->year_published }}</p>
                                         @if ($doc->abstract)
                                             <p class="mb-1 text-truncate" style="max-height: 3.6em; overflow: hidden;">

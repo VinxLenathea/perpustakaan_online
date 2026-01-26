@@ -60,8 +60,8 @@
                                             style="width: auto;">
                                             <option value="judul" {{ request('filter') == 'judul' ? 'selected' : '' }}>
                                                 Judul</option>
-                                            <option value="penulis"
-                                                {{ request('filter') == 'penulis' ? 'selected' : '' }}>Penulis</option>
+                                            <option value="pembuat"
+                                                {{ request('filter') == 'pembuat' ? 'selected' : '' }}>Pembuat</option>
                                             <option value="tahun" {{ request('filter') == 'tahun' ? 'selected' : '' }}>
                                                 Tahun</option>
                                         </select>
@@ -98,57 +98,15 @@
                                             ];
                                             $currentSort = request('sort_by') ?: 'tahun_desc';
                                         @endphp
-                                        <div class="dropdown mr-2" style="margin-left: 10px;">
-                                            <button class="btn btn-success btn-sm dropdown-toggle" type="button"
-                                                id="sortDropdown" data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
-                                                <i class="{{ $sortOptions[$currentSort]['icon'] }}"></i>
-                                                {{ $sortOptions[$currentSort]['label'] }}
-                                            </button>
-                                            <div class="dropdown-menu" aria-labelledby="sortDropdown">
-                                                @foreach ($sortOptions as $key => $option)
-                                                    <a class="dropdown-item {{ $key == $currentSort ? 'active' : '' }}"
-                                                        href="{{ route('library') . '?' . http_build_query(array_merge(request()->query(), ['sort_by' => $key])) }}"><i
-                                                            class="{{ $option['icon'] }}"></i>
-                                                        {{ $option['label'] }}</a>
-                                                @endforeach
-                                            </div>
-                                        </div>
+                                        
 
                                         <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
-                                            data-target="#tambahDocumentModal">
+                                            data-target="#tambahDocumentModal" style="margin-left: 10px;">
                                             <i class="fas fa-plus fa-sm text-white-50"></i>
                                         </button>
                                 </div>
 
-                                <div class="text-end mb-3">
-                                    <form action="" method="GET" class="d-inline" id="exportForm">
-                                        <select name="month" class="form-control form-control-sm d-inline"
-                                            style="width: auto; margin-right: 10px;" id="monthSelect">
-                                            <option value="">Pilih Bulan</option>
-                                            @for ($i = 1; $i <= 12; $i++)
-                                                <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}"
-                                                    {{ request('month') == str_pad($i, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}>
-                                                    {{ date('F', mktime(0, 0, 0, $i, 1)) }}
-                                                </option>
-                                            @endfor
-                                        </select>
-                                        <select name="year" class="form-control form-control-sm d-inline"
-                                            style="width: auto; margin-right: 10px;" id="yearSelect">
-                                            <option value="">Pilih Tahun</option>
-                                            @for ($y = date('Y'); $y >= 2020; $y--)
-                                                <option value="{{ $y }}"
-                                                    {{ request('year') == $y ? 'selected' : '' }}>
-                                                    {{ $y }}
-                                                </option>
-                                            @endfor
-                                        </select>
-                                        <button type="button" class="btn btn-success btn-sm disabled" id="exportBtn">
-                                            <i class="fas fa-file-excel me-2"></i> Export Buku
-                                        </button>
-
-                                    </form>
-                                </div>
+                                
 
 
                             </div>
@@ -160,6 +118,51 @@
                         <div class="card-body">
                             <div class="container-fluid">
                                 <div class="table-responsive">
+                                    <div style="display: flex;">
+                                        <div class="dropdown mr-2" style="position: relative;">
+                                            <button class="btn btn-success btn-sm dropdown-toggle" type="button"
+                                                id="sortDropdown" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
+                                                <i class="{{ $sortOptions[$currentSort]['icon'] }}"></i>
+                                                {{ $sortOptions[$currentSort]['label'] }}
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="sortDropdown">
+                                                @foreach ($sortOptions as $key => $option)
+                                                    <a class="dropdown-item {{ $key == $currentSort ? 'active' : '' }}"
+                                                        href="{{ route('library') . '?' . http_build_query(array_merge(request()->query(), ['sort_by' => $key])) }}"><i
+                                                        class="{{ $option['icon'] }}"></i>
+                                                    {{ $option['label'] }}</a>
+                                                @endforeach
+                                            </div>
+                                        </div>    
+                                        <div class="text-end mb-3">
+                                            <form action="" method="GET" class="d-inline" id="exportForm">
+                                                <select name="month" class="form-control form-control-sm d-inline"
+                                                    style="width: auto; margin-right: 10px;" id="monthSelect">
+                                                    <option value="">Pilih Bulan</option>
+                                                        @for ($i = 1; $i <= 12; $i++)
+                                                            <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}"
+                                                                {{ request('month') == str_pad($i, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}>
+                                                                {{ date('F', mktime(0, 0, 0, $i, 1)) }}
+                                                            </option>
+                                                        @endfor
+                                                </select>
+                                                <select name="year" class="form-control form-control-sm d-inline"
+                                                    style="width: auto; margin-right: 10px;" id="yearSelect">
+                                                        <option value="">Pilih Tahun</option>
+                                                            @for ($y = date('Y'); $y >= 2020; $y--)
+                                                        <option value="{{ $y }}"
+                                                            {{ request('year') == $y ? 'selected' : '' }}>
+                                                            {{ $y }}
+                                                        </option>
+                                                            @endfor
+                                                </select>
+                                                    <button type="button" class="btn btn-success btn-sm disabled" id="exportBtn">
+                                                        <i class="fas fa-file-excel me-2"></i> Export Data Buku
+                                                    </button>
+                                            </form>
+                                        </div>
+                                    </div>
                                     <table class="table table-bordered" id="dataTable" width="100%"
                                         cellspacing="0">
                                         <thead>
@@ -169,7 +172,7 @@
                                                 <th>Judul</th>
                                                 <th>Kategori</th>
                                                 <th>Tahun</th>
-                                                <th>Penulis</th>
+                                                <th>Pembuat</th>
                                                 <th>Abstrak</th>
                                                 <th>File</th>
                                                 <th>Dilihat</th>
@@ -286,7 +289,7 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for="year_published">Tahun Terbit</label>
+                                                    <label for="year_published">Tahun</label>
                                                     <input type="number" class="form-control" name="year_published"
                                                         min="1900" max="2099" required>
                                                 </div>
@@ -383,7 +386,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="author">Penulis</label>
+                                                        <label for="author">Pembuat</label>
                                                         <input type="text" class="form-control" name="author"
                                                             value="{{ $doc->author }}" required>
                                                     </div>
@@ -610,7 +613,7 @@
                 var detailsHtml = `
                     <div class="alert alert-light">
                         <strong>Judul:</strong> ${itemName}<br>
-                        <strong>Penulis:</strong> ${itemDetail}
+                        <strong>Pembuat:</strong> ${itemDetail}
                     </div>
                 `;
 
@@ -720,7 +723,7 @@
                 // Buat pesan konfirmasi
                 let confirmMessage = `Apakah Anda yakin ingin mengupdate document ini?\n\n`;
                 confirmMessage += `Judul: ${title}\n`;
-                confirmMessage += `Penulis: ${author}\n`;
+                confirmMessage += `Pembuat: ${author}\n`;
                 confirmMessage += `Tahun: ${year}\n`;
                 confirmMessage += `Kategori: ${category}\n`;
                 if (hasNewFile) {
