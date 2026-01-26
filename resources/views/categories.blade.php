@@ -39,7 +39,7 @@
                 <div class="container-fluid">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">User Management</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Category Management</h1>
                     </div>
 
                     <!-- Data User -->
@@ -49,7 +49,7 @@
                                 <!-- Tombol Tambah User -->
                                 <button class="btn btn-sm btn-success shadow-sm mb-2" data-toggle="modal"
                                     data-target="#tambahUserModal">
-                                    <i class="fas fa-plus fa-sm text-white-50"></i> Tambah User
+                                    <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Kategori
                                 </button>
                             </div>
 
@@ -58,50 +58,50 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Username</th>
-                                        <th>Email</th>
+                                        <th>Nama Kategori</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($users as $user)
-                                        <tr id="userRow{{ $user->id }}">
-                                            <td>{{ $user->id }}</td>
-                                            <td>{{ $user->name }}</td>
-                                            <td>{{ $user->email }}</td>
+                                    @foreach ($categories as $category)
+                                        <tr id="userRow{{ $category->id }}">
+                                            <td>{{ $category->id }}</td>
+                                            <td>{{ $category->category_name }}</td>
                                             <td>
                                                 <!-- Tombol Edit -->
-                                                @if ($user->name !== 'Master Admin')
-                                                    <button class="btn btn-success btn-sm" data-toggle="modal"
-                                                        data-target="#editUserModal{{ $user->id }}">Edit</button>
-                                                @endif
+
+                                                <button class="btn btn-success btn-sm" data-toggle="modal"
+                                                    data-target="#editUserModal{{ $category->id }}">Edit</button>
+
 
                                                 <!-- Tombol Hapus -->
-                                                @if ($user->name !== 'Master Admin')
-                                                    <button type="button" class="btn btn-danger btn-sm"
-                                                        data-toggle="modal" data-target="#confirmModal"
-                                                        data-url="{{ route('users.destroy', $user->id) }}">
-                                                        Hapus
-                                                    </button>
-                                                @endif
+
+                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                                                    data-target="#confirmModal"
+                                                    data-url="{{ route('categories.destroy', $category->id) }}">
+                                                    Hapus
+                                                </button>
+
 
                                             </td>
                                         </tr>
 
                                         <!-- Modal Edit User -->
-                                        <div class="modal fade" id="editUserModal{{ $user->id }}" tabindex="-1"
-                                            role="dialog" aria-labelledby="editUserLabel{{ $user->id }}"
+                                        <div class="modal fade" id="editUserModal{{ $category->id }}" tabindex="-1"
+                                            role="dialog" aria-labelledby="editUserLabel{{ $category->id }}"
                                             aria-hidden="true">
                                             <div class="modal-dialog" role="document">
-                                                <form id="editUserForm{{ $user->id }}" class="editUserForm"
-                                                    data-id="{{ $user->id }}"
-                                                    action="{{ route('users.update', $user) }}" method="POST">
+                                                <form id="editUserForm{{ $category->id }}" class="editUserForm"
+                                                    data-id="{{ $category->id }}"
+                                                    action="{{ route('categories.update', $category) }}"
+                                                    method="POST">
                                                     @csrf
                                                     @method('PUT')
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title"
-                                                                id="editUserLabel{{ $user->id }}">Edit User</h5>
+                                                                id="editUserLabel{{ $category->id }}">Edit Kategori
+                                                            </h5>
                                                             <button type="button" class="close" data-dismiss="modal"
                                                                 aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
@@ -110,30 +110,12 @@
                                                         <div class="modal-body">
                                                             <!-- Form Edit -->
                                                             <div class="form-group">
-                                                                <label for="name">Nama</label>
+                                                                <label for="name">Nama Kategori</label>
                                                                 <input type="text" class="form-control"
-                                                                    name="name" value="{{ $user->name }}"
-                                                                    required>
+                                                                    name="name"
+                                                                    value="{{ $category->category_name }}" required>
                                                             </div>
-                                                            <div class="form-group">
-                                                                <label for="email">Email</label>
-                                                                <input type="email" class="form-control"
-                                                                    name="email" value="{{ $user->email }}"
-                                                                    required>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="password">Password (Opsional)</label>
-                                                                <input type="password" class="form-control"
-                                                                    name="password"
-                                                                    placeholder="Kosongkan jika tidak ingin mengganti password">
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="password_confirmation">Konfirmasi
-                                                                    Password</label>
-                                                                <input type="password" class="form-control"
-                                                                    name="password_confirmation"
-                                                                    placeholder="Ulangi password baru jika diganti">
-                                                            </div>
+
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary"
@@ -156,34 +138,20 @@
                     <div class="modal fade" id="tambahUserModal" tabindex="-1" role="dialog"
                         aria-labelledby="tambahUserLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
-                            <form action="{{ route('users.store') }}" method="POST">
+                            <form action="{{ route('categories.store') }}" method="POST">
                                 @csrf
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="tambahUserLabel">Tambah User</h5>
-                                        <button type="button" class="close" data-dismiss="modal"
-                                            aria-label="Close">
+                                        <h5 class="modal-title" id="tambahUserLabel">Tambah Kategori</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
                                         <!-- Form Input -->
                                         <div class="form-group">
-                                            <label for="name">Nama</label>
+                                            <label for="name">Nama Kategori</label>
                                             <input type="text" class="form-control" name="name" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="email">Email</label>
-                                            <input type="email" class="form-control" name="email" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="password">Password</label>
-                                            <input type="password" class="form-control" name="password" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="password_confirmation">Konfirmasi Password</label>
-                                            <input type="password" class="form-control" name="password_confirmation"
-                                                required>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -225,7 +193,7 @@
                     <!-- Konten akan diisi secara dinamis melalui JavaScript -->
                     <div id="deleteContent">
                         <!-- Default content -->
-                        <p class="mb-3">Apakah Anda yakin ingin menghapus item ini?</p>
+                        <p class="mb-3">Apakah Anda yakin ingin menghapus kategori ini?</p>
                         <div id="itemDetails" class="text-left mb-3">
                             <!-- Item details akan diisi di sini -->
                         </div>
@@ -277,8 +245,8 @@
 
                 var detailsHtml = `
                     <div class="alert alert-light">
-                        <strong>Nama:</strong> ${itemName}<br>
-                        <strong>Email:</strong> ${itemDetail}
+                        <strong>Nama Kategori:</strong> ${itemName}<br>
+
                     </div>
                 `;
 
@@ -394,16 +362,10 @@
 
                 // Ambil data form untuk konfirmasi
                 let name = form.find('input[name="name"]').val();
-                let email = form.find('input[name="email"]').val();
-                let password = form.find('input[name="password"]').val();
 
                 // Buat pesan konfirmasi
-                let confirmMessage = `Apakah Anda yakin ingin mengupdate user ini?\n\n`;
-                confirmMessage += `Nama: ${name}\n`;
-                confirmMessage += `Email: ${email}\n`;
-                if (password) {
-                    confirmMessage += `Password: [Password baru akan diatur]\n`;
-                }
+                let confirmMessage = `Apakah Anda yakin ingin mengupdate kategori ini?\n\n`;
+                confirmMessage += `Nama Kategori: ${name}\n`;
 
                 // Tampilkan konfirmasi dengan SweetAlert2
                 Swal.fire({
@@ -441,7 +403,7 @@
                                 Swal.fire({
                                     icon: "success",
                                     title: "Berhasil!",
-                                    text: "Data berhasil diperbarui!",
+                                    text: "Kategori berhasil diperbarui!",
                                     showConfirmButton: false,
                                     timer: 2000
                                 });
@@ -503,13 +465,12 @@
 
                         // Tambahkan row baru ke tabel
                         let newRow = `
-                            <tr id="userRow${response.user.id}">
-                                <td>${response.user.id}</td>
-                                <td>${response.user.name}</td>
-                                <td>${response.user.email}</td>
+                            <tr id="userRow${response.category.id}">
+                                <td>${response.category.id}</td>
+                                <td>${response.category.category_name}</td>
                                 <td>
-                                    <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#editUserModal${response.user.id}">Edit</button>
-                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmModal" data-url="/users/${response.user.id}">Hapus</button>
+                                    <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#editUserModal${response.category.id}">Edit</button>
+                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmModal" data-url="/categories/${response.category.id}">Hapus</button>
                                 </td>
                             </tr>
                         `;

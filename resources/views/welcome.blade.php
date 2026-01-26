@@ -229,7 +229,7 @@
             <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
                 <div class="card card-hover text-center h-100 shadow-sm">
                     <div class="card-body d-flex flex-column">
-                        <i class="fas fa-book fa-3x text-success mb-3"></i>
+                        <i class="fas fa-folder fa-3x text-success mb-3"></i>
                         <h5 class="card-title">Karya Tulis Ilmiah</h5>
                         <p class="card-text flex-grow-1">Koleksi penelitian dan artikel ilmiah terbaru.</p>
                         <a href="{{ route('collection', 'Karya Tulis Ilmiah') }}"
@@ -241,7 +241,7 @@
             <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
                 <div class="card card-hover text-center h-100 shadow-sm">
                     <div class="card-body d-flex flex-column">
-                        <i class="fas fa-image fa-3x text-success mb-3"></i>
+                        <i class="fas fa-folder fa-3x text-success mb-3"></i>
                         <h5 class="card-title">Poster</h5>
                         <p class="card-text flex-grow-1">Poster penelitian dan presentasi visual.</p>
                         <a href="{{ route('collection', 'Poster') }}" class="btn btn-success mt-auto">Lihat
@@ -253,7 +253,7 @@
             <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
                 <div class="card card-hover text-center h-100 shadow-sm">
                     <div class="card-body d-flex flex-column">
-                        <i class="fas fa-flask fa-3x text-success mb-3"></i>
+                        <i class="fas fa-folder fa-3x text-success mb-3"></i>
                         <h5 class="card-title">Penelitian Eksternal</h5>
                         <p class="card-text flex-grow-1">Hasil penelitian dari kolaborasi eksternal.</p>
                         <a href="{{ route('collection', 'Penelitian Eksternal') }}"
@@ -265,7 +265,7 @@
             <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
                 <div class="card card-hover text-center h-100 shadow-sm">
                     <div class="card-body d-flex flex-column">
-                        <i class="fas fa-microscope fa-3x text-success mb-3"></i>
+                        <i class="fas fa-folder fa-3x text-success mb-3"></i>
                         <h5 class="card-title">Penelitian Internal</h5>
                         <p class="card-text flex-grow-1">Penelitian yang dilakukan secara internal.</p>
                         <a href="{{ route('collection', 'Penelitian Internal') }}"
@@ -277,7 +277,7 @@
             <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
                 <div class="card card-hover text-center h-100 shadow-sm">
                     <div class="card-body d-flex flex-column">
-                        <i class="fas fa-book-open fa-3x text-success mb-3"></i>
+                        <i class="fas fa-folder fa-3x text-success mb-3"></i>
                         <h5 class="card-title">E Book</h5>
                         <p class="card-text flex-grow-1">Koleksi buku elektronik dan digital.</p>
                         <a href="{{ route('collection', 'E Book') }}" class="btn btn-success mt-auto">Lihat
