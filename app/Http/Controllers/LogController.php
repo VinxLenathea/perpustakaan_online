@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\UploadLogModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LogController extends Controller
 {
     public function index(Request $request)
     {
-        $query = UploadLogModel::with(['document', 'user', 'client']);
+        $query = UploadLogModel::with(['document', 'user', 'client', 'verifier']);
 
         // 🔹 Filter berdasarkan status
         if ($request->filled('status')) {
@@ -46,17 +47,30 @@ class LogController extends Controller
     public function approve($id)
     {
         $log = UploadLogModel::findOrFail($id);
-        $log->update(['status' => 'approved']);
+        $log->update([
+            'status' => 'approved',
+            'verified_by' => auth()->id(),
+            'verified_at' => now()
+        ]);
 
         return response()->json([
             'message' => 'Log berhasil diapprove'
         ]);
     }
 
-    public function reject($id)
+    public function reject($id, Request $request)
     {
+        $request->validate([
+            'reason' => 'required|string|max:500'
+        ]);
+
         $log = UploadLogModel::findOrFail($id);
-        $log->update(['status' => 'rejected']);
+        $log->update([
+            'status' => 'rejected',
+            'notes' => $request->reason,
+            'verified_by' => Auth::id(),
+            'verified_at' => now()
+        ]);
 
         return response()->json([
             'message' => 'Log berhasil direject'

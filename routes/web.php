@@ -62,6 +62,9 @@ Route::get('/collection/readonly/{id}', [CollectionController::class, 'viewReadO
 Route::get('/collectionall', [App\Http\Controllers\CollectionAllController::class, 'index'])->name('collectionall');
 Route::get('/collectionall/view/{id}', [CollectionAllController::class, 'view'])->name('collectionall.view');
 Route::get('/collectionall/readonly/{id}', [CollectionAllController::class, 'viewReadOnly'])->name('collectionall.readonly');
+Route::get('/categoryCollection', function () {
+    return view('categoryCollection');
+})->name('categoryCollection');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -83,12 +86,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/library/{document}/edit', [LibraryController::class, 'edit'])->name('library.edit');
     Route::put('/library/{document}', [LibraryController::class, 'update'])->name('library.update');
     Route::get('/library/view-file/{id}', [LibraryController::class, 'viewFile'])->name('library.viewFile');
+    Route::get('/library/detail/{id}', [LibraryController::class, 'detail'])->name('library.detail');
 
     // user management
     Route::get('/users', [UserController::class, 'index'])->name('users.index');          // daftar user
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create'); // form tambah
     Route::post('/users', [UserController::class, 'store'])->name('users.store');         // simpan user baru
-    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');// form edit
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit'); // form edit
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update'); // update data user
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy'); // hapus user
     // Dashboard
@@ -110,7 +114,14 @@ Route::middleware('auth')->group(function () {
     Route::put('/categories/{id}', [App\Http\Controllers\CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{id}', [App\Http\Controllers\CategoryController::class, 'destroy'])->name('categories.destroy');
 
+    // verification management
+    Route::get('/verification', [App\Http\Controllers\VerificationController::class, 'index'])->name('verification.index');
+    Route::get('/verification/view-file/{id}', [App\Http\Controllers\VerificationController::class, 'viewFile'])->name('verification.viewFile');
+    Route::post('/verification/approve/{id}', [App\Http\Controllers\VerificationController::class, 'approve'])->name('verification.approve');
+    Route::post('/verification/reject/{id}', [App\Http\Controllers\VerificationController::class, 'reject'])->name('verification.reject');
 });
 
- Route::get('/test', function() { return 'Test route works'; });
-require __DIR__.'/auth.php';
+Route::get('/test', function () {
+    return 'Test route works';
+});
+require __DIR__ . '/auth.php';

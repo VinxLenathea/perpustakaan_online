@@ -286,6 +286,13 @@
                 </div>
             </div>
         </div>
+
+        <!-- Tombol Lihat Semua Kategori -->
+        <div class="text-center mt-4">
+            <a href="{{ route('categoryCollection') }}" class="btn btn-success btn-lg">
+                <i class="fas fa-th-large me-2"></i>Lihat Semua Kategori
+            </a>
+        </div>
     </div>
 
     <!-- Footer -->

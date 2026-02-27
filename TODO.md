@@ -1,0 +1,4 @@
+- [ ] Update migration 2026_01_26_201043_add_verification_fields_to_upload_logs_table.php to add 'notes', 'verified_by', 'verified_at' fields
+- [ ] Modify LogController approve method to set 'verified_by' and 'verified_at'
+- [ ] Modify LogController reject method to set 'verified_by' and 'verified_at'
+- [ ] Fix logs.blade.php table headers to include Verifier, Verified At, Notes

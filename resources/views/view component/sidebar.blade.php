@@ -60,4 +60,13 @@
         </a>
     </li>
 
+    <!-- Nav Item - Verification -->
+    <li class="nav-item {{ Request::is('verification*') ? 'active' : '' }}">
+        <a class="nav-link text-primary {{ Request::is('verification*') ? 'fw-bold bg-light rounded' : '' }}"
+            href="{{ route('verification.index') }}">
+            <i class="fas fa-check-circle me-2 text-primary"></i>
+            <span>Verifikasi Upload</span>
+        </a>
+    </li>
+
 </ul>

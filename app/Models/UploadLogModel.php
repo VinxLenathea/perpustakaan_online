@@ -17,6 +17,13 @@ class UploadLogModel extends Model
         'client_id',
         'action',
         'status',
+        'notes',
+        'verified_by',
+        'verified_at',
+    ];
+
+    protected $casts = [
+        'verified_at' => 'datetime',
     ];
 
     public function document()
@@ -32,5 +39,10 @@ class UploadLogModel extends Model
     public function client()
     {
         return $this->belongsTo(ClientModel::class, 'client_id');
+    }
+
+    public function verifier()
+    {
+        return $this->belongsTo(User::class, 'verified_by');
     }
 }

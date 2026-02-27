@@ -97,8 +97,10 @@
                                                 <th>Client</th>
                                                 <th>Action</th>
                                                 <th>Status</th>
+                                                <th>Verifier</th>
+                                                <th>Verified At</th>
+                                                <th>Notes</th>
                                                 <th>Tanggal Upload</th>
-                                                <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -144,25 +146,32 @@
                                                             {{ ucfirst($log->status) }}
                                                         </span>
                                                     </td>
-                                                    <td>{{ $log->created_at->format('d/m/Y H:i') }}</td>
                                                     <td>
-                                                        @if ($log->status == 'pending')
-                                                            <div class="d-flex flex-column align-items-center gap-1">
-                                                                <button class="btn btn-success btn-sm approveBtn"
-                                                                    data-id="{{ $log->id }}"
-                                                                    data-title="{{ $log->document ? $log->document->title : 'Unknown' }}">
-                                                                    <i class="fas fa-check"></i> Approve
-                                                                </button>
-                                                                <button class="btn btn-danger btn-sm rejectBtn" style="margin-top: 5px; width: 90px;"
-                                                                    data-id="{{ $log->id }}"
-                                                                    data-title="{{ $log->document ? $log->document->title : 'Unknown' }}">
-                                                                    <i class="fas fa-times"></i> Reject
-                                                                </button>
-                                                            </div>
+                                                        @if ($log->verifier)
+                                                            {{ $log->verifier->name }}<br>
+                                                            <small
+                                                                class="text-muted">{{ $log->verifier->email }}</small>
                                                         @else
-                                                            <em class="text-muted">Sudah diproses</em>
+                                                            <em class="text-muted">-</em>
                                                         @endif
                                                     </td>
+                                                    <td>
+                                                        @if ($log->verified_at)
+                                                            {{ $log->verified_at->format('d/m/Y H:i') }}
+                                                        @else
+                                                            <em class="text-muted">-</em>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($log->notes)
+                                                            <span
+                                                                title="{{ $log->notes }}">{{ Str::limit($log->notes, 30) }}</span>
+                                                        @else
+                                                            <em class="text-muted">-</em>
+                                                        @endif
+                                                    </td>
+                                                    <td>{{ $log->created_at->format('d/m/Y H:i') }}</td>
+
                                                 </tr>
                                             @endforeach
                                         </tbody>

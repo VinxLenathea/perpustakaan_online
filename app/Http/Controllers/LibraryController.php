@@ -16,62 +16,62 @@ class LibraryController extends Controller
      * Tampilkan halaman utama library dengan pencarian, filter, dan pagination
      */
     public function index(Request $request)
-{
-    $query = DocumentModel::with('category');
+    {
+        $query = DocumentModel::with('category');
 
-    // 🔍 Search
-    if ($request->filled('keyword') && $request->filled('filter')) {
-        $key = $request->keyword;
-        $filter = $request->filter;
+        // 🔍 Search
+        if ($request->filled('keyword') && $request->filled('filter')) {
+            $key = $request->keyword;
+            $filter = $request->filter;
 
-        if ($filter === 'judul') {
-            $query->where('title', 'LIKE', "%{$key}%");
-        } elseif ($filter === 'pembuat') {
-            $query->where('author', 'LIKE', "%{$key}%");
-        } elseif ($filter === 'tahun') {
-            $query->where('year_published', 'LIKE', "%{$key}%");
+            if ($filter === 'judul') {
+                $query->where('title', 'LIKE', "%{$key}%");
+            } elseif ($filter === 'pembuat') {
+                $query->where('author', 'LIKE', "%{$key}%");
+            } elseif ($filter === 'tahun') {
+                $query->where('year_published', 'LIKE', "%{$key}%");
+            }
         }
+
+        // 🎯 Filter kategori
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        // 🆕 DEFAULT: TERBARU
+        $sortBy = $request->get('sort_by', 'terbaru');
+
+        switch ($sortBy) {
+            case 'views':
+                $query->orderBy('views', 'desc');
+                break;
+            case 'judul_asc':
+                $query->orderBy('title', 'asc');
+                break;
+            case 'tahun_desc':
+                $query->orderBy('year_published', 'desc');
+                break;
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
+        $documents = $query->paginate(10)->withQueryString();
+        $categories = CategoryModel::all();
+
+        return view('library', compact('documents', 'categories'));
     }
 
-    // 🎯 Filter kategori
-    if ($request->filled('category_id')) {
-        $query->where('category_id', $request->category_id);
+    public function welcome()
+    {
+        $popularDocuments = DocumentModel::with('category')
+            ->orderBy('views', 'desc')
+            ->orderBy('title', 'asc')
+            ->limit(8)
+            ->get();
+
+        return view('welcome', compact('popularDocuments'));
     }
-
-    // 🆕 DEFAULT: TERBARU
-    $sortBy = $request->get('sort_by', 'terbaru');
-
-    switch ($sortBy) {
-        case 'views':
-            $query->orderBy('views', 'desc');
-            break;
-        case 'judul_asc':
-            $query->orderBy('title', 'asc');
-            break;
-        case 'tahun_desc':
-            $query->orderBy('year_published', 'desc');
-            break;
-        default:
-            $query->orderBy('created_at', 'desc');
-            break;
-    }
-
-    $documents = $query->paginate(10)->withQueryString();
-    $categories = CategoryModel::all();
-
-    return view('library', compact('documents', 'categories'));
-}
-
-public function welcome()
-{
-    $popularDocuments = DocumentModel::with('category')
-        ->orderBy('views', 'desc')
-        ->orderBy('title', 'asc')
-        ->limit(8)
-        ->get();
-
-    return view('welcome', compact('popularDocuments'));
-}
 
 
 
@@ -321,6 +321,16 @@ public function welcome()
 
         // Jika tidak bisa preview (misal docx, xlsx), paksa download
         return response()->download($path);
+    }
+
+    /**
+     * Show detail of a document
+     */
+    public function detail($id)
+    {
+        $document = DocumentModel::with('category')->findOrFail($id);
+
+        return view('library.detail', compact('document'));
     }
 
     public function storeApi(Request $request)

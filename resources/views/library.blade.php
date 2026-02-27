@@ -98,7 +98,7 @@
                                             ];
                                             $currentSort = request('sort_by') ?: 'tahun_desc';
                                         @endphp
-                                        
+
 
                                         <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
                                             data-target="#tambahDocumentModal" style="margin-left: 10px;">
@@ -106,7 +106,7 @@
                                         </button>
                                 </div>
 
-                                
+
 
 
                             </div>
@@ -130,36 +130,37 @@
                                                 @foreach ($sortOptions as $key => $option)
                                                     <a class="dropdown-item {{ $key == $currentSort ? 'active' : '' }}"
                                                         href="{{ route('library') . '?' . http_build_query(array_merge(request()->query(), ['sort_by' => $key])) }}"><i
-                                                        class="{{ $option['icon'] }}"></i>
-                                                    {{ $option['label'] }}</a>
+                                                            class="{{ $option['icon'] }}"></i>
+                                                        {{ $option['label'] }}</a>
                                                 @endforeach
                                             </div>
-                                        </div>    
+                                        </div>
                                         <div class="text-end mb-3">
                                             <form action="" method="GET" class="d-inline" id="exportForm">
                                                 <select name="month" class="form-control form-control-sm d-inline"
                                                     style="width: auto; margin-right: 10px;" id="monthSelect">
                                                     <option value="">Pilih Bulan</option>
-                                                        @for ($i = 1; $i <= 12; $i++)
-                                                            <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}"
-                                                                {{ request('month') == str_pad($i, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}>
-                                                                {{ date('F', mktime(0, 0, 0, $i, 1)) }}
-                                                            </option>
-                                                        @endfor
+                                                    @for ($i = 1; $i <= 12; $i++)
+                                                        <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}"
+                                                            {{ request('month') == str_pad($i, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}>
+                                                            {{ date('F', mktime(0, 0, 0, $i, 1)) }}
+                                                        </option>
+                                                    @endfor
                                                 </select>
                                                 <select name="year" class="form-control form-control-sm d-inline"
                                                     style="width: auto; margin-right: 10px;" id="yearSelect">
-                                                        <option value="">Pilih Tahun</option>
-                                                            @for ($y = date('Y'); $y >= 2020; $y--)
+                                                    <option value="">Pilih Tahun</option>
+                                                    @for ($y = date('Y'); $y >= 2020; $y--)
                                                         <option value="{{ $y }}"
                                                             {{ request('year') == $y ? 'selected' : '' }}>
                                                             {{ $y }}
                                                         </option>
-                                                            @endfor
+                                                    @endfor
                                                 </select>
-                                                    <button type="button" class="btn btn-success btn-sm disabled" id="exportBtn">
-                                                        <i class="fas fa-file-excel me-2"></i> Export Data Buku
-                                                    </button>
+                                                <button type="button" class="btn btn-success btn-sm disabled"
+                                                    id="exportBtn">
+                                                    <i class="fas fa-file-excel me-2"></i> Export Data Buku
+                                                </button>
                                             </form>
                                         </div>
                                     </div>
@@ -167,15 +168,11 @@
                                         cellspacing="0">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
                                                 <th>Cover</th>
                                                 <th>Judul</th>
                                                 <th>Kategori</th>
                                                 <th>Tahun</th>
                                                 <th>Pembuat</th>
-                                                <th>Abstrak</th>
-                                                <th>File</th>
-                                                <th>Dilihat</th>
                                                 <th>Kampus</th>
                                                 <th>Prodi</th>
                                                 <th>Aksi</th>
@@ -184,7 +181,6 @@
                                         <tbody>
                                             @foreach ($documents as $doc)
                                                 <tr id="row-{{ $doc->id }}">
-                                                    <td>{{ $doc->id }}</td>
                                                     <td>
                                                         @if ($doc->category->category_name == 'Poster')
                                                             @if ($doc->file_url && in_array(pathinfo($doc->file_url, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg', 'gif']))
@@ -212,30 +208,26 @@
                                                     <td class="category">{{ $doc->category->category_name }}</td>
                                                     <td class="year">{{ $doc->year_published }}</td>
                                                     <td class="author">{{ $doc->author }}</td>
-                                                    <td class="abstract">
-                                                        @if ($doc->abstract)
-                                                            {{ Str::limit($doc->abstract, 50) }}
-                                                        @else
-                                                            -
-                                                        @endif
-                                                    </td>
-                                                    <td class="file">
-                                                        <a href="{{ route('library.viewFile', $doc->id) }}"
-                                                            target="_blank">Lihat File</a>
-                                                    </td>
-                                                    <td class="views">{{ $doc->views }}X dilihat</td>
-                                                    <td class="kampus">{{ $doc->kampus }}</td>
-                                                    <td class="prodi">{{ $doc->prodi }}</td>
+                                                    <td class="kampus">{{ $doc->kampus ?: '-' }}</td>
+                                                    <td class="prodi">{{ $doc->prodi ?: '-' }}</td>
                                                     <td>
                                                         <div class="d-flex flex-column align-items-center gap-1">
+                                                            <a href="{{ route('library.detail', $doc->id) }}"
+                                                                class="btn btn-info btn-sm" style="width: 32px"
+                                                                title="Detail">
+                                                                <i class="fas fa-eye"></i>
+                                                            </a>
                                                             <button class="btn btn-success btn-sm" data-toggle="modal"
-                                                                data-target="#editDocumentModal{{ $doc->id }}"><i
-                                                                    class="fas fa-edit"></i></button>
+                                                                data-target="#editDocumentModal{{ $doc->id }}"
+                                                                style="width: 32px; margin-top: 5px" title="Edit">
+                                                                <i class="fas fa-edit"></i>
+                                                            </button>
                                                             <button type="button" class="btn btn-danger btn-sm"
                                                                 data-toggle="modal"
                                                                 style="margin-top: 5px; width: 32px"
                                                                 data-target="#confirmModal"
-                                                                data-url="{{ route('library.destroy', $doc) }}">
+                                                                data-url="{{ route('library.destroy', $doc) }}"
+                                                                title="Hapus">
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
                                                         </div>
@@ -589,36 +581,19 @@
             var url = button.data('url'); // Ambil data-url dari tombol
             var row = button.closest('tr'); // Ambil row tabel
 
-            // Deteksi jenis data berdasarkan struktur tabel
-            if (row.find('td:nth-child(3)').length > 0) {
-                // User table (kolom: ID, Name, Email, Aksi)
-                var itemName = row.find('.title').text(); // Nama user
-                var itemDetail = row.find('.category').text(); // Email user
-                var itemType = 'user';
+            // Document table (kolom: Cover, Judul, Kategori, Tahun, Pembuat, Kampus, Prodi, Aksi)
+            var itemName = row.find('.title').text(); // Judul document
+            var itemDetail = row.find('.author').text(); // Pembuat document
+            var itemType = 'document';
 
-                var detailsHtml = `
-                    <div class="alert alert-light">
-                        <strong>Nama File:</strong> ${itemName}<br>
-                        <strong>Kategori:</strong> ${itemDetail}
-                    </div>
-                `;
+            var detailsHtml = `
+                <div class="alert alert-light">
+                    <strong>Judul:</strong> ${itemName}<br>
+                    <strong>Pembuat:</strong> ${itemDetail}
+                </div>
+            `;
 
-                var warningText = 'Data ini akan dihapus secara permanen.';
-            } else {
-                // Document table (kolom: ID, Judul, Kategori, Tahun, Pembuat, File, Aksi)
-                var itemName = row.find('.title').text(); // Judul document
-                var itemDetail = row.find('.category').text(); // Penulis document
-                var itemType = 'document';
-
-                var detailsHtml = `
-                    <div class="alert alert-light">
-                        <strong>Judul:</strong> ${itemName}<br>
-                        <strong>Pembuat:</strong> ${itemDetail}
-                    </div>
-                `;
-
-                var warningText = 'File ini akan dihapus secara permanen.';
-            }
+            var warningText = 'File ini akan dihapus secara permanen.';
 
             // Update modal content
             $(this).find('#itemDetails').html(detailsHtml);
@@ -639,10 +614,7 @@
             var modal = form.closest('.modal');
             var itemName = modal.find('#itemDetails strong').first().text().replace(/^(Nama|Judul):\s*/, '');
 
-            // Deteksi jenis item berdasarkan konten modal
-            var isUser = modal.find('#itemDetails').text().includes('Email:');
-            var itemType = isUser ? 'user' : 'document';
-            var successMessage = isUser ? 'File berhasil dihapus!' : 'File berhasil dihapus!';
+            var successMessage = 'File berhasil dihapus!';
 
             // Lanjutkan dengan F request langsung
             $.ajax({
@@ -774,7 +746,7 @@
 
                                 // Update cover image
                                 let coverCell = $('#row-' + id + ' td').eq(
-                                    1); // Cover is second column (index 1)
+                                    0); // Cover is first column (index 0)
                                 if (response.document.category.category_name ==
                                     'Poster') {
                                     coverCell.html(response.document.file_url ?
@@ -874,21 +846,18 @@
 
                         let newRow = `
                             <tr id="row-${response.document.id}">
-                                <td>${response.document.id}</td>
                                 <td>${coverHtml}</td>
                                 <td class="title">${response.document.title}</td>
                                 <td class="category">${response.document.category.category_name}</td>
                                 <td class="year">${response.document.year_published}</td>
                                 <td class="author">${response.document.author}</td>
-                                <td class="abstract">${abstractText}</td>
-                                <td class="file">
-                                   <a href="/library/view-file/${response.document.id}" target="_blank">Lihat File</a>
-                                </td>
-                                <td class="views">0X dilihat</td>
                                 <td class="kampus">${response.document.kampus || '-'}</td>
                                 <td class="prodi">${response.document.prodi || '-'}</td>
                                 <td>
                                     <div class="d-flex flex-column align-items-center gap-1">
+                                        <a href="/library/detail/${response.document.id}" class="btn btn-info btn-sm">
+                                            <i class="fas fa-eye"></i> Detail
+                                        </a>
                                         <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#editDocumentModal${response.document.id}"><i class="fas fa-edit"></i></button>
                                         <button type="button" class="btn btn-danger btn-sm deleteBtn" data-toggle="modal" data-target="#confirmModal" data-url="/library/${response.document.id}"><i class="fas fa-trash"></i></button>
                                     </div>
