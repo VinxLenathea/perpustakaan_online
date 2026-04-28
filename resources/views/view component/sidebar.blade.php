@@ -24,6 +24,7 @@
     <!-- Heading -->
     <div class="sidebar-heading text-secondary">Menu</div>
 
+    @if(auth()->user()->role === 'master_admin')
     <!-- Nav Item - Users -->
     <li class="nav-item {{ Request::is('users*') ? 'active' : '' }}">
         <a class="nav-link text-primary {{ Request::is('users*') ? 'fw-bold bg-light rounded' : '' }}"
@@ -32,6 +33,7 @@
             <span>Users</span>
         </a>
     </li>
+    @endif
 
     <!-- Nav Item - Library -->
     <li class="nav-item {{ Request::is('library*') ? 'active' : '' }}">
@@ -42,7 +44,8 @@
         </a>
     </li>
 
-    <!-- Nav Item - Library -->
+    @if(auth()->user()->role === 'master_admin')
+    <!-- Nav Item - Category -->
     <li class="nav-item {{ Request::is('category*') ? 'active' : '' }}">
         <a class="nav-link text-primary {{ Request::is('categories*') ? 'fw-bold bg-light rounded' : '' }}"
             href="{{ route('categories.index') }}">
@@ -59,6 +62,7 @@
             <span>Logs</span>
         </a>
     </li>
+    @endif
 
     <!-- Nav Item - Verification -->
     <li class="nav-item {{ Request::is('verification*') ? 'active' : '' }}">

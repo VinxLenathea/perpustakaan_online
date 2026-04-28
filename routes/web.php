@@ -88,31 +88,35 @@ Route::middleware('auth')->group(function () {
     Route::get('/library/view-file/{id}', [LibraryController::class, 'viewFile'])->name('library.viewFile');
     Route::get('/library/detail/{id}', [LibraryController::class, 'detail'])->name('library.detail');
 
-    // user management
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');          // daftar user
-    Route::get('/users/create', [UserController::class, 'create'])->name('users.create'); // form tambah
-    Route::post('/users', [UserController::class, 'store'])->name('users.store');         // simpan user baru
-    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit'); // form edit
-    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update'); // update data user
-    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy'); // hapus user
+    // user management (master_admin only)
+    Route::middleware(['role:master_admin'])->group(function () {
+        Route::get('/users', [UserController::class, 'index'])->name('users.index');          // daftar user
+        Route::get('/users/create', [UserController::class, 'create'])->name('users.create'); // form tambah
+        Route::post('/users', [UserController::class, 'store'])->name('users.store');         // simpan user baru
+        Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit'); // form edit
+        Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update'); // update data user
+        Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy'); // hapus user
+    });
     // Dashboard
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/welcome', [LibraryController::class, 'index'])->name('welcome');
 
-    // logs management
-    Route::get('/logs', [App\Http\Controllers\LogController::class, 'index'])->name('logs.index');
-    Route::post('/logs/{id}/approve', [App\Http\Controllers\LogController::class, 'approve'])->name('logs.approve');
-    Route::post('/logs/{id}/reject', [App\Http\Controllers\LogController::class, 'reject'])->name('logs.reject');
+    // logs management (master_admin only)
+    Route::middleware(['role:master_admin'])->group(function () {
+        Route::get('/logs', [App\Http\Controllers\LogController::class, 'index'])->name('logs.index');
+        Route::post('/logs/{id}/approve', [App\Http\Controllers\LogController::class, 'approve'])->name('logs.approve');
+        Route::post('/logs/{id}/reject', [App\Http\Controllers\LogController::class, 'reject'])->name('logs.reject');
 
-    Route::get('/export/buku/{month}/{year}', [ExportController::class, 'exportMonthly'])->name('book.export.monthly');
+        Route::get('/export/buku/{month}/{year}', [ExportController::class, 'exportMonthly'])->name('book.export.monthly');
 
-    // category management
-    Route::get('/categories', [App\Http\Controllers\CategoryController::class, 'index'])->name('categories.index');
-    Route::get('/categories/create', [App\Http\Controllers\CategoryController::class, 'create'])->name('categories.create');
-    Route::post('/categories', [App\Http\Controllers\CategoryController::class, 'store'])->name('categories.store');
-    Route::get('/categories/{id}/edit', [App\Http\Controllers\CategoryController::class, 'edit'])->name('categories.edit');
-    Route::put('/categories/{id}', [App\Http\Controllers\CategoryController::class, 'update'])->name('categories.update');
-    Route::delete('/categories/{id}', [App\Http\Controllers\CategoryController::class, 'destroy'])->name('categories.destroy');
+        // category management
+        Route::get('/categories', [App\Http\Controllers\CategoryController::class, 'index'])->name('categories.index');
+        Route::get('/categories/create', [App\Http\Controllers\CategoryController::class, 'create'])->name('categories.create');
+        Route::post('/categories', [App\Http\Controllers\CategoryController::class, 'store'])->name('categories.store');
+        Route::get('/categories/{id}/edit', [App\Http\Controllers\CategoryController::class, 'edit'])->name('categories.edit');
+        Route::put('/categories/{id}', [App\Http\Controllers\CategoryController::class, 'update'])->name('categories.update');
+        Route::delete('/categories/{id}', [App\Http\Controllers\CategoryController::class, 'destroy'])->name('categories.destroy');
+    });
 
     // verification management
     Route::get('/verification', [App\Http\Controllers\VerificationController::class, 'index'])->name('verification.index');
