@@ -87,6 +87,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/library/{document}', [LibraryController::class, 'update'])->name('library.update');
     Route::get('/library/view-file/{id}', [LibraryController::class, 'viewFile'])->name('library.viewFile');
     Route::get('/library/detail/{id}', [LibraryController::class, 'detail'])->name('library.detail');
+    Route::get('/export/buku/{month}/{year}', [ExportController::class, 'exportMonthly'])->name('book.export.monthly');
 
     // user management (master_admin only)
     Route::middleware(['role:master_admin'])->group(function () {
@@ -106,8 +107,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/logs', [App\Http\Controllers\LogController::class, 'index'])->name('logs.index');
         Route::post('/logs/{id}/approve', [App\Http\Controllers\LogController::class, 'approve'])->name('logs.approve');
         Route::post('/logs/{id}/reject', [App\Http\Controllers\LogController::class, 'reject'])->name('logs.reject');
-
-        Route::get('/export/buku/{month}/{year}', [ExportController::class, 'exportMonthly'])->name('book.export.monthly');
 
         // category management
         Route::get('/categories', [App\Http\Controllers\CategoryController::class, 'index'])->name('categories.index');

@@ -10,12 +10,29 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Hitung total dokumen
-        $totalDocuments = documentModel::count();
+        // Hitung hanya dokumen yang approved
+        $totalDocuments    = documentModel::where('status', 'approved')->count();
+        $approvedDocuments = documentModel::where('status', 'approved')->count();
+        $pendingDocuments  = documentModel::where('status', 'pending')->count();
+        $rejectedDocuments = documentModel::where('status', 'rejected')->count();
 
-        // Hitung dokumen per kategori
-        $categories = categoryModel::withCount('documents')->get();
+        // Hitung dokumen per kategori hanya yang approved
+        $categories = categoryModel::withCount(['documents' => function ($q) {
+            $q->where('status', 'approved');
+        }])->get();
 
-        return view('dashboard', compact('totalDocuments', 'categories'));
+        $recentPending = documentModel::where('status', 'pending')
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+
+        return view('dashboard', compact(
+            'totalDocuments',
+            'approvedDocuments',
+            'pendingDocuments',
+            'rejectedDocuments',
+            'categories',
+            'recentPending'
+        ));
     }
 }

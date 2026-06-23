@@ -63,7 +63,7 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         // Prevent editing of master admin user
-        if ($user->name === 'admin') {
+        if ($user->role === 'master_admin') {
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
@@ -111,7 +111,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         // Prevent deletion of master admin user
-        if ($user->name === 'admin') {
+        if ($user->role === 'master_admin') {
             return redirect()->route('users.index')->with('error', 'User admin tidak dapat dihapus.');
         }
 

@@ -16,12 +16,10 @@ class CollectionAllController extends Controller
                 $q->where('status', 'approved');
             });
 
-
-        // 🔍 Handle search
+        // Handle search
         if ($request->filled('query')) {
             $keyword = $request->input('query');
-            $filter = $request->input('search_by');
-            $categoryName = $request->input('category');
+            $filter  = $request->input('search_by');
 
             if ($keyword && $filter) {
                 if ($filter == 'judul') {
@@ -32,52 +30,47 @@ class CollectionAllController extends Controller
                     $query->where('year_published', 'LIKE', "%{$keyword}%");
                 }
             }
+        }
 
-            if ($categoryName) {
-                $category = CategoryModel::where('category_name', $categoryName)->first();
-                if ($category) {
-                    $query->where('category_id', $category->id);
-                }
+        // Filter kategori — ganti nama variabel agar tidak konflik
+        if ($request->filled('category')) {
+            $filterCat = CategoryModel::where('category_name', $request->category)->first();
+            if ($filterCat) {
+                $query->where('category_id', $filterCat->id);
             }
         }
 
-        // 📌 Sorting
+        // Sorting
         if ($request->filled('sort_by')) {
             switch ($request->sort_by) {
                 case 'tahun_desc':
                     $query->orderBy('year_published', 'desc');
                     break;
-
                 case 'tahun_asc':
                     $query->orderBy('year_published', 'asc');
                     break;
-
                 case 'judul_asc':
                     $query->orderBy('title', 'asc');
                     break;
-
                 case 'judul_desc':
                     $query->orderBy('title', 'desc');
                     break;
-
                 case 'views':
                     $query->orderBy('views', 'desc');
                     break;
-
                 default:
                     $query->orderBy('views', 'desc');
                     break;
             }
         } else {
-            // ✅ default: paling banyak dilihat
             $query->orderBy('views', 'desc');
         }
 
-        $documents = $query->paginate(10)->withQueryString();
+        $documents  = $query->paginate(10)->withQueryString();
+        $categories = CategoryModel::all();
+        $category   = (object) ['category_name' => 'Semua Kategori']; // ← tidak akan tertimpa lagi
 
-        $category = (object) ['category_name' => 'Semua Kategori'];
-
-        return view('collection.collectionall', compact('documents', 'category'));
+        return view('collection.collectionall', compact('documents', 'category', 'categories'));
     }
 
     public function view($id)

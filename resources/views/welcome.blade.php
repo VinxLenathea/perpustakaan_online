@@ -4,7 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'Perpustakaan Online') }}</title <!-- Fonts -->
+    <title>{{ config('app.name', 'Perpustakaan Online RSMN') }}</title>
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet">
 
@@ -14,297 +16,339 @@
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
 
-    <!-- Styles -->
-    @include('styleUserPage')
+    <style>
+        /* --- Layout Dasar --- */
+        html,
+        body {
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            background-color: #ffffff;
+            font-family: 'Instrument Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        body>footer {
+            margin-top: auto;
+        }
+
+        /* --- Hero Section --- */
+        .hero-section {
+            background-color: #001f3f;
+            color: white;
+            padding: 70px 20px;
+            text-align: center;
+        }
+
+        /* --- Search Bar Responsif --- */
+        .search-container {
+            background-color: #001f3f;
+            padding: 15px;
+            margin-top: -35px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+
+        }
+
+        .search-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-wrapper select,
+        .search-wrapper input {
+            height: 38px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        /* --- List Dokumen (Sesuai Referensi Gambar) --- */
+        .doc-card {
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 20px;
+            background: #fff;
+            transition: 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .doc-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .img-cover-wrapper {
+            width: 100%;
+            max-width: 160px;
+            /* Menjaga ukuran gambar agar tidak raksasa */
+            margin: 0 auto;
+        }
+
+        .img-cover {
+            width: 100%;
+            aspect-ratio: 3/4;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .text-title {
+            color: #d93025 !important;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 1.15rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .info-row {
+            display: flex;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .info-label {
+            width: 110px;
+            font-weight: bold;
+            flex-shrink: 0;
+            color: #333;
+        }
+
+        .info-value {
+            color: #555;
+        }
+
+        /* --- Kategori Unggulan --- */
+        .cat-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: 0.3s;
+        }
+
+        .cat-card:hover {
+            border-color: #001f3f;
+            transform: translateY(-3px);
+        }
+
+        .cat-icon {
+            font-size: 2.5rem;
+            color: #001f3f;
+            margin-bottom: 15px;
+        }
+
+        .btn-navy {
+            background-color: #001f3f;
+            color: white;
+            border: none;
+            font-size: 0.85rem;
+            padding: 8px 20px;
+            border-radius: 5px;
+        }
+
+        .btn-navy:hover {
+            background-color: #001122;
+            color: white;
+        }
+
+        /* --- Mobile Adjustments --- */
+        @media (max-width: 768px) {
+            .search-wrapper>* {
+                flex: 1 1 100%;
+            }
+
+            .info-label {
+                width: 90px;
+            }
+
+            .img-cover-wrapper {
+                margin-bottom: 15px;
+            }
+
+            .hero-section h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 </head>
 
-<body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18]">
+<body>
 
-    <!-- Top Bar -->
+    <!-- Header / Navbar -->
     @include('view component.headerWelcome')
 
     <!-- Hero Section -->
     <div class="hero-section">
         <div class="container">
-            <h1 class="display-4 fw-bold">Selamat Datang di Perpustakaan Online RSMN</h1>
-            <p class="lead">Temukan koleksi buku, jurnal, dan dokumen ilmiah terlengkap untuk mendukung pembelajaran
-                dan penelitian Anda.</p>
-
+            <h1 class="fw-bold mb-3">Selamat Datang di Perpustakaan Online RSMN</h1>
+            <p class="opacity-75">Temukan koleksi buku, jurnal, dan dokumen ilmiah terlengkap untuk mendukung pembelajaran Anda.</p>
         </div>
     </div>
 
     <!-- Search Section -->
-    <div class="container-fluid">
-        <div class="row search-bar">
-            <div class="col-12 col-md-8 mx-auto">
-                <form class="d-flex flex-wrap align-items-center justify-content-center text-white"
-                    action="{{ url('/') }}" method="GET">
+    <div class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="search-container shadow-sm p-3 p-md-4" style="background-color: #001f3f; border-radius: 12px; margin-top: 10px;">
+                    <form action="{{ url('/') }}" method="GET">
 
-                    <span class="me-2">Cari</span>
+                        <!-- Container utama menggunakan flex-column (mobile) dan flex-md-row (desktop) -->
+                        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-center gap-3">
 
-                    <select class="form-select form-select-sm me-2 mb-2 mb-md-0" name="search_by" style="width: auto;">
-                        <option value="judul">Judul</option>
-                        <option value="penulis">Pembuat</option>
-                        <option value="tahun">Tahun</option>
-                    </select>
+                            <!-- Label "Cari" - Muncul di atas pada mobile -->
+                            <div class="text-center text-md-start">
+                                <span class="text-white fw-bold fs-6">Cari</span>
+                            </div>
 
-                    <span class="me-2">berdasarkan</span>
+                            <!-- Dropdown Berdasarkan (Judul, Penulis, dll) -->
+                            <div class="w-100 w-md-auto">
+                                <select name="search_by" class="form-select form-select-sm py-2 py-md-1" style="width: 100%; min-width: 120px; border-radius: 6px;">
+                                    <option value="judul">Judul</option>
+                                    <option value="penulis">Pembuat</option>
+                                    <option value="tahun">Tahun</option>
+                                </select>
+                            </div>
 
-                    <select class="form-select form-select-sm me-2 mb-2 mb-md-0" name="category" style="width: auto;">
-                        <option value="">Semua Kategori</option>
-                        <option value="karya_tulis_ilmiah"
-                            {{ request('category') == 'karya_tulis_ilmiah' ? 'selected' : '' }}>Karya Tulis Ilmiah
-                        </option>
-                        <option value="Poster" {{ request('category') == 'poster' ? 'selected' : '' }}>Poster</option>
-                        <option value="penelitian_eksternal"
-                            {{ request('category') == 'penelitian_eksternal' ? 'selected' : '' }}>Penelitian Eksternal
-                        </option>
-                        <option value="penelitian_internal"
-                            {{ request('category') == 'penelitian_internal' ? 'selected' : '' }}>Penelitian Internal
-                        </option>
-                        <option value="e_book" {{ request('category') == 'e_book' ? 'selected' : '' }}>E Book</option>
-                    </select>
+                            <!-- Label "berdasarkan" - Disembunyikan di mobile agar lebih clean seperti gambar -->
+                            <div class="d-none d-md-block">
+                                <span class="text-white fw-medium">berdasarkan</span>
+                            </div>
 
-                    <input type="text" class="form-control form-control-sm me-2" name="query"
-                        placeholder="Kata kunci..." value="{{ request('query') }}" style="max-width: 200px;">
+                            <!-- Dropdown Kategori -->
+                            <div class="w-100 w-md-auto">
+                                <select name="category" class="form-select form-select-sm py-2 py-md-1" style="width: 100%; min-width: 180px; border-radius: 6px;">
+                                    <option value="">Semua Kategori</option>
+                                    <option value="karya_tulis_ilmiah">Karya Tulis Ilmiah</option>
+                                    <option value="Poster">Poster</option>
+                                    <option value="penelitian_eksternal">Penelitian Eksternal</option>
+                                    <option value="penelitian_internal">Penelitian Internal</option>
+                                    <option value="e_book">E-Book</option>
+                                </select>
+                            </div>
 
-                    <button class="btn btn-outline-light mb-2 mb-md-0" type="submit">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </form>
+                            <!-- Input Kata Kunci & Tombol Search -->
+                            <div class="input-group input-group-sm w-100">
+                                <input type="text" name="query" class="form-control py-2 py-md-1" placeholder="Kata kunci..." value="{{ request('query') }}" style="border-top-left-radius: 6px; border-bottom-left-radius: 6px;">
+                                <button type="submit" class="btn btn-primary px-3" style="border-top-right-radius: 6px; border-bottom-right-radius: 6px; background-color: #007bff;">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Populer / Hasil Pencarian -->
+    <div class="container mb-5">
+        <h3 class="text-center fw-bold mb-5" style="color: #001f3f;">
+            {{ (isset($isSearch) && $isSearch) ? 'Hasil Pencarian' : 'Populer' }}
+        </h3>
 
-    <!-- Buku Unggulan / Hasil Pencarian -->
-    <!-- Baru Ditambahkan -->
-    <div class="container my-4">
-        <h2 class="text-center mb-4 text-success">
-            @if (isset($isSearch) && $isSearch)
-                Hasil Pencarian
-            @else
-                Populer
-            @endif
-        </h2>
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                @php $docs = (isset($isSearch) && $isSearch) ? $searchResults : $topViewedDocuments; @endphp
 
-        @if (isset($isSearch) && $isSearch)
-            @if ($searchResults->count() > 0)
-                @foreach ($searchResults as $doc)
-                    <div class="card shadow-sm border-0 rounded-3 mb-3 p-3">
-                        <div class="row g-3 align-items-center">
-                            <!-- Cover Buku -->
-                            <div class="col-md-3 col-12 text-center">
-                                @if ($doc->category->category_name == 'Poster')
-                                    @if ($doc->file_url && in_array(pathinfo($doc->file_url, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg', 'gif']))
-                                        <img src="{{ asset('storage/' . $doc->file_url) }}"
-                                            class="img-fluid rounded shadow-sm" alt="Cover {{ $doc->title }}"
-                                            style="max-height: 220px; object-fit: cover;">
-                                    @else
-                                        <img src="assets/img/undraw_posting_photo.svg"
-                                            class="img-fluid rounded shadow-sm" alt="Cover {{ $doc->title }}"
-                                            style="max-height: 220px; object-fit: cover;">
-                                    @endif
-                                @else
-                                    @if ($doc->cover_image)
-                                        <img src="{{ asset('storage/' . $doc->cover_image) }}"
-                                            class="img-fluid rounded shadow-sm" alt="Cover {{ $doc->title }}"
-                                            style="max-height: 220px; object-fit: cover;">
-                                    @else
-                                        <img src="assets/img/undraw_posting_photo.svg"
-                                            class="img-fluid rounded shadow-sm" alt="Cover {{ $doc->title }}"
-                                            style="max-height: 220px; object-fit: cover;">
-                                    @endif
-                                @endif
+                @forelse ($docs as $doc)
+                <div class="doc-card">
+                    <div class="row align-items-start">
+                        <!-- Gambar -->
+                        <div class="col-md-3 col-sm-4 text-center">
+                            <div class="img-cover-wrapper">
+                                @php
+                                $img = ($doc->category->category_name == 'Poster' && $doc->file_url)
+                                ? asset('storage/' . $doc->file_url)
+                                : ($doc->cover_image ? asset('storage/' . $doc->cover_image) : asset('assets/img/undraw_posting_photo.svg'));
+                                @endphp
+                                <img src="{{ $img }}" class="img-cover shadow-sm">
                             </div>
+                        </div>
+                        <!-- Info -->
+                        <div class="col-md-9 col-sm-8">
+                            <a href="{{ route('documents.readonly', $doc->id) }}" class="text-title">{{ $doc->title }}</a>
+                            <div class="info-row"><span class="info-label">Jenis:</span><span class="info-value">{{ $doc->category->category_name }}</span></div>
+                            <div class="info-row"><span class="info-label">Pembuat:</span><span class="info-value">{{ $doc->author }}</span></div>
+                            <div class="info-row"><span class="info-label">Tahun:</span><span class="info-value">{{ $doc->year_published }}</span></div>
 
-                            <!-- Detail Buku -->
-                            <div class="col-md-9 col-12">
-                                <h5 class="fw-bold text-danger mb-2" style="font-size: 1.2rem;">
-                                    {{ $doc->title }}
-                                </h5>
-                                <p class="mb-1"><strong>Jenis:</strong> {{ $doc->category->category_name }}</p>
-                                <p class="mb-1"><strong>Pembuat:</strong> {{ $doc->author }}</p>
-                                <p class="mb-1"><strong>Tahun:</strong> {{ $doc->year_published }}</p>
-                                @if ($doc->abstract)
-                                    <p class="mb-2"><strong>Abstrak:</strong> {{ $doc->abstract }}</p>
-                                @endif
-                                <p class="mb-1"><strong>Dilihat:</strong> {{ $doc->views }} kali</p>
-                                <p class="mb-2">
-                                    <strong>Konten Digital:</strong>
-                                    <a href="{{ route('documents.readonly', $doc->id) }}" class="text-primary">Lihat
-                                        File</a>
+                            @if($doc->abstract)
+                            <div class="info-row d-none d-md-flex mt-2">
+                                <span class="info-label">Abstrak:</span>
+                                <span class="info-value small text-muted">{{ Str::limit($doc->abstract, 160) }}</span>
+                            </div>
+                            @endif
 
-
-                                </p>
-
+                            <div class="info-row mt-2"><span class="info-label">Dilihat:</span><span class="info-value">{{ $doc->views }} kali</span></div>
+                            <div class="info-row">
+                                <span class="info-label">Konten Digital:</span>
+                                <span class="info-value"><a href="{{ route('documents.readonly', $doc->id) }}" class="text-primary text-decoration-underline">Lihat File</a></span>
                             </div>
                         </div>
                     </div>
-                @endforeach
-
-                <!-- Pagination -->
-                <div class="d-flex justify-content-center mt-4">
-                    {{ $searchResults->links() }}
                 </div>
-            @else
-                <div class="text-center">
-                    <p class="text-muted">Tidak ada dokumen yang ditemukan untuk kriteria pencarian Anda.</p>
-                    <a href="{{ url('/') }}" class="btn btn-success">Kembali ke Beranda</a>
+                @empty
+                <div class="text-center py-5">
+                    <p class="text-muted">Tidak ditemukan dokumen.</p>
+                    <a href="{{ url('/') }}" class="btn btn-outline-primary btn-sm">Refresh</a>
                 </div>
-            @endif
-        @else
-            @if ($topViewedDocuments->count() > 0)
-                @foreach ($topViewedDocuments as $doc)
-                    <div class="card shadow-sm border-0 rounded-3 mb-3 p-3">
-                        <div class="row g-3 align-items-center">
-                            <!-- Cover Buku -->
-                            <div class="col-md-3 col-12 text-center">
-                                @if ($doc->category->category_name == 'Poster')
-                                    @if ($doc->file_url && in_array(pathinfo($doc->file_url, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg', 'gif']))
-                                        <img src="{{ asset('storage/' . $doc->file_url) }}"
-                                            class="img-fluid rounded shadow-sm" alt="Cover {{ $doc->title }}"
-                                            style="max-height: 220px; object-fit: cover;">
-                                    @else
-                                        <img src="assets/img/undraw_posting_photo.svg"
-                                            class="img-fluid rounded shadow-sm" alt="Cover {{ $doc->title }}"
-                                            style="max-height: 220px; object-fit: cover;">
-                                    @endif
-                                @else
-                                    @if ($doc->cover_image)
-                                        <img src="{{ asset('storage/' . $doc->cover_image) }}"
-                                            class="img-fluid rounded shadow-sm" alt="Cover {{ $doc->title }}"
-                                            style="max-height: 220px; object-fit: cover;">
-                                    @else
-                                        <img src="assets/img/undraw_posting_photo.svg"
-                                            class="img-fluid rounded shadow-sm" alt="Cover {{ $doc->title }}"
-                                            style="max-height: 220px; object-fit: cover;">
-                                    @endif
-                                @endif
-                            </div>
+                @endforelse
 
-                            <!-- Detail Buku -->
-                            <div class="col-md-9 col-12">
-                                <h5 class="fw-bold text-danger mb-2" style="font-size: 1.2rem;">
-                                    {{ $doc->title }}
-                                </h5>
-                                <p class="mb-1"><strong>Jenis:</strong> {{ $doc->category->category_name }}</p>
-                                <p class="mb-1"><strong>Pembuat:</strong> {{ $doc->author }}</p>
-                                <p class="mb-1"><strong>Tahun:</strong> {{ $doc->year_published }}</p>
-                                @if ($doc->abstract)
-                                    <p class="mb-2"><strong>Abstrak:</strong> {{ $doc->abstract }}</p>
-                                @endif
-                                <p class="mb-1"><strong>Dilihat:</strong> {{ $doc->views }} kali</p>
-                                <p class="mb-2">
-                                    <strong>Konten Digital:</strong>
-                                    <a href="{{ route('documents.readonly', $doc->id) }}" class="text-primary">Lihat
-                                        File</a>
-
-
-                                </p>
-
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-
-                <!-- Tombol Lihat Selengkapnya -->
-                <div class="text-center mt-4">
-                    <a href="{{ route('collectionall') }}" class="btn btn-success btn-lg">Lihat Selengkapnya</a>
+                <div class="text-center mt-5">
+                    <a href="{{ route('collectionall') }}" class="btn btn-navy px-5 rounded-pill shadow-sm">Lihat Selengkapnya</a>
                 </div>
-            @else
-                <div class="text-center">
-                    <p class="text-muted">Belum ada dokumen yang ditambahkan.</p>
-                </div>
-            @endif
-        @endif
+            </div>
+        </div>
     </div>
-
 
     <!-- Kategori Unggulan -->
-    <div class="container featured-grid">
-        <h2 class="text-center mb-4 text-success">Kategori Unggulan</h2>
-        <div class="row justify-content-center">
-            <!-- Item kategori -->
-            <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
-                <div class="card card-hover text-center h-100 shadow-sm">
-                    <div class="card-body d-flex flex-column">
-                        <i class="fas fa-folder fa-3x text-success mb-3"></i>
-                        <h5 class="card-title">Karya Tulis Ilmiah</h5>
-                        <p class="card-text flex-grow-1">Koleksi penelitian dan artikel ilmiah terbaru.</p>
-                        <a href="{{ route('collection', 'Karya Tulis Ilmiah') }}"
-                            class="btn btn-success mt-auto">Lihat Koleksi</a>
+    <div class="container my-5 pb-5">
+        <h3 class="text-center fw-bold mb-5" style="color: #001f3f;">Kategori Unggulan</h3>
+        <div class="row g-4 justify-content-center">
+            @php
+            $cats = [
+            ['Karya Tulis Ilmiah', 'fas fa-file-contract'],
+            ['Poster', 'fas fa-image'],
+            ['Penelitian Eksternal', 'fas fa-flask'],
+            ['Penelitian Internal', 'fas fa-microscope'],
+            ['E-Book', 'fas fa-book-open']
+            ];
+            @endphp
+
+            @foreach($cats as $c)
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="cat-card shadow-sm">
+                    <div>
+                        <i class="{{ $c[1] }} cat-icon"></i>
+                        <p class="fw-bold small mb-3">{{ $c[0] }}</p>
                     </div>
+                    <a href="{{ route('collection', $c[0]) }}" class="btn btn-navy btn-sm w-100">Lihat Koleksi</a>
                 </div>
             </div>
+            @endforeach
 
-            <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
-                <div class="card card-hover text-center h-100 shadow-sm">
-                    <div class="card-body d-flex flex-column">
-                        <i class="fas fa-folder fa-3x text-success mb-3"></i>
-                        <h5 class="card-title">Poster</h5>
-                        <p class="card-text flex-grow-1">Poster penelitian dan presentasi visual.</p>
-                        <a href="{{ route('collection', 'Poster') }}" class="btn btn-success mt-auto">Lihat
-                            Koleksi</a>
-                    </div>
-                </div>
+            <!-- Tombol Lihat Semua Kategori -->
+            <div class="text-center mt-4">
+                <a href="{{ route('categoryCollection') }}" class="btn btn-navy btn-lg">
+                    <i class="fas fa-th-large me-2"></i>Lihat Semua Kategori
+                </a>
             </div>
 
-            <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
-                <div class="card card-hover text-center h-100 shadow-sm">
-                    <div class="card-body d-flex flex-column">
-                        <i class="fas fa-folder fa-3x text-success mb-3"></i>
-                        <h5 class="card-title">Penelitian Eksternal</h5>
-                        <p class="card-text flex-grow-1">Hasil penelitian dari kolaborasi eksternal.</p>
-                        <a href="{{ route('collection', 'Penelitian Eksternal') }}"
-                            class="btn btn-success mt-auto">Lihat Koleksi</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
-                <div class="card card-hover text-center h-100 shadow-sm">
-                    <div class="card-body d-flex flex-column">
-                        <i class="fas fa-folder fa-3x text-success mb-3"></i>
-                        <h5 class="card-title">Penelitian Internal</h5>
-                        <p class="card-text flex-grow-1">Penelitian yang dilakukan secara internal.</p>
-                        <a href="{{ route('collection', 'Penelitian Internal') }}"
-                            class="btn btn-success mt-auto">Lihat Koleksi</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
-                <div class="card card-hover text-center h-100 shadow-sm">
-                    <div class="card-body d-flex flex-column">
-                        <i class="fas fa-folder fa-3x text-success mb-3"></i>
-                        <h5 class="card-title">E Book</h5>
-                        <p class="card-text flex-grow-1">Koleksi buku elektronik dan digital.</p>
-                        <a href="{{ route('collection', 'E Book') }}" class="btn btn-success mt-auto">Lihat
-                            Koleksi</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tombol Lihat Semua Kategori -->
-        <div class="text-center mt-4">
-            <a href="{{ route('categoryCollection') }}" class="btn btn-success btn-lg">
-                <i class="fas fa-th-large me-2"></i>Lihat Semua Kategori
-            </a>
         </div>
     </div>
 
     <!-- Footer -->
     @include('view component.footerWelcome')
 
-    <!-- Bootstrap JS -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    @if (Route::has('login'))
-        <div class="h-14.5 hidden lg:block"></div>
-    @endif
-
 </body>
 
 </html>

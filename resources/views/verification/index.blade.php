@@ -60,10 +60,10 @@
                                         value="{{ request('date_to') }}">
                                 </div>
                                 <div class="col-md-4 d-flex align-items-end">
-                                    <button type="submit" class="btn btn-primary me-2">
+                                    <button type="submit" class="btn btn-primary btn-sm" style="margin-bottom: 5px;">
                                         <i class="fas fa-filter"></i> Filter
                                     </button>
-                                    <a href="{{ route('verification.index') }}" class="btn btn-secondary">
+                                    <a href="{{ route('verification.index') }}" class="btn btn-secondary btn-sm" style="margin-bottom: 5px; margin-left: 5px;">
                                         <i class="fas fa-times"></i> Reset
                                     </a>
                                 </div>
@@ -79,76 +79,75 @@
                         </div>
                         <div class="card-body">
                             @if ($pendingUploads->count() > 0)
-                                <div class="table-responsive">
-                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Judul Dokumen</th>
-                                                <th>Pembuat</th>
-                                                <th>Kategori</th>
-                                                <th>Tahun</th>
-                                                <th>Client</th>
-                                                <th>Tanggal Upload</th>
-                                                <th>Status</th>
-                                                <th>Aksi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($pendingUploads as $log)
-                                                <tr>
-                                                    <td>{{ $log->id }}</td>
-                                                    <td>{{ $log->document->title ?? 'N/A' }}</td>
-                                                    <td>{{ $log->document->author ?? 'N/A' }}</td>
-                                                    <td>{{ $log->document->category->category_name ?? 'N/A' }}</td>
-                                                    <td>{{ $log->document->year_published ?? 'N/A' }}</td>
-                                                    <td>{{ $log->client->name ?? 'N/A' }}</td>
-                                                    <td>{{ $log->created_at->format('d M Y H:i') }}</td>
-                                                    <td>
-                                                        <div class="d-flex flex-column gap-1">
-                                                            <a href="{{ route('verification.viewFile', $log->id) }}"
-                                                                target="_blank" class="btn btn-info btn-sm">
-                                                                <i class="fas fa-eye"></i> Lihat File
-                                                            </a>
-                                                            @if ($log->status == 'pending')
-                                                                <button class="btn btn-success btn-sm"
-                                                                    onclick="approveUpload({{ $log->id }})">
-                                                                    <i class="fas fa-check"></i> Setujui
-                                                                </button>
-                                                                <button class="btn btn-danger btn-sm"
-                                                                    onclick="rejectUpload({{ $log->id }})">
-                                                                    <i class="fas fa-times"></i> Tolak
-                                                                </button>
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Judul Dokumen</th>
+                                            <th>Pembuat</th>
+                                            <th>Kategori</th>
+                                            <th>Tahun</th>
+                                            <th>Client</th>
+                                            <th>Tanggal Upload</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($pendingUploads as $log)
+                                        <tr>
+                                            <td>{{ $log->id }}</td>
+                                            <td>{{ $log->document->title ?? 'N/A' }}</td>
+                                            <td>{{ $log->document->author ?? 'N/A' }}</td>
+                                            <td>{{ $log->document->category->category_name ?? 'N/A' }}</td>
+                                            <td>{{ $log->document->year_published ?? 'N/A' }}</td>
+                                            <td>{{ $log->client->name ?? 'N/A' }}</td>
+                                            <td>{{ $log->created_at->format('d M Y H:i') }}</td>
+                                            <td>
+                                                <div class="d-flex flex-column gap-1">
+                                                    <a href="{{ route('verification.viewFile', $log->id) }}" style="margin-top: 5px; width: 100px"
+                                                        target="_blank" class="btn btn-info btn-sm">
+                                                        <i class="fas fa-eye"></i> Lihat File
+                                                    </a>
+                                                    @if ($log->status == 'pending')
+                                                    <button class="btn btn-success btn-sm" style="margin-top: 5px; width: 100px"
+                                                        onclick="approveUpload({{ $log->id }})">
+                                                        <i class="fas fa-check"></i> Setujui
+                                                    </button>
+                                                    <button class="btn btn-danger btn-sm" style="margin-top: 5px; width: 100px"
+                                                        onclick="rejectUpload({{ $log->id }})">
+                                                        <i class="fas fa-times"></i> Tolak
+                                                    </button>
+                                                    @else
+                                                    <div class="text-center">
+                                                        <small class="text-muted">
+                                                            @if ($log->verifier)
+                                                            Oleh: {{ $log->verifier->name }}<br>
+                                                            {{ $log->verified_at ? $log->verified_at->format('d/m/Y H:i') : '-' }}
                                                             @else
-                                                                <div class="text-center">
-                                                                    <small class="text-muted">
-                                                                        @if ($log->verifier)
-                                                                            Oleh: {{ $log->verifier->name }}<br>
-                                                                            {{ $log->verified_at ? $log->verified_at->format('d/m/Y H:i') : '-' }}
-                                                                        @else
-                                                                            -
-                                                                        @endif
-                                                                    </small>
-                                                                </div>
+                                                            -
                                                             @endif
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                                                        </small>
+                                                    </div>
+                                                    @endif
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
 
-                                <!-- Pagination -->
-                                <div class="d-flex justify-content-center mt-3">
-                                    {{ $pendingUploads->links() }}
-                                </div>
+                            <!-- Pagination -->
+                            <div class="d-flex justify-content-center mt-3">
+                                {{ $pendingUploads->links() }}
+                            </div>
                             @else
-                                <div class="text-center py-4">
-                                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
-                                    <h5>Tidak ada upload yang menunggu verifikasi</h5>
-                                    <p class="text-muted">Semua upload telah diverifikasi.</p>
-                                </div>
+                            <div class="text-center py-4">
+                                <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                                <h5>Tidak ada upload yang menunggu verifikasi</h5>
+                                <p class="text-muted">Semua upload telah diverifikasi.</p>
+                            </div>
                             @endif
                         </div>
                     </div>
@@ -301,9 +300,13 @@
             $.ajax({
                 url: `/verification/reject/${currentRejectId}`,
                 type: 'POST',
+                // ← Samakan dengan approve, pakai headers bukan _token di data
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 data: {
-                    reason: reason,
-                    _token: $('meta[name="csrf-token"]').attr('content')
+                    reason: reason
+                    // ← Hapus _token dari sini
                 },
                 success: function(response) {
                     $('#rejectModal').modal('hide');

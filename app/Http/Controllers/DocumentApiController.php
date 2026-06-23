@@ -31,6 +31,7 @@ class DocumentApiController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'author' => 'required|string|max:255',
+            'nim' => 'required|string|max:50',
             'year_published' => 'required|integer|min:1900|max:' . (date('Y') + 10),
             'category_id' => 'required|exists:categories,id',
             'abstract' => 'nullable|string',
@@ -64,6 +65,7 @@ class DocumentApiController extends Controller
         $document = DocumentModel::create([
             'title' => $request->title,
             'author' => $request->author,
+            'nim' => $request->nim,
             'year_published' => $request->year_published,
             'category_id' => $request->category_id,
             'abstract' => $request->abstract,
@@ -94,5 +96,58 @@ class DocumentApiController extends Controller
                 'status' => $document->status
             ]
         ], 201);
+    }
+
+    public function checkStatus(Request $request)
+    {
+        // Validasi token
+        $token  = $request->bearerToken();
+        $client = ClientModel::where('api_token', $token)->first();
+
+        if (!$client) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Token API tidak valid'
+            ], 401);
+        }
+
+        // Wajib ada nim
+        $nim = $request->query('nim');
+        if (!$nim) {
+            return response()->json([
+                'success' => false,
+                'message' => 'NIM tidak ditemukan'
+            ], 400);
+        }
+
+        $documents = DocumentModel::with(['uploadLogs' => function($q) {
+                        $q->latest();
+                    }])
+                    ->where('client_id', $client->id)
+                    ->where('nim', $nim)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+
+        $data = $documents->map(function($doc) {
+            $latestLog = $doc->uploadLogs->first();
+            return [
+                'id'             => $doc->id,
+                'title'          => $doc->title,
+                'author'         => $doc->author,
+                'nim'            => $doc->nim,
+                'year_published' => $doc->year_published,
+                'kampus'         => $doc->kampus,
+                'prodi'          => $doc->prodi,
+                'status'         => $doc->status,
+                'created_at'     => $doc->created_at,
+                'notes'          => $latestLog ? $latestLog->notes : null,
+                'verified_at'    => $latestLog ? $latestLog->verified_at : null,
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'data'    => $data
+        ]);
     }
 }

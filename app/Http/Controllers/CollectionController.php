@@ -10,14 +10,17 @@ class CollectionController extends Controller
 {
     public function index($category_name, Request $request)
     {
-        $category = CategoryModel::where('category_name', $category_name)->firstOrFail();
+        $category   = CategoryModel::where('category_name', $category_name)->firstOrFail();
+        $categories = CategoryModel::all(); // ← tambah ini
 
-        $query = DocumentModel::where('category_id', $category->id)->with('category');
+        $query = DocumentModel::where('category_id', $category->id)
+            ->where('status', 'approved') // ← hanya yang approved
+            ->with('category');
 
-        // Handle search
-        if ($request->has('keyword') && $request->keyword) {
-            $keyword = $request->keyword;
-            $filter = $request->filter ?? 'judul';
+        // Handle search — sesuaikan dengan nama parameter di form
+        if ($request->filled('query')) {
+            $keyword = $request->input('query');
+            $filter  = $request->input('search_by', 'judul');
 
             switch ($filter) {
                 case 'judul':
@@ -32,28 +35,30 @@ class CollectionController extends Controller
             }
         }
 
+        if ($request->filled('category')) {
+            $filterCategory = CategoryModel::where('category_name', $request->category)->first();
+            if ($filterCategory) {
+                $query->where('category_id', $filterCategory->id);
+            }
+        }
+
         if ($request->filled('sort_by')) {
             switch ($request->sort_by) {
-                case 'tahun_desc': // Tahun terbaru
+                case 'tahun_desc':
                     $query->orderBy('year_published', 'desc');
                     break;
-
-                case 'tahun_asc': // Tahun terlama
+                case 'tahun_asc':
                     $query->orderBy('year_published', 'asc');
                     break;
-
-                case 'judul_asc': // Judul A-Z
+                case 'judul_asc':
                     $query->orderBy('title', 'asc');
                     break;
-
-                case 'judul_desc': // Judul Z-A
+                case 'judul_desc':
                     $query->orderBy('title', 'desc');
                     break;
-
-                case 'views': // Paling sering dibaca
+                case 'views':
                     $query->orderBy('views', 'desc');
                     break;
-
                 default:
                     $query->latest();
                     break;
@@ -62,9 +67,9 @@ class CollectionController extends Controller
             $query->latest();
         }
 
-        $documents = $query->paginate(10);
+        $documents = $query->paginate(10)->withQueryString(); // ← tambah withQueryString
 
-        return view('collection.collection', compact('documents', 'category'));
+        return view('collection.collection', compact('documents', 'category', 'categories'));
     }
 
     public function view($id)

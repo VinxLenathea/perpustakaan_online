@@ -17,6 +17,7 @@ class DocumentModel extends Model
     protected $fillable = [
         'title',
         'author',
+        'nim',
         'year_published',
         'category_id',
         'abstract',

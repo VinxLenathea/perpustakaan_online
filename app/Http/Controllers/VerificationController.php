@@ -6,6 +6,7 @@ use App\Models\UploadLogModel;
 use App\Models\DocumentModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class VerificationController extends Controller
 {
@@ -74,9 +75,12 @@ class VerificationController extends Controller
 
         $log->update([
             'status' => 'approved',
-            'verified_by' => auth()->id(),
+            'verified_by' => Auth::id(),
             'verified_at' => now()
         ]);
+
+        // Sync document status
+        $log->document->update(['status' => 'approved']);
 
         return response()->json([
             'success' => true,
@@ -92,7 +96,6 @@ class VerificationController extends Controller
 
         $log = UploadLogModel::findOrFail($id);
 
-        // Pastikan log masih pending
         if ($log->status !== 'pending') {
             return response()->json([
                 'success' => false,
@@ -101,9 +104,13 @@ class VerificationController extends Controller
         }
 
         $log->update([
-            'status' => 'rejected',
-            'notes' => $request->reason
+            'status'      => 'rejected',
+            'notes'       => $request->reason,
+            'verified_by' => Auth::id(),
+            'verified_at' => now(),
         ]);
+
+        $log->document->update(['status' => 'rejected']);
 
         return response()->json([
             'success' => true,

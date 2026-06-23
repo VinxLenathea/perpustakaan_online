@@ -47,22 +47,22 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'category_name' => 'required|string|max:255|unique:categories,name,' . $id,
+            'category_name' => 'required|string|max:255|unique:categories,category_name,' . $id,
         ]);
 
-        $category = \App\Models\categoryModel::findOrFail($id);
+        $category = \App\Models\CategoryModel::findOrFail($id);
         $category->category_name = $request->category_name;
         $category->save();
 
         if ($request->ajax()) {
             return response()->json([
-                'success' => true,
-                'message' => 'Category successfully updated!',
+                'success'  => true,
+                'message'  => 'Kategori berhasil diperbarui!',
                 'category' => $category
             ]);
         }
 
-        return redirect()->route('categories.index')->with('success', 'Category successfully updated!');
+        return redirect()->route('categories.index')->with('success', 'Kategori berhasil diperbarui!');
     }
 
     public function destroy(Request $request, $id)

@@ -45,70 +45,53 @@
 
 
                     <!-- Search Bar -->
+                    <!-- Search Bar -->
                     <div class="card shadow mb-4">
                         <div class="card-body bg-light">
-                            <div class="container-fluid">
-                                <div class="d-flex justify-content-between align-items-center flex-wrap">
-                                    <!-- Form Pencarian -->
-                                    <form action="{{ route('library') }}" method="GET"
-                                        class="form-inline mb-2 d-flex align-items-center flex-wrap">
-                                        <input type="text" name="keyword" class="form-control form-control-sm mr-2"
-                                            placeholder="Kata Kunci" value="{{ request('keyword') }}"
-                                            style="min-width:150px;">
+                            <div class="d-flex flex-wrap align-items-center justify-content-between" style="gap: 8px;">
 
-                                        <select name="filter" class="form-control form-control-sm mr-2"
-                                            style="width: auto;">
-                                            <option value="judul" {{ request('filter') == 'judul' ? 'selected' : '' }}>
-                                                Judul</option>
-                                            <option value="pembuat"
-                                                {{ request('filter') == 'pembuat' ? 'selected' : '' }}>Pembuat</option>
-                                            <option value="tahun" {{ request('filter') == 'tahun' ? 'selected' : '' }}>
-                                                Tahun</option>
-                                        </select>
+                                <!-- Form Pencarian -->
+                                <form action="{{ route('library') }}" method="GET"
+                                    class="d-flex flex-wrap align-items-center" style="gap: 8px; flex: 1;">
+                                    <input type="text" name="keyword" class="form-control form-control-sm"
+                                        placeholder="Kata Kunci" value="{{ request('keyword') }}"
+                                        style="min-width: 120px; flex: 1;">
 
-                                        <select name="category_id" class="form-control form-control-sm mr-2"
-                                            style="width: auto;">
-                                            <option value="">Semua Kategori</option>
-                                            @foreach ($categories as $cat)
-                                                <option value="{{ $cat->id }}"
-                                                    {{ request('category_id') == $cat->id ? 'selected' : '' }}>
-                                                    {{ ucfirst(str_replace('_', ' ', $cat->category_name)) }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                    <select name="filter" class="form-control form-control-sm" style="width: auto;">
+                                        <option value="judul" {{ request('filter') == 'judul' ? 'selected' : '' }}>Judul</option>
+                                        <option value="pembuat" {{ request('filter') == 'pembuat' ? 'selected' : '' }}>Pembuat</option>
+                                        <option value="tahun" {{ request('filter') == 'tahun' ? 'selected' : '' }}>Tahun</option>
+                                    </select>
 
-                                        {{-- ✅ ini untuk mempertahankan urutan berdasarkan views --}}
-                                        <input type="hidden" name="sort_by" value="{{ request('sort_by', 'views') }}">
+                                    <select name="category_id" class="form-control form-control-sm" style="width: auto;">
+                                        <option value="">Semua Kategori</option>
+                                        @foreach ($categories as $cat)
+                                        <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>
+                                            {{ ucfirst(str_replace('_', ' ', $cat->category_name)) }}
+                                        </option>
+                                        @endforeach
+                                    </select>
 
-                                        <button type="submit" class="btn btn-success btn-sm">Cari</button>
+                                    <input type="hidden" name="sort_by" value="{{ request('sort_by', 'views') }}">
+                                    <button type="submit" class="btn btn-success btn-sm">Cari</button>
+                                </form>
 
-                                        @php
-                                            $sortOptions = [
-                                                'tahun_desc' => [
-                                                    'icon' => 'fas fa-calendar-alt',
-                                                    'label' => 'Tahun Terbaru',
-                                                ],
-                                                'tahun_asc' => [
-                                                    'icon' => 'fas fa-calendar',
-                                                    'label' => 'Tahun Terlama',
-                                                ],
-                                                'judul_asc' => ['icon' => 'fas fa-sort-alpha-down', 'label' => 'A - Z'],
-                                                'judul_desc' => ['icon' => 'fas fa-sort-alpha-up', 'label' => 'Z - A'],
-                                                'views' => ['icon' => 'fas fa-eye', 'label' => 'Paling Sering Dibaca'],
-                                            ];
-                                            $currentSort = request('sort_by') ?: 'tahun_desc';
-                                        @endphp
+                                @php
+                                $sortOptions = [
+                                'tahun_desc' => ['icon' => 'fas fa-calendar-alt', 'label' => 'Tahun Terbaru'],
+                                'tahun_asc' => ['icon' => 'fas fa-calendar', 'label' => 'Tahun Terlama'],
+                                'judul_asc' => ['icon' => 'fas fa-sort-alpha-down', 'label' => 'A - Z'],
+                                'judul_desc' => ['icon' => 'fas fa-sort-alpha-up', 'label' => 'Z - A'],
+                                'views' => ['icon' => 'fas fa-eye', 'label' => 'Paling Sering Dibaca'],
+                                ];
+                                $currentSort = request('sort_by') ?: 'tahun_desc';
+                                @endphp
 
-
-                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
-                                            data-target="#tambahDocumentModal" style="margin-left: 10px;">
-                                            <i class="fas fa-plus fa-sm text-white-50"></i>
-                                        </button>
-                                </div>
-
-
-
-
+                                <!-- Tombol Tambah -->
+                                <button type="button" class="btn btn-success btn-sm"
+                                    data-toggle="modal" data-target="#tambahDocumentModal">
+                                    Tambah Dokumen <i class="fas fa-plus"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -118,51 +101,59 @@
                         <div class="card-body">
                             <div class="container-fluid">
                                 <div class="table-responsive">
-                                    <div style="display: flex;">
-                                        <div class="dropdown mr-2" style="position: relative;">
+                                    <div class="d-flex flex-wrap align-items-center mb-3" style="gap: 8px;">
+
+                                        {{-- Dropdown Sort --}}
+                                        <div class="dropdown">
                                             <button class="btn btn-success btn-sm dropdown-toggle" type="button"
-                                                id="sortDropdown" data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
+                                                id="sortDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="{{ $sortOptions[$currentSort]['icon'] }}"></i>
                                                 {{ $sortOptions[$currentSort]['label'] }}
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="sortDropdown">
                                                 @foreach ($sortOptions as $key => $option)
-                                                    <a class="dropdown-item {{ $key == $currentSort ? 'active' : '' }}"
-                                                        href="{{ route('library') . '?' . http_build_query(array_merge(request()->query(), ['sort_by' => $key])) }}"><i
-                                                            class="{{ $option['icon'] }}"></i>
-                                                        {{ $option['label'] }}</a>
+                                                <a class="dropdown-item {{ $key == $currentSort ? 'active' : '' }}"
+                                                    href="{{ route('library') . '?' . http_build_query(array_merge(request()->query(), ['sort_by' => $key])) }}">
+                                                    <i class="{{ $option['icon'] }}"></i> {{ $option['label'] }}
+                                                </a>
                                                 @endforeach
                                             </div>
                                         </div>
-                                        <div class="text-end mb-3">
-                                            <form action="" method="GET" class="d-inline" id="exportForm">
-                                                <select name="month" class="form-control form-control-sm d-inline"
-                                                    style="width: auto; margin-right: 10px;" id="monthSelect">
-                                                    <option value="">Pilih Bulan</option>
-                                                    @for ($i = 1; $i <= 12; $i++)
-                                                        <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}"
-                                                            {{ request('month') == str_pad($i, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}>
-                                                            {{ date('F', mktime(0, 0, 0, $i, 1)) }}
-                                                        </option>
+
+                                        {{-- Garis pemisah (hidden di mobile) --}}
+                                        <div class="d-none d-md-block" style="width: 1px; height: 31px; background-color: #ccc;"></div>
+
+                                        {{-- Form Ekspor --}}
+                                        <form action="" method="GET"
+                                            class="d-flex flex-wrap align-items-center"
+                                            id="exportForm" style="gap: 6px;">
+                                            <select name="month" class="form-control form-control-sm"
+                                                style="width: auto; margin-bottom: 0;" id="monthSelect">
+                                                <option value="">Pilih Bulan</option>
+                                                @for ($i = 1; $i <= 12; $i++)
+                                                    <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}"
+                                                    {{ request('month') == str_pad($i, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}>
+                                                    {{ date('F', mktime(0, 0, 0, $i, 1)) }}
+                                                    </option>
                                                     @endfor
-                                                </select>
-                                                <select name="year" class="form-control form-control-sm d-inline"
-                                                    style="width: auto; margin-right: 10px;" id="yearSelect">
-                                                    <option value="">Pilih Tahun</option>
-                                                    @for ($y = date('Y'); $y >= 2020; $y--)
-                                                        <option value="{{ $y }}"
-                                                            {{ request('year') == $y ? 'selected' : '' }}>
-                                                            {{ $y }}
-                                                        </option>
-                                                    @endfor
-                                                </select>
-                                                <button type="button" class="btn btn-success btn-sm disabled"
-                                                    id="exportBtn">
-                                                    <i class="fas fa-file-excel me-2"></i> Export Data Buku
-                                                </button>
-                                            </form>
-                                        </div>
+                                            </select>
+
+                                            <select name="year" class="form-control form-control-sm"
+                                                style="width: auto; margin-bottom: 0;" id="yearSelect">
+                                                <option value="">Pilih Tahun</option>
+                                                @for ($y = date('Y'); $y >= 2020; $y--)
+                                                <option value="{{ $y }}" {{ request('year') == $y ? 'selected' : '' }}>
+                                                    {{ $y }}
+                                                </option>
+                                                @endfor
+                                            </select>
+
+                                            <button type="button" class="btn btn-success btn-sm disabled"
+                                                style="margin-bottom: 0; white-space: nowrap;" id="exportBtn">
+                                                <i class="fas fa-file-excel"></i> Ekspor Data Buku
+                                            </button>
+                                        </form>
+
                                     </div>
                                     <table class="table table-bordered" id="dataTable" width="100%"
                                         cellspacing="0">
@@ -180,59 +171,60 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($documents as $doc)
-                                                <tr id="row-{{ $doc->id }}">
-                                                    <td>
-                                                        @if ($doc->category->category_name == 'Poster')
-                                                            @if ($doc->file_url && in_array(pathinfo($doc->file_url, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg', 'gif']))
-                                                                <img src="{{ asset('storage/' . $doc->file_url) }}"
-                                                                    alt="Cover {{ $doc->title }}"
-                                                                    style="width: 50px; height: 70px; object-fit: cover;">
-                                                            @else
-                                                                <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}"
-                                                                    alt="Cover {{ $doc->title }}"
-                                                                    style="width: 50px; height: 70px; object-fit: cover;">
-                                                            @endif
-                                                        @else
-                                                            @if ($doc->cover_image)
-                                                                <img src="{{ asset('storage/' . $doc->cover_image) }}"
-                                                                    alt="Cover {{ $doc->title }}"
-                                                                    style="width: 50px; height: 70px; object-fit: cover;">
-                                                            @else
-                                                                <img src="{{ asset('assets/img/undraw_posting_photo.svg') }}"
-                                                                    alt="Cover {{ $doc->title }}"
-                                                                    style="width: 50px; height: 70px; object-fit: cover;">
-                                                            @endif
-                                                        @endif
-                                                    </td>
-                                                    <td class="title">{{ $doc->title }}</td>
-                                                    <td class="category">{{ $doc->category->category_name }}</td>
-                                                    <td class="year">{{ $doc->year_published }}</td>
-                                                    <td class="author">{{ $doc->author }}</td>
-                                                    <td class="kampus">{{ $doc->kampus ?: '-' }}</td>
-                                                    <td class="prodi">{{ $doc->prodi ?: '-' }}</td>
-                                                    <td>
-                                                        <div class="d-flex flex-column align-items-center gap-1">
-                                                            <a href="{{ route('library.detail', $doc->id) }}"
-                                                                class="btn btn-info btn-sm" style="width: 32px"
-                                                                title="Detail">
-                                                                <i class="fas fa-eye"></i>
-                                                            </a>
-                                                            <button class="btn btn-success btn-sm" data-toggle="modal"
-                                                                data-target="#editDocumentModal{{ $doc->id }}"
-                                                                style="width: 32px; margin-top: 5px" title="Edit">
-                                                                <i class="fas fa-edit"></i>
-                                                            </button>
-                                                            <button type="button" class="btn btn-danger btn-sm"
-                                                                data-toggle="modal"
-                                                                style="margin-top: 5px; width: 32px"
-                                                                data-target="#confirmModal"
-                                                                data-url="{{ route('library.destroy', $doc) }}"
-                                                                title="Hapus">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                            <tr id="row-{{ $doc->id }}">
+                                                <td>
+                                                    @if ($doc->category->category_name == 'Poster')
+                                                    @if ($doc->file_url && in_array(pathinfo($doc->file_url, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg', 'gif']))
+                                                    <img src="{{ asset('storage/' . $doc->file_url) }}"
+                                                        alt="Cover {{ $doc->title }}"
+                                                        style="width: 50px; height: 70px; object-fit: cover;">
+                                                    @else
+                                                    <img src="{{ asset('assets/img/img_not-found.png') }}"
+                                                        alt="Cover {{ $doc->title }}"
+                                                        style="width: 50px; height: 70px; object-fit: cover;">
+                                                    @endif
+                                                    @else
+                                                    @if ($doc->cover_image)
+                                                    <img src="{{ asset('storage/' . $doc->cover_image) }}"
+                                                        alt="Cover {{ $doc->title }}"
+                                                        style="width: 50px; height: 70px; object-fit: cover;">
+                                                    @else
+                                                    <img src="{{ asset('assets/img/img_not-found.png') }}"
+                                                        alt="Cover {{ $doc->title }}"
+                                                        style="width: 50px; height: 70px; object-fit: cover;">
+                                                    @endif
+                                                    @endif
+                                                </td>
+                                                <td class="title">{{ $doc->title }}</td>
+                                                <td class="category">{{ $doc->category->category_name }}</td>
+                                                <td class="year">{{ $doc->year_published }}</td>
+                                                <td class="author">{{ $doc->author }}</td>
+                                                <td class="kampus">{{ $doc->kampus ?: '-' }}</td>
+                                                <td class="prodi">{{ $doc->prodi ?: '-' }}</td>
+                                                <td>
+                                                    <div class="d-flex flex-column align-items-center gap-1">
+                                                        <a href="{{ route('library.detail', $doc->id) }}"
+                                                            class="btn btn-info btn-sm"
+                                                            style="width: 32px"
+                                                            title="Detail">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        <button class="btn btn-success btn-sm" data-toggle="modal"
+                                                            data-target="#editDocumentModal{{ $doc->id }}"
+                                                            style="width: 32px; margin-top: 5px" title="Edit">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <button type="button" class="btn btn-danger btn-sm"
+                                                            data-toggle="modal"
+                                                            style="margin-top: 5px; width: 32px"
+                                                            data-target="#confirmModal"
+                                                            data-url="{{ route('library.destroy', $doc) }}"
+                                                            title="Hapus">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -254,30 +246,28 @@
                                 @csrf
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="tambahDocumentLabel">Tambah Document</h5>
-                                        <button type="button" class="close" data-dismiss="modal"
-                                            aria-label="Close">
+                                        <h5 class="modal-title" id="tambahDocumentLabel">Tambah Dokumen</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <!-- Form Input -->
+
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="title">Judul</label>
-                                                    <input type="text" class="form-control" name="title"
-                                                        required>
+                                                    <input type="text" class="form-control" name="title" required>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="author">Pembuat</label>
-                                                    <input type="text" class="form-control" name="author"
-                                                        required>
+                                                    <input type="text" class="form-control" name="author" required>
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
@@ -289,41 +279,56 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="category_id">Kategori</label>
-                                                    <select class="form-control" name="category_id" required>
+                                                    <select class="form-control" name="category_id" id="categorySelect" required>
                                                         <option value="">Pilih Kategori</option>
                                                         @foreach ($categories as $cat)
-                                                            <option value="{{ $cat->id }}">
-                                                                {{ ucfirst(str_replace('_', ' ', $cat->category_name)) }}
-                                                            </option>
+                                                        <option value="{{ $cat->id }}"
+                                                            data-name="{{ strtolower($cat->category_name) }}">
+                                                            {{ ucfirst(str_replace('_', ' ', $cat->category_name)) }}
+                                                        </option>
                                                         @endforeach
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
+
+                                        {{-- NIM - muncul hanya saat Penelitian Eksternal --}}
+                                        <div class="row nim-row" style="display: none;">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="nim">NIM <span class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control" name="nim"
+                                                        placeholder="Masukkan NIM peneliti">
+                                                    <small class="text-muted">Wajib diisi untuk kategori Penelitian Eksternal.</small>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for="file">Upload File (PDF,PNG)</label>
+                                                    <label for="file">Upload File (PDF, PNG)</label>
                                                     <input type="file" class="form-control" name="file"
                                                         accept=".pdf,.png,.jpg,.jpeg" required>
-                                                    <small class="text-muted">Opsional: JPG, JPEG. Max
-                                                        10MB.</small>
+                                                    <small class="text-muted">Format: PDF, JPG, JPEG. Max 10MB.</small>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="cover_image">Upload Cover Image</label>
-                                                    <input type="file" class="form-control" name="cover_image"
-                                                        accept="image/*">
-                                                    <small class="text-muted">Opsional. Format: JPG, PNG, GIF. Max
-                                                        2MB.</small>
+                                                    <input type="file" class="form-control" name="cover_image" accept="image/*">
+                                                    <small class="text-muted">Opsional. Format: JPG, PNG, GIF. Max 2MB.</small>
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="form-group">
                                             <label for="abstract">Abstrak</label>
-                                            <textarea class="form-control" name="abstract" rows="2" placeholder="Masukkan abstrak dokumen..."></textarea>
+                                            <textarea class="form-control" name="abstract" rows="2"
+                                                placeholder="Masukkan abstrak dokumen..."></textarea>
                                         </div>
+
+                                        {{-- Kampus & Prodi - muncul hanya saat Penelitian Eksternal --}}
                                         <div class="row kampus-prodi-row" style="display: none;">
                                             <div class="col-md-6">
                                                 <div class="form-group">
@@ -338,10 +343,10 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-dismiss="modal">Batal</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                                         <button type="submit" class="btn btn-primary">Simpan</button>
                                     </div>
                                 </div>
@@ -351,112 +356,112 @@
 
                     <!-- Modal Edit Document (Per Document) -->
                     @foreach ($documents as $doc)
-                        <div class="modal fade" id="editDocumentModal{{ $doc->id }}" tabindex="-1"
-                            role="dialog" aria-labelledby="editDocumentLabel{{ $doc->id }}"
-                            aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <form class="updateForm" data-id="{{ $doc->id }}"
-                                    action="{{ route('library.update', $doc) }}" method="POST"
-                                    enctype="multipart/form-data">
-                                    @csrf
-                                    @method('PUT')
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="editDocumentLabel{{ $doc->id }}">Edit
-                                                Document</h5>
-                                            <button type="button" class="close" data-dismiss="modal"
-                                                aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="title">Judul</label>
-                                                        <input type="text" class="form-control" name="title"
-                                                            value="{{ $doc->title }}" required>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="author">Pembuat</label>
-                                                        <input type="text" class="form-control" name="author"
-                                                            value="{{ $doc->author }}" required>
-                                                    </div>
+                    <div class="modal fade" id="editDocumentModal{{ $doc->id }}" tabindex="-1"
+                        role="dialog" aria-labelledby="editDocumentLabel{{ $doc->id }}"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <form class="updateForm" data-id="{{ $doc->id }}"
+                                action="{{ route('library.update', $doc) }}" method="POST"
+                                enctype="multipart/form-data">
+                                @csrf
+                                @method('PUT')
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editDocumentLabel{{ $doc->id }}">Edit
+                                            Document</h5>
+                                        <button type="button" class="close" data-dismiss="modal"
+                                            aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="title">Judul</label>
+                                                    <input type="text" class="form-control" name="title"
+                                                        value="{{ $doc->title }}" required>
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="year_published">Tahun Terbit</label>
-                                                        <input type="number" class="form-control"
-                                                            name="year_published" value="{{ $doc->year_published }}"
-                                                            min="1900" max="2099" required>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="category_id">Kategori</label>
-                                                        <select class="form-control" name="category_id" required>
-                                                            @foreach ($categories as $cat)
-                                                                <option value="{{ $cat->id }}"
-                                                                    {{ $doc->category_id == $cat->id ? 'selected' : '' }}>
-                                                                    {{ ucfirst(str_replace('_', ' ', $cat->category_name)) }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="file">Ganti File (Opsional)</label>
-                                                        <input type="file" class="form-control" name="file"
-                                                            accept=".pdf,.doc,.docx">
-                                                        <small class="text-muted">Kosongkan jika tidak ingin mengganti
-                                                            file.</small>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="cover_image">Ganti Cover Image (Opsional)</label>
-                                                        <input type="file" class="form-control" name="cover_image"
-                                                            accept="image/*">
-                                                        <small class="text-muted">Kosongkan jika tidak ingin mengganti
-                                                            cover. Format: JPG, PNG, GIF. Max 2MB.</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="abstract">Abstrak</label>
-                                                <textarea class="form-control" name="abstract" rows="2" placeholder="Masukkan abstrak dokumen...">{{ $doc->abstract }}</textarea>
-                                            </div>
-                                            <div class="row kampus-prodi-row" style="display: none;">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="kampus">Kampus</label>
-                                                        <input type="text" class="form-control" name="kampus"
-                                                            value="{{ $doc->kampus }}">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="prodi">Prodi</label>
-                                                        <input type="text" class="form-control" name="prodi"
-                                                            value="{{ $doc->prodi }}">
-                                                    </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="author">Pembuat</label>
+                                                    <input type="text" class="form-control" name="author"
+                                                        value="{{ $doc->author }}" required>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Batal</button>
-                                            <button type="submit" class="btn btn-primary">Update</button>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="year_published">Tahun Terbit</label>
+                                                    <input type="number" class="form-control"
+                                                        name="year_published" value="{{ $doc->year_published }}"
+                                                        min="1900" max="2099" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="category_id">Kategori</label>
+                                                    <select class="form-control" name="category_id" required>
+                                                        @foreach ($categories as $cat)
+                                                        <option value="{{ $cat->id }}"
+                                                            {{ $doc->category_id == $cat->id ? 'selected' : '' }}>
+                                                            {{ ucfirst(str_replace('_', ' ', $cat->category_name)) }}
+                                                        </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="file">Ganti File (Opsional)</label>
+                                                    <input type="file" class="form-control" name="file"
+                                                        accept=".pdf,.doc,.docx">
+                                                    <small class="text-muted">Kosongkan jika tidak ingin mengganti
+                                                        file.</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="cover_image">Ganti Cover Image (Opsional)</label>
+                                                    <input type="file" class="form-control" name="cover_image"
+                                                        accept="image/*">
+                                                    <small class="text-muted">Kosongkan jika tidak ingin mengganti
+                                                        cover. Format: JPG, PNG, GIF. Max 2MB.</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="abstract">Abstrak</label>
+                                            <textarea class="form-control" name="abstract" rows="2" placeholder="Masukkan abstrak dokumen...">{{ $doc->abstract }}</textarea>
+                                        </div>
+                                        <div class="row kampus-prodi-row" style="display: none;">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="kampus">Kampus</label>
+                                                    <input type="text" class="form-control" name="kampus"
+                                                        value="{{ $doc->kampus }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="prodi">Prodi</label>
+                                                    <input type="text" class="form-control" name="prodi"
+                                                        value="{{ $doc->prodi }}">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </form>
-                            </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Batal</button>
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
+                    </div>
                     @endforeach
 
 
@@ -541,21 +546,6 @@
         </div>
     </div>
 
-    @if (session('success'))
-        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-                <div class="modal-content text-center shadow-lg border-0 rounded animate__animated animate__zoomIn">
-                    <div class="modal-body p-4">
-                        <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
-                        <h5 class="text-success">{{ session('success') }}</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
-
-
     <!-- jQuery -->
     <script src="assets/vendor/jquery/jquery.min.js"></script>
 
@@ -566,13 +556,33 @@
     <script src="assets/vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="assets/js/sb-admin-2.min.js"></script>
     <script src="assets/vendor/chart.js/Chart.min.js"></script>
-    <script src="assets/js/demo/chart-area-demo.js"></script>
-    <script src="assets/js/demo/chart-pie-demo.js"></script>
 
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script>
+        var baseUrl = "{{ url('/') }}";
+    </script>
+
     <!-- Modal konfirmasi hapus menggunakan JavaScript yang sama dengan users.blade.php -->
+    <script>
+        var sessionSuccess = "{{ session('success') ?? '' }}";
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            if (sessionSuccess) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: sessionSuccess,
+                    timer: 2500,
+                    showConfirmButton: false,
+                    timerProgressBar: true
+                });
+            }
+        });
+    </script>
 
     <script>
         // Modal konfirmasi hapus dengan AJAX (Generic untuk semua jenis data)
@@ -658,20 +668,6 @@
                 }
             });
         });
-    </script>
-
-    <script>
-        // Modal sukses otomatis muncul
-        @if (session('success'))
-            $(document).ready(function() {
-                let modal = $('#successModal');
-                modal.modal('show');
-
-                setTimeout(function() {
-                    modal.modal('hide');
-                }, 2500);
-            });
-        @endif
     </script>
 
     <script>
@@ -855,11 +851,25 @@
                                 <td class="prodi">${response.document.prodi || '-'}</td>
                                 <td>
                                     <div class="d-flex flex-column align-items-center gap-1">
-                                        <a href="/library/detail/${response.document.id}" class="btn btn-info btn-sm">
-                                            <i class="fas fa-eye"></i> Detail
+                                        <a href="${baseUrl}/library/detail/${response.document.id}"
+                                            class="btn btn-info btn-sm"
+                                            style="width: 32px"
+                                            title="Detail">
+                                            <i class="fas fa-eye"></i>
                                         </a>
-                                        <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#editDocumentModal${response.document.id}"><i class="fas fa-edit"></i></button>
-                                        <button type="button" class="btn btn-danger btn-sm deleteBtn" data-toggle="modal" data-target="#confirmModal" data-url="/library/${response.document.id}"><i class="fas fa-trash"></i></button>
+                                        <button class="btn btn-success btn-sm" data-toggle="modal"
+                                            data-target="#editDocumentModal${response.document.id}"
+                                            style="width: 32px; margin-top: 5px" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm"
+                                            data-toggle="modal"
+                                            style="margin-top: 5px; width: 32px"
+                                            data-target="#confirmModal"
+                                            data-url="${baseUrl}/library/${response.document.id}"
+                                            title="Hapus">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -910,25 +920,35 @@
     </script>
 
     <script>
-        // Show/hide abstract, cover image, kampus, and prodi fields based on category selection
         $(document).ready(function() {
             function toggleFields(form) {
                 var categorySelect = form.find('select[name="category_id"]');
                 var selectedCategoryText = categorySelect.find('option:selected').text().trim();
+                var isPenelitianEksternal = selectedCategoryText === 'Penelitian Eksternal';
+                var isPoster = selectedCategoryText === 'Poster';
 
-                // Show fields for all categories except Poster
-                if (selectedCategoryText !== 'Poster') {
-                    form.find('input[name="cover_image"]').closest('.form-group').show();
-                    form.find('textarea[name="abstract"]').closest('.form-group').show();
-                } else {
+                // Cover image & abstrak — sembunyikan hanya untuk Poster
+                if (isPoster) {
                     form.find('input[name="cover_image"]').closest('.form-group').hide();
                     form.find('textarea[name="abstract"]').closest('.form-group').hide();
+                } else {
+                    form.find('input[name="cover_image"]').closest('.form-group').show();
+                    form.find('textarea[name="abstract"]').closest('.form-group').show();
                 }
 
-                // Show kampus and prodi only for 'penelitian eksternal'
-                if (selectedCategoryText === 'Penelitian Eksternal') {
+                // NIM, Kampus & Prodi — hanya untuk Penelitian Eksternal
+                if (isPenelitianEksternal) {
+                    form.find('.nim-row').show();
+                    form.find('input[name="nim"]').attr('required', true);
+
                     form.find('.kampus-prodi-row').show();
+                    form.find('input[name="kampus"]').attr('required', true); // ← tambah required
+                    form.find('input[name="prodi"]').attr('required', true);
+
+                    form.find('textarea[name="abstract"]').prop('required', true);
                 } else {
+                    form.find('.nim-row').hide();
+                    form.find('input[name="nim"]').removeAttr('required').val('');
                     form.find('.kampus-prodi-row').hide();
                 }
             }
@@ -950,8 +970,6 @@
             $('[id^="editDocumentModal"] select[name="category_id"]').on('change', function() {
                 toggleFields($(this).closest('form'));
             });
-
-
         });
     </script>
 

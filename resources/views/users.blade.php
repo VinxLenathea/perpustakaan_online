@@ -60,6 +60,7 @@
                                         <th>ID</th>
                                         <th>Username</th>
                                         <th>Email</th>
+                                        <th>Role</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -69,15 +70,16 @@
                                             <td>{{ $user->id }}</td>
                                             <td>{{ $user->name }}</td>
                                             <td>{{ $user->email }}</td>
+                                            <td>{{ $user->role }}</td>
                                             <td>
                                                 <!-- Tombol Edit -->
-                                                @if ($user->name !== 'Master Admin')
+                                                @if ($user->role !== 'master_admin')
                                                     <button class="btn btn-success btn-sm" data-toggle="modal"
                                                         data-target="#editUserModal{{ $user->id }}">Edit</button>
                                                 @endif
 
                                                 <!-- Tombol Hapus -->
-                                                @if ($user->name !== 'Master Admin')
+                                                @if ($user->role !== 'master_admin')
                                                     <button type="button" class="btn btn-danger btn-sm"
                                                         data-toggle="modal" data-target="#confirmModal"
                                                         data-url="{{ route('users.destroy', $user->id) }}">
@@ -260,6 +262,7 @@
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="assets/js/sb-admin-2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         // Modal konfirmasi hapus dengan AJAX (Generic untuk semua jenis data)
@@ -367,20 +370,25 @@
         });
     </script>
     <script>
-        @if (session('success'))
-            $(document).ready(function() {
-                let modal = $('#successModal');
-                modal.modal('show');
+        var sessionSuccess = "{{ session('success') ?? '' }}";
+    </script>
 
-                // Tutup otomatis setelah 2.5 detik
-                setTimeout(function() {
-                    modal.modal('hide');
-                }, 2500);
-            });
-        @endif
+    <script>
+        $(document).ready(function() {
+            if (sessionSuccess) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: sessionSuccess,
+                    timer: 2500,
+                    showConfirmButton: false,
+                    timerProgressBar: true
+                });
+            }
+        });
     </script>
     <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
 
     <script>
         $(document).ready(function() {

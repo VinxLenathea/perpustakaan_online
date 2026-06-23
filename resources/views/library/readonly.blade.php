@@ -4,22 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $document->title }} - Baca Saja</title>
+    <title>{{ $document->title }} - Viewer Aman</title>
 
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
         body {
-            background-color: #f4f6f8;
+            margin: 0;
+            background: #f4f6f8;
+            overflow-x: hidden;
             user-select: none;
             -webkit-user-select: none;
             -ms-user-select: none;
-            margin: 0;
-            overflow-x: hidden;
-            overflow-y: auto;
         }
 
         .header {
@@ -27,192 +24,221 @@
             color: white;
             padding: 15px;
             text-align: center;
-            user-select: none;
+            font-weight: bold;
+            position: relative;
+            z-index: 999;
         }
 
-        .iframe-wrapper {
+        .viewer-wrapper {
             position: relative;
             width: 100%;
-            height: 95vh;
+            height: 92vh;
             overflow: hidden;
-
+            background: #000;
         }
 
         iframe {
             width: 100%;
             height: 100%;
             border: none;
-            pointer-events: auto;
-            overflow: auto;
         }
 
-        /* ✅ Overlay transparan: blok klik kanan tapi tetap bisa scroll */
+        /* overlay blok kanan */
         .overlay-blocker {
             position: absolute;
             top: 0;
             left: 0;
-            width: 90%;
+            width: 92%;
             height: 100%;
+            z-index: 5;
             background: transparent;
-            z-index: 10;
         }
 
-        /* supaya scroll lewat overlay tetap berfungsi */
-        .overlay-blocker::-webkit-scrollbar {
-            display: none;
+        /* watermark */
+        .watermark {
+            position: absolute;
+            top: 30%;
+            left: 15%;
+            font-size: 42px;
+            color: rgba(255, 0, 0, 0.12);
+            transform: rotate(-28deg);
+            z-index: 8;
+            pointer-events: none;
+            font-weight: bold;
+            white-space: nowrap;
         }
 
-        /* Sembunyikan saat print */
-        @media print {
-            body {
-                display: none !important;
-            }
+        .watermark2 {
+            position: absolute;
+            top: 60%;
+            left: 25%;
+            font-size: 35px;
+            color: rgba(0, 0, 255, 0.10);
+            transform: rotate(-28deg);
+            z-index: 8;
+            pointer-events: none;
+            white-space: nowrap;
         }
 
-        .btn-beranda {
-            background-color: #001f3f;
-            color: #fff;
+        .btn-back {
+            background: #001f3f;
+            color: white;
             border: none;
-            transition: 0.3s;
         }
 
-        .btn-beranda:hover {
-            background-color: #003366;
-            color: #fff;
+        .btn-back:hover {
+            background: #003366;
+            color: white;
         }
 
-        /* Notifikasi kecil */
         #notice {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0,0,0,.8);
             color: white;
-            padding: 10px 15px;
+            padding: 10px 14px;
             border-radius: 8px;
-            font-size: 14px;
             display: none;
-            z-index: 9999;
-            animation: fadein 0.5s;
+            z-index: 99999;
         }
 
-        @keyframes fadein {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
+        .blur-screen {
+            filter: blur(18px);
+        }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
+        @media print {
+            body {
+                display: none !important;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="header">
-        <p class="mb-0 fw-bold">{{ $document->title }}</p>
+
+<div class="header">
+    {{ $document->title }}
+</div>
+
+<div id="viewerArea" class="viewer-wrapper">
+
+    {{-- watermark --}}
+    <div class="watermark">
+        {{ auth()->user()->name ?? 'Guest' }} | {{ now()->format('d-m-Y H:i') }}
     </div>
 
-    <div class="iframe-wrapper">
-        @php
-            $fileExtension = pathinfo($document->file_url, PATHINFO_EXTENSION);
-            $isImage = in_array(strtolower($fileExtension), ['png', 'jpg', 'jpeg', 'gif']);
-        @endphp
-
-        @if ($isImage)
-            <!-- Tampilkan gambar di tengah -->
-            <div class="d-flex justify-content-center align-items-center h-100">
-                <img src="{{ asset('storage/' . $document->file_url) }}" alt="{{ $document->title }}" class="img-fluid"
-                    style="max-width: 100%; max-height: 100%; object-fit: contain;">
-            </div>
-        @else
-            <!-- Dokumen PDF -->
-            <iframe id="docFrame" src="{{ asset('storage/' . $document->file_url) }}#toolbar=0&navpanes=0&scrollbar=1"
-                allowfullscreen>
-            </iframe>
-
-            <!-- Overlay transparan -->
-            <div class="overlay-blocker" oncontextmenu="return false;" onmousedown="if(event.button===2) return false;"
-                onmouseup="if(event.button===2) return false;" ondragstart="return false;" onselectstart="return false;"
-                ontouchstart="return true;" ontouchmove="return true;">
-            </div>
-        @endif
+    <div class="watermark2">
+        PERPUSTAKAAN ONLINE RSUD MOHAMMAD NOER PAMEKASAN
     </div>
 
-    @if (!isset($showBackButton) || $showBackButton)
-        <div class="text-center my-3">
-            <button onclick="window.history.back()" class="btn btn-beranda btn-lg px-4">
-                <i class="fas fa-arrow-left me-2"></i> Kembali ke Halaman Sebelumnya
-            </button>
-        </div>
-    @endif
+    {{-- pdf --}}
+    <iframe
+        src="{{ asset('storage/' . $document->file_url) }}#toolbar=0&navpanes=0&scrollbar=1"
+        id="docFrame"
+        allowfullscreen>
+    </iframe>
 
-    <!-- Notifikasi -->
-    <div id="notice"></div>
+    {{-- blocker --}}
+    <div class="overlay-blocker"
+         oncontextmenu="return false;"
+         ondragstart="return false;"
+         onselectstart="return false;">
+    </div>
 
-    <script>
-        (function() {
-            'use strict';
+</div>
 
-            const showNotice = (msg) => {
-                const notice = document.getElementById('notice');
-                notice.textContent = msg;
-                notice.style.display = 'block';
-                setTimeout(() => {
-                    notice.style.display = 'none';
-                }, 2000);
-            };
+<div class="text-center my-3">
+    <button onclick="history.back()" class="btn btn-back px-4 btn-lg">
+        <i class="fas fa-arrow-left me-2"></i>Kembali
+    </button>
+</div>
 
-            // 🔒 Blok klik kanan di seluruh halaman
-            document.addEventListener('contextmenu', e => e.preventDefault());
-            document.addEventListener('mousedown', e => {
-                if (e.button === 2) e.preventDefault();
-            });
-            document.addEventListener('mouseup', e => {
-                if (e.button === 2) e.preventDefault();
-            });
+<div id="notice"></div>
 
-            // 🔒 Blok shortcut developer
-            document.addEventListener('keydown', e => {
-                const k = e.key.toLowerCase();
-                if (
-                    e.key === 'F12' ||
-                    (e.ctrlKey && ['s', 'u', 'p'].includes(k)) ||
-                    (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(k))
-                ) {
-                    e.preventDefault();
-                    console.clear();
-                    showNotice('Tombol pintasan ini dinonaktifkan!');
-                }
-            });
+<script>
+(function () {
+    "use strict";
 
-            // 🔒 Peringatan PrintScreen
-            document.addEventListener('keyup', e => {
-                if (e.key === 'PrintScreen') {
-                    showNotice('Tangkapan layar tidak diperbolehkan.');
-                    navigator.clipboard.writeText('');
-                }
-            });
+    const notice = document.getElementById("notice");
+    const viewer = document.getElementById("viewerArea");
 
-            // 🔒 Deteksi Developer Tools (lebih stabil)
-            let open = false;
-            const threshold = 200;
-            setInterval(() => {
-                if (
-                    window.outerWidth - window.innerWidth > threshold ||
-                    window.outerHeight - window.innerHeight > threshold
-                ) {
-                    if (!open) {
-                        open = true;
-                        document.body.innerHTML =
-                            "<h1 style='color:red;text-align:center;margin-top:20%;'>⚠️ Akses Diblokir</h1>";
-                    }
-                }
-            }, 1500);
-        })();
-    </script>
+    function showNotice(text) {
+        notice.innerText = text;
+        notice.style.display = "block";
+        setTimeout(() => {
+            notice.style.display = "none";
+        }, 2000);
+    }
+
+    // klik kanan
+    document.addEventListener("contextmenu", e => e.preventDefault());
+
+    // blok drag
+    document.addEventListener("dragstart", e => e.preventDefault());
+
+    // blok select
+    document.addEventListener("selectstart", e => e.preventDefault());
+
+    // blok shortcut
+    document.addEventListener("keydown", function (e) {
+        let key = e.key.toLowerCase();
+
+        if (
+            e.key === "F12" ||
+            (e.ctrlKey && ["s", "u", "p"].includes(key)) ||
+            (e.ctrlKey && e.shiftKey && ["i", "j", "c"].includes(key))
+        ) {
+            e.preventDefault();
+            showNotice("Shortcut dinonaktifkan");
+        }
+    });
+
+    // printscreen
+    document.addEventListener("keyup", function(e){
+        if(e.key === "PrintScreen"){
+            navigator.clipboard.writeText('');
+            showNotice("Screenshot terdeteksi");
+        }
+    });
+
+    // blur saat pindah tab
+    document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+            viewer.classList.add("blur-screen");
+        } else {
+            viewer.classList.remove("blur-screen");
+        }
+    });
+
+    // deteksi devtools
+    let devtoolsOpen = false;
+
+    setInterval(() => {
+        const widthGap = window.outerWidth - window.innerWidth;
+        const heightGap = window.outerHeight - window.innerHeight;
+
+        if (widthGap > 180 || heightGap > 180) {
+            if (!devtoolsOpen) {
+                devtoolsOpen = true;
+                document.body.innerHTML = `
+                    <div style="
+                        height:100vh;
+                        display:flex;
+                        justify-content:center;
+                        align-items:center;
+                        font-size:40px;
+                        color:red;
+                        font-weight:bold;">
+                        ⚠️ Akses Diblokir
+                    </div>
+                `;
+            }
+        }
+    }, 1500);
+
+})();
+</script>
+
 </body>
-
 </html>

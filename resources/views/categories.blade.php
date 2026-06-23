@@ -64,70 +64,70 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($categories as $category)
-                                        <tr id="userRow{{ $category->id }}">
-                                            <td>{{ $category->id }}</td>
-                                            <td>{{ $category->category_name }}</td>
-                                            <td>
-                                                <!-- Tombol Edit -->
+                                    <tr id="userRow{{ $category->id }}">
+                                        <td>{{ $category->id }}</td>
+                                        <td>{{ $category->category_name }}</td>
+                                        <td>
+                                            <!-- Tombol Edit -->
 
-                                                <button class="btn btn-success btn-sm" data-toggle="modal"
-                                                    data-target="#editUserModal{{ $category->id }}">Edit</button>
-
-
-                                                <!-- Tombol Hapus -->
-
-                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
-                                                    data-target="#confirmModal"
-                                                    data-url="{{ route('categories.destroy', $category->id) }}">
-                                                    Hapus
-                                                </button>
+                                            <button class="btn btn-success btn-sm" data-toggle="modal"
+                                                data-target="#editUserModal{{ $category->id }}">Edit</button>
 
 
-                                            </td>
-                                        </tr>
+                                            <!-- Tombol Hapus -->
 
-                                        <!-- Modal Edit User -->
-                                        <div class="modal fade" id="editUserModal{{ $category->id }}" tabindex="-1"
-                                            role="dialog" aria-labelledby="editUserLabel{{ $category->id }}"
-                                            aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <form id="editUserForm{{ $category->id }}" class="editUserForm"
-                                                    data-id="{{ $category->id }}"
-                                                    action="{{ route('categories.update', $category) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title"
-                                                                id="editUserLabel{{ $category->id }}">Edit Kategori
-                                                            </h5>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <!-- Form Edit -->
-                                                            <div class="form-group">
-                                                                <label for="name">Nama Kategori</label>
-                                                                <input type="text" class="form-control"
-                                                                    name="name"
-                                                                    value="{{ $category->category_name }}" required>
-                                                            </div>
+                                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                                                data-target="#confirmModal"
+                                                data-url="{{ route('categories.destroy', $category->id) }}">
+                                                Hapus
+                                            </button>
 
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                data-dismiss="modal">Batal</button>
-                                                            <button type="submit"
-                                                                class="btn btn-primary">Update</button>
-                                                        </div>
+
+                                        </td>
+                                    </tr>
+
+                                    <!-- Modal Edit User -->
+                                    <div class="modal fade" id="editUserModal{{ $category->id }}" tabindex="-1"
+                                        role="dialog" aria-labelledby="editUserLabel{{ $category->id }}"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <form id="editUserForm{{ $category->id }}" class="editUserForm"
+                                                data-id="{{ $category->id }}"
+                                                action="{{ route('categories.update', $category) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('PUT')
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title"
+                                                            id="editUserLabel{{ $category->id }}">Edit Kategori
+                                                        </h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
                                                     </div>
-                                                </form>
+                                                    <div class="modal-body">
+                                                        <!-- Form Edit -->
+                                                        <div class="form-group">
+                                                            <label for="name">Nama Kategori</label>
+                                                            <input type="text" class="form-control"
+                                                                name="category_name"
+                                                                value="{{ $category->category_name }}" required>
+                                                        </div>
 
-                                            </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">Batal</button>
+                                                        <button type="submit"
+                                                            class="btn btn-primary">Update</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+
                                         </div>
+                                    </div>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -151,7 +151,7 @@
                                         <!-- Form Input -->
                                         <div class="form-group">
                                             <label for="name">Nama Kategori</label>
-                                            <input type="text" class="form-control" name="name" required>
+                                            <input type="text" class="form-control" name="category_name" required>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -224,153 +224,109 @@
     <a class="scroll-to-top rounded" href="#page-top"><i class="fas fa-angle-up"></i></a>
 
     <!-- Bootstrap core JavaScript-->
+    <!-- jQuery -->
     <script src="assets/vendor/jquery/jquery.min.js"></script>
+    <!-- Bootstrap -->
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Plugin tambahan -->
     <script src="assets/vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="assets/js/sb-admin-2.min.js"></script>
+    <!-- SweetAlert2 — harus SEBELUM script lain yang pakai Swal -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        // Modal konfirmasi hapus dengan AJAX (Generic untuk semua jenis data)
-        $('#confirmModal').on('show.bs.modal', function(event) {
-            var button = $(event.relatedTarget); // Tombol yang diklik
-            var url = button.data('url'); // Ambil data-url dari tombol
-            var row = button.closest('tr'); // Ambil row tabel
+        var baseUrl = "{{ url('/') }}";
+        var sessionSuccess = "{{ session('success') ?? '' }}";
+    </script>
 
-            // Deteksi jenis data berdasarkan struktur tabel
-            if (row.find('td:nth-child(3)').length > 0) {
-                // User table (kolom: ID, Name, Email, Aksi)
-                var itemName = row.find('td:nth-child(2)').text(); // Nama user
-                var itemDetail = row.find('td:nth-child(3)').text(); // Email user
-                var itemType = 'user';
-
-                var detailsHtml = `
-                    <div class="alert alert-light">
-                        <strong>Nama Kategori:</strong> ${itemName}<br>
-
-                    </div>
-                `;
-
-                var warningText = 'User ini akan dihapus secara permanen.';
-            } else {
-                // Document table (kolom: ID, Judul, Kategori, Tahun, Pembuat, File, Aksi)
-                var itemName = row.find('.title').text(); // Judul document
-                var itemDetail = row.find('.author').text(); // Penulis document
-                var itemType = 'document';
-
-                var detailsHtml = `
-                    <div class="alert alert-light">
-                        <strong>Judul:</strong> ${itemName}<br>
-                        <strong>Penulis:</strong> ${itemDetail}
-                    </div>
-                `;
-
-                var warningText = 'Document ini akan dihapus secara permanen beserta file yang terkait.';
+    <script>
+        $(document).ready(function() {
+            if (sessionSuccess) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: sessionSuccess,
+                    timer: 2500,
+                    showConfirmButton: false,
+                    timerProgressBar: true
+                });
             }
+        });
+    </script>
 
-            // Update modal content
+    <script>
+        // Modal konfirmasi hapus
+        $('#confirmModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget);
+            var url = button.data('url');
+            var row = button.closest('tr');
+            var itemName = row.find('td:nth-child(2)').text();
+
+            var detailsHtml = `
+            <div class="alert alert-light">
+                <strong>Nama Kategori:</strong> ${itemName}
+            </div>
+        `;
+
             $(this).find('#itemDetails').html(detailsHtml);
-            $(this).find('.modal-body p').first().html(`Apakah Anda yakin ingin menghapus ${itemType} ini?`);
-            $(this).find('.text-muted').html(warningText);
-
-            // Set action form untuk AJAX
-            var form = $(this).find('#deleteForm');
-            form.attr('action', url);
+            $(this).find('.modal-body p').first().html('Apakah Anda yakin ingin menghapus kategori ini?');
+            $(this).find('.text-muted').html('Kategori ini akan dihapus secara permanen.');
+            $(this).find('#deleteForm').attr('action', url);
         });
 
-        // Handle delete form submission dengan AJAX (Generic)
+        // Handle delete AJAX
         $('#deleteForm').on('submit', function(e) {
             e.preventDefault();
 
             var form = $(this);
             var url = form.attr('action');
-            var modal = form.closest('.modal');
-            var itemName = modal.find('#itemDetails strong').first().text().replace(/^(Nama|Judul):\s*/, '');
 
-            // Deteksi jenis item berdasarkan konten modal
-            var isUser = modal.find('#itemDetails').text().includes('Email:');
-            var itemType = isUser ? 'user' : 'document';
-            var successMessage = isUser ? 'User berhasil dihapus!' : 'Document berhasil dihapus!';
-
-            // Lanjutkan dengan AJAX request langsung
             $.ajax({
                 url: url,
-                type: "POST", // spoofing pakai _method=DELETE
+                type: "POST",
                 data: form.serialize(),
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
-                    // Tutup modal konfirmasi
                     $('#confirmModal').modal('hide');
-
-                    // Hapus row dari tabel
-                    var button = $(`button[data-url="${url}"]`);
-                    button.closest('tr').fadeOut(500, function() {
+                    $(`button[data-url="${url}"]`).closest('tr').fadeOut(500, function() {
                         $(this).remove();
                     });
-
-                    // Tampilkan notifikasi sukses
                     Swal.fire({
                         icon: 'success',
                         title: 'Berhasil!',
-                        text: successMessage,
+                        text: 'Kategori berhasil dihapus!',
                         timer: 2000,
                         showConfirmButton: false
                     });
                 },
                 error: function(xhr) {
-                    // Tutup modal konfirmasi
                     $('#confirmModal').modal('hide');
-
-                    let message = xhr.responseJSON?.message ??
-                        `Terjadi kesalahan saat menghapus ${itemType}`;
-
                     Swal.fire({
                         icon: 'error',
                         title: 'Gagal!',
-                        text: message
+                        text: xhr.responseJSON?.message ?? 'Terjadi kesalahan'
                     });
                 }
             });
         });
     </script>
-    <script>
-        @if (session('success'))
-            $(document).ready(function() {
-                let modal = $('#successModal');
-                modal.modal('show');
-
-                // Tutup otomatis setelah 2.5 detik
-                setTimeout(function() {
-                    modal.modal('hide');
-                }, 2500);
-            });
-        @endif
-    </script>
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         $(document).ready(function() {
-            // tangkap submit form update user
+            // Edit kategori
             $(document).on("submit", ".editUserForm", function(e) {
                 e.preventDefault();
 
                 let form = $(this);
                 let id = form.data("id");
                 let formData = new FormData(this);
+                let name = form.find('input[name="category_name"]').val();
 
-                // Ambil data form untuk konfirmasi
-                let name = form.find('input[name="name"]').val();
-
-                // Buat pesan konfirmasi
-                let confirmMessage = `Apakah Anda yakin ingin mengupdate kategori ini?\n\n`;
-                confirmMessage += `Nama Kategori: ${name}\n`;
-
-                // Tampilkan konfirmasi dengan SweetAlert2
                 Swal.fire({
                     title: 'Konfirmasi Update',
-                    text: confirmMessage,
+                    text: `Apakah Anda yakin ingin mengupdate kategori ini?`,
                     icon: 'question',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -379,27 +335,22 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Lanjutkan dengan AJAX request
                         $.ajax({
-                            url: form.attr('action'), // gunakan action dari form
-                            type: "POST", // tetap POST (Laravel pakai _method=PUT)
+                            url: form.attr('action'),
+                            type: "POST",
                             data: formData,
                             processData: false,
                             contentType: false,
                             headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                'X-Requested-With': 'XMLHttpRequest'
                             },
                             success: function(response) {
-                                // tutup modal
                                 $("#editUserModal" + id).modal("hide");
 
-                                // update tabel
-                                $("#userRow" + id + " td:nth-child(2)").text(response
-                                    .user.name);
-                                $("#userRow" + id + " td:nth-child(3)").text(response
-                                    .user.email);
+                                // ← Fix: pakai response.category bukan response.user
+                                $("#userRow" + id + " td:nth-child(2)").text(response.category.category_name);
 
-                                // popup sukses
                                 Swal.fire({
                                     icon: "success",
                                     title: "Berhasil!",
@@ -410,17 +361,13 @@
                             },
                             error: function(xhr) {
                                 let errors = xhr.responseJSON?.errors;
-                                let message = xhr.responseJSON?.message ??
-                                    "Terjadi kesalahan";
+                                let message = xhr.responseJSON?.message ?? "Terjadi kesalahan";
 
                                 if (errors) {
-                                    // Tampilkan error validasi
-                                    let errorMessages = Object.values(errors).flat()
-                                        .join('\n');
                                     Swal.fire({
                                         icon: "error",
                                         title: "Validasi Gagal!",
-                                        text: errorMessages
+                                        text: Object.values(errors).flat().join('\n')
                                     });
                                 } else {
                                     Swal.fire({
@@ -434,19 +381,14 @@
                     }
                 });
             });
-        });
-    </script>
 
-    <script>
-        // Handle add user form submission dengan AJAX
-        $(document).ready(function() {
+            // Tambah kategori
             $('#tambahUserModal form').on('submit', function(e) {
                 e.preventDefault();
 
                 let form = $(this);
                 let formData = new FormData(this);
 
-                // Lanjutkan dengan AJAX request langsung
                 $.ajax({
                     url: form.attr('action'),
                     type: "POST",
@@ -454,31 +396,29 @@
                     processData: false,
                     contentType: false,
                     headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'X-Requested-With': 'XMLHttpRequest'
                     },
                     success: function(response) {
-                        // Tutup modal
                         $('#tambahUserModal').modal('hide');
-
-                        // Reset form
                         form[0].reset();
 
-                        // Tambahkan row baru ke tabel
                         let newRow = `
-                            <tr id="userRow${response.category.id}">
-                                <td>${response.category.id}</td>
-                                <td>${response.category.category_name}</td>
-                                <td>
-                                    <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#editUserModal${response.category.id}">Edit</button>
-                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmModal" data-url="/categories/${response.category.id}">Hapus</button>
-                                </td>
-                            </tr>
-                        `;
+                        <tr id="userRow${response.category.id}">
+                            <td>${response.category.id}</td>
+                            <td>${response.category.category_name}</td>
+                            <td>
+                                <button class="btn btn-success btn-sm" data-toggle="modal" 
+                                        data-target="#editUserModal${response.category.id}">Edit</button>
+                                <button type="button" class="btn btn-danger btn-sm" 
+                                        data-toggle="modal" data-target="#confirmModal" 
+                                        data-url="${baseUrl}/categories/${response.category.id}">Hapus</button>
+                            </td>
+                        </tr>
+                    `;
 
-                        // Tambahkan row ke tabel
                         $('#dataTable tbody').prepend(newRow);
 
-                        // Tampilkan popup sukses
                         Swal.fire({
                             icon: 'success',
                             title: 'Berhasil!',
@@ -492,12 +432,10 @@
                         let message = xhr.responseJSON?.message ?? 'Terjadi kesalahan';
 
                         if (errors) {
-                            // Tampilkan error validasi
-                            let errorMessages = Object.values(errors).flat().join('\n');
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Validasi Gagal!',
-                                text: errorMessages
+                                text: Object.values(errors).flat().join('\n')
                             });
                         } else {
                             Swal.fire({
@@ -511,7 +449,6 @@
             });
         });
     </script>
-
 </body>
 
 </html>

@@ -10,3 +10,4 @@ Route::get('/user', function (Request $request) {
 
 // API untuk upload dokumen
 Route::post('/documents', [DocumentApiController::class, 'upload']);
+Route::get('/documents/status', [DocumentApiController::class, 'checkStatus']);

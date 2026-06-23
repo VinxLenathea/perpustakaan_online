@@ -49,9 +49,12 @@ class LogController extends Controller
         $log = UploadLogModel::findOrFail($id);
         $log->update([
             'status' => 'approved',
-            'verified_by' => auth()->id(),
+            'verified_by' => Auth::id(),
             'verified_at' => now()
         ]);
+
+        // Sync document status
+        $log->document->update(['status' => 'approved']);
 
         return response()->json([
             'message' => 'Log berhasil diapprove'
@@ -60,6 +63,12 @@ class LogController extends Controller
 
     public function reject($id, Request $request)
     {
+        dd([
+            'auth_id'    => Auth::id(),
+            'auth_check' => Auth::check(),
+            'auth_user'  => Auth::user(),
+            'request_all' => $request->all(),
+        ]);
         $request->validate([
             'reason' => 'required|string|max:500'
         ]);
@@ -71,6 +80,9 @@ class LogController extends Controller
             'verified_by' => Auth::id(),
             'verified_at' => now()
         ]);
+
+        // Sync document status
+        $log->document->update(['status' => 'rejected']);
 
         return response()->json([
             'message' => 'Log berhasil direject'

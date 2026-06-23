@@ -17,9 +17,9 @@ class LibraryController extends Controller
      */
     public function index(Request $request)
     {
-        $query = DocumentModel::with('category');
+        $query = DocumentModel::with('category')
+            ->where('status', 'approved');
 
-        // 🔍 Search
         if ($request->filled('keyword') && $request->filled('filter')) {
             $key = $request->keyword;
             $filter = $request->filter;
@@ -38,7 +38,6 @@ class LibraryController extends Controller
             $query->where('category_id', $request->category_id);
         }
 
-        // 🆕 DEFAULT: TERBARU
         $sortBy = $request->get('sort_by', 'terbaru');
 
         switch ($sortBy) {
@@ -65,6 +64,7 @@ class LibraryController extends Controller
     public function welcome()
     {
         $popularDocuments = DocumentModel::with('category')
+            ->where('status', 'approved')
             ->orderBy('views', 'desc')
             ->orderBy('title', 'asc')
             ->limit(8)
@@ -72,6 +72,7 @@ class LibraryController extends Controller
 
         return view('welcome', compact('popularDocuments'));
     }
+
 
 
 
@@ -121,7 +122,7 @@ class LibraryController extends Controller
             $coverPath = $request->file('cover_image')->store('covers', 'public');
         }
 
-        $document = DocumentModel::create([
+$document = DocumentModel::create([
             'title'          => $request->title,
             'author'         => $request->author,
             'year_published' => $request->year_published,
@@ -131,6 +132,7 @@ class LibraryController extends Controller
             'abstract'       => $request->abstract,
             'kampus'         => $request->kampus,
             'prodi'          => $request->prodi,
+            'status'         => 'approved',
         ]);
         // Log the upload action
         UploadLogModel::create([
@@ -347,12 +349,14 @@ class LibraryController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'file_url' => 'required|string|max:255',
+            'nim'     => 'required|string|max:50',
         ]);
 
         // 🔹 Simpan dokumen
         $document = documentModel::create([
             'title' => $request->title,
             'author' => $request->author,
+            'nim' => $request->nim,
             'year_published' => $request->year_published,
             'category_id' => $request->category_id,
             'abstract' => $request->abstract,
@@ -363,6 +367,53 @@ class LibraryController extends Controller
         return response()->json([
             'message' => 'Upload berhasil, menunggu persetujuan admin',
             'document' => $document
+        ]);
+    }
+
+    public function checkStatus(Request $request)
+    {
+        $token = $request->bearerToken();
+        $client = ClientModel::where('api_token', $token)->first();
+
+        if (!$client) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        // Wajib kirim nim untuk filter
+        $nim = $request->query('nim');
+
+        if (!$nim) {
+            return response()->json(['error' => 'NIM tidak ditemukan'], 400);
+        }
+
+        $documents = documentModel::with(['uploadLogs' => function($q) {
+                        $q->latest();
+                    }])
+                    ->where('client_id', $client->id)
+                    ->where('nim', $nim) // ← filter by nim
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+
+        $data = $documents->map(function($doc) {
+            $latestLog = $doc->uploadLogs->first();
+            return [
+                'id'             => $doc->id,
+                'title'          => $doc->title,
+                'author'         => $doc->author,
+                'nim'            => $doc->nim,
+                'year_published' => $doc->year_published,
+                'kampus'         => $doc->kampus,
+                'prodi'          => $doc->prodi,
+                'status'         => $doc->status,
+                'created_at'     => $doc->created_at,
+                'notes'          => $latestLog ? $latestLog->notes : null,
+                'verified_at'    => $latestLog ? $latestLog->verified_at : null,
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'data'    => $data
         ]);
     }
 }
