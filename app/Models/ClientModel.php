@@ -28,7 +28,7 @@ class ClientModel extends Model
 
     public function documents()
     {
-        return $this->hasMany(\App\Models\documentModel::class, 'client_id');
+        return $this->hasMany(\App\Models\DocumentModel::class, 'client_id');
     }
 
     public function uploadLogs()

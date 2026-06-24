@@ -353,7 +353,7 @@ $document = DocumentModel::create([
         ]);
 
         // 🔹 Simpan dokumen
-        $document = documentModel::create([
+        $document = DocumentModel::create([
             'title' => $request->title,
             'author' => $request->author,
             'nim' => $request->nim,
@@ -386,7 +386,7 @@ $document = DocumentModel::create([
             return response()->json(['error' => 'NIM tidak ditemukan'], 400);
         }
 
-        $documents = documentModel::with(['uploadLogs' => function($q) {
+        $documents = DocumentModel::with(['uploadLogs' => function($q) {
                         $q->latest();
                     }])
                     ->where('client_id', $client->id)
