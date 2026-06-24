@@ -8,7 +8,7 @@ use App\Models\CategoryModel;
 use App\Models\ClientModel;
 use App\Models\UploadLogModel;
 
-class documentModel extends Model
+class DocumentModel extends Model
 {
     use HasFactory;
 
