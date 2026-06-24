@@ -98,6 +98,10 @@
                                                     <td>: {{ $document->category->category_name }}</td>
                                                 </tr>
                                                 <tr>
+                                                    <th>NIM</th>
+                                                    <td>: {{ $document->nim ?: '-' }}</td>
+                                                </tr>
+                                                <tr>
                                                     <th>Tahun</th>
                                                     <td>: {{ $document->year_published }}</td>
                                                 </tr>
