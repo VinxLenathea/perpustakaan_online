@@ -9,12 +9,17 @@ class WellcomeController extends Controller
 {
     public function index(Request $request)
     {
-        // Mengambil 5 dokumen yang paling banyak dilihat, diurutkan berdasarkan views descending, lalu title ascending
         $topViewedDocuments = DocumentModel::with('category')
+            ->where('status', 'approved')
             ->orderBy('views', 'desc')
             ->orderBy('title', 'asc')
-            ->limit(5)
+            ->limit(3)
             ->get();
+
+            dd(
+                $topViewedDocuments->count(),
+                $topViewedDocuments->pluck('id', 'title')
+            );
 
         // Mengirimkan data ke view
         return view('welcome', compact('topViewedDocuments'));

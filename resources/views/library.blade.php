@@ -39,7 +39,7 @@
                 <div class="container-fluid">
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Perpustakaan RSUD Mohammad Noer</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Library Management</h1>
                     </div>
 
 
@@ -412,12 +412,23 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="row nim-row" style="display: none;">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="nim">NIM <span class="text-danger">*</span></label>
+                                                        <input type="text" class="form-control" name="nim"
+                                                            value="{{ $doc->nim }}"
+                                                            placeholder="Masukkan NIM peneliti">
+                                                        <small class="text-muted">Wajib diisi untuk kategori Penelitian Eksternal.</small>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="file">Ganti File (Opsional)</label>
                                                     <input type="file" class="form-control" name="file"
-                                                        accept=".pdf,.doc,.docx">
+                                                        accept=".pdf,.png,.jpg,.jpeg">
                                                     <small class="text-muted">Kosongkan jika tidak ingin mengganti
                                                         file.</small>
                                                 </div>

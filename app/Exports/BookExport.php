@@ -22,9 +22,10 @@ class BookExport implements FromCollection, WithHeadings, WithMapping
     // Ambil data dari database
     public function collection()
     {
-        return DocumentModel::whereMonth('created_at', $this->month)
-                           ->whereYear('created_at', $this->year)
-                           ->get();
+        return DocumentModel::where('status', 'approved') // ← tambah filter
+            ->whereMonth('created_at', $this->month)
+            ->whereYear('created_at', $this->year)
+            ->get();
     }
 
     // Tentukan kolom Excel

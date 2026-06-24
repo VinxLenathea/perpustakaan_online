@@ -9,6 +9,7 @@ use App\Http\Controllers\WelcomeControllerController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\ExportController;
 use Illuminate\Http\Request;
+use App\Http\Controllers\WellcomeController;
 use PharIo\Manifest\Library;
 
 
@@ -46,6 +47,7 @@ Route::get('/', function (Request $request) {
     } else {
         // Show top viewed documents, sorted by views desc, then title asc
         $topViewedDocuments = \App\Models\DocumentModel::with('category')
+            ->where('status', 'approved')
             ->orderBy('views', 'desc')
             ->orderBy('title', 'asc')
             ->take(3)
@@ -100,7 +102,7 @@ Route::middleware('auth')->group(function () {
     });
     // Dashboard
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/welcome', [LibraryController::class, 'index'])->name('welcome');
+    Route::get('/welcome', [WellcomeController::class, 'index'])->name('welcome');
 
     // logs management (master_admin only)
     Route::middleware(['role:master_admin'])->group(function () {
