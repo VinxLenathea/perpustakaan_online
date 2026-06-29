@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\CategoryModel;
 
 class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = \App\Models\CategoryModel::all();
+        $categories = CategoryModel::all();
         return view('categories', compact('categories'));
     }
 
@@ -19,13 +20,12 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:categories,category_name',
+        // ✅ FIX: Ubah 'name' jadi 'category_name' sesuai form
+        $validated = $request->validate([
+            'category_name' => 'required|string|max:255|unique:categories,category_name',
         ]);
 
-        $category = \App\Models\CategoryModel::create([
-            'category_name' => $request->name,
-        ]);
+        $category = CategoryModel::create($validated);
 
         if ($request->ajax()) {
             return response()->json([
@@ -40,19 +40,18 @@ class CategoryController extends Controller
 
     public function edit($id)
     {
-        $category = \App\Models\CategoryModel::findOrFail($id);
+        $category = CategoryModel::findOrFail($id);
         return view('categories.edit', compact('category'));
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validated = $request->validate([
             'category_name' => 'required|string|max:255|unique:categories,category_name,' . $id,
         ]);
 
-        $category = \App\Models\CategoryModel::findOrFail($id);
-        $category->category_name = $request->category_name;
-        $category->save();
+        $category = CategoryModel::findOrFail($id);
+        $category->update($validated); // ✅ Lebih clean pakai update()
 
         if ($request->ajax()) {
             return response()->json([
@@ -67,16 +66,16 @@ class CategoryController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $category = \App\Models\CategoryModel::findOrFail($id);
+        $category = CategoryModel::findOrFail($id);
         $category->delete();
 
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Category successfully deleted!',
+                'message' => 'Kategori berhasil dihapus!',
             ]);
         }
 
-        return redirect()->route('categories.index')->with('success', 'Category successfully deleted!');
+        return redirect()->route('categories.index')->with('success', 'Kategori berhasil dihapus!');
     }
 }
