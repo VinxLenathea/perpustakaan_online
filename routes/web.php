@@ -15,6 +15,9 @@ use PharIo\Manifest\Library;
 
 Route::get('/', function (Request $request) {
     // Check if search parameters are present
+    $cats = \App\Models\CategoryModel::orderBy('created_at', 'asc')
+                ->limit(5)
+                ->get();
     if ($request->has('query') || $request->has('search_by') || $request->has('category')) {
         // Perform search
         $query = \App\Models\DocumentModel::with('category');
@@ -43,7 +46,7 @@ Route::get('/', function (Request $request) {
         $searchResults = $query->paginate(10)->withQueryString();
         $isSearch = true;
 
-        return view('welcome', compact('searchResults', 'isSearch'));
+        return view('welcome', compact('searchResults', 'isSearch', 'cats'));
     } else {
         // Show top viewed documents, sorted by views desc, then title asc
         $topViewedDocuments = \App\Models\DocumentModel::with('category')
@@ -54,7 +57,7 @@ Route::get('/', function (Request $request) {
             ->get();
         $isSearch = false;
 
-        return view('welcome', compact('topViewedDocuments', 'isSearch'));
+        return view('welcome', compact('topViewedDocuments', 'isSearch', 'cats'));
     }
 });
 

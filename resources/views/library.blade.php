@@ -283,7 +283,8 @@
                                                         <option value="">Pilih Kategori</option>
                                                         @foreach ($categories as $cat)
                                                         <option value="{{ $cat->id }}"
-                                                            data-name="{{ strtolower($cat->category_name) }}">
+                                                            data-name="{{ strtolower($cat->category_name) }}"
+                                                            data-type="{{ $cat->category_type }}">
                                                             {{ ucfirst(str_replace('_', ' ', $cat->category_name)) }}
                                                         </option>
                                                         @endforeach
@@ -404,6 +405,7 @@
                                                     <select class="form-control" name="category_id" required>
                                                         @foreach ($categories as $cat)
                                                         <option value="{{ $cat->id }}"
+                                                            data-type="{{ $cat->category_type }}"
                                                             {{ $doc->category_id == $cat->id ? 'selected' : '' }}>
                                                             {{ ucfirst(str_replace('_', ' ', $cat->category_name)) }}
                                                         </option>
@@ -413,16 +415,16 @@
                                             </div>
                                         </div>
                                         <div class="row nim-row" style="display: none;">
-                                                <div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <label for="nim">NIM <span class="text-danger">*</span></label>
-                                                        <input type="text" class="form-control" name="nim"
-                                                            value="{{ $doc->nim }}"
-                                                            placeholder="Masukkan NIM peneliti">
-                                                        <small class="text-muted">Wajib diisi untuk kategori Penelitian Eksternal.</small>
-                                                    </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="nim">NIM <span class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control" name="nim"
+                                                        value="{{ $doc->nim }}"
+                                                        placeholder="Masukkan NIM peneliti">
+                                                    <small class="text-muted">Wajib diisi untuk kategori Penelitian Eksternal.</small>
                                                 </div>
                                             </div>
+                                        </div>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
@@ -934,33 +936,41 @@
         $(document).ready(function() {
             function toggleFields(form) {
                 var categorySelect = form.find('select[name="category_id"]');
-                var selectedCategoryText = categorySelect.find('option:selected').text().trim();
-                var isPenelitianEksternal = selectedCategoryText === 'Penelitian Eksternal';
+                var selectedOption = categorySelect.find('option:selected'); // ← tambah ini
+                var selectedCategoryText = selectedOption.text().trim();
+                var categoryType = selectedOption.data('type'); // ← sekarang bisa dibaca
+                var isExternal = categoryType === 'external';
                 var isPoster = selectedCategoryText === 'Poster';
 
                 // Cover image & abstrak — sembunyikan hanya untuk Poster
                 if (isPoster) {
                     form.find('input[name="cover_image"]').closest('.form-group').hide();
                     form.find('textarea[name="abstract"]').closest('.form-group').hide();
+                    form.find('textarea[name="abstract"]').removeAttr('required');
                 } else {
                     form.find('input[name="cover_image"]').closest('.form-group').show();
                     form.find('textarea[name="abstract"]').closest('.form-group').show();
                 }
 
-                // NIM, Kampus & Prodi — hanya untuk Penelitian Eksternal
-                if (isPenelitianEksternal) {
+                // NIM, Kampus & Prodi — muncul untuk kategori bertipe external
+                if (isExternal) { // ← ganti isPenelitianEksternal → isExternal
                     form.find('.nim-row').show();
                     form.find('input[name="nim"]').attr('required', true);
 
                     form.find('.kampus-prodi-row').show();
-                    form.find('input[name="kampus"]').attr('required', true); // ← tambah required
+                    form.find('input[name="kampus"]').attr('required', true);
                     form.find('input[name="prodi"]').attr('required', true);
 
                     form.find('textarea[name="abstract"]').prop('required', true);
                 } else {
                     form.find('.nim-row').hide();
                     form.find('input[name="nim"]').removeAttr('required').val('');
+
                     form.find('.kampus-prodi-row').hide();
+                    form.find('input[name="kampus"]').removeAttr('required').val('');
+                    form.find('input[name="prodi"]').removeAttr('required').val('');
+
+                    form.find('textarea[name="abstract"]').removeAttr('required');
                 }
             }
 

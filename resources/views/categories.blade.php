@@ -59,6 +59,7 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Nama Kategori</th>
+                                        <th>Tipe Kategori</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -67,6 +68,11 @@
                                     <tr id="userRow{{ $category->id }}">
                                         <td>{{ $category->id }}</td>
                                         <td>{{ $category->category_name }}</td>
+                                        <td> {{-- ← kolom tipe --}}
+                                            <span class="badge {{ $category->category_type == 'internal' ? 'badge-primary' : 'badge-success' }}">
+                                                {{ ucfirst($category->category_type) }}
+                                            </span>
+                                        </td>
                                         <td>
                                             <!-- Tombol Edit -->
 
@@ -115,7 +121,14 @@
                                                                 name="category_name"
                                                                 value="{{ $category->category_name }}" required>
                                                         </div>
-
+                                                        <div class="form-group">
+                                                            <label for="category_type">Tipe Kategori</label>
+                                                            <select class="form-control" name="category_type" required>
+                                                                <option value="">Pilih Tipe</option>
+                                                                <option value="internal" {{ $category->category_type == 'internal' ? 'selected' : '' }}>Internal</option>
+                                                                <option value="external" {{ $category->category_type == 'external' ? 'selected' : '' }}>External</option>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary"
@@ -152,6 +165,14 @@
                                         <div class="form-group">
                                             <label for="name">Nama Kategori</label>
                                             <input type="text" class="form-control" name="category_name" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="category_type">Tipe Kategori</label>
+                                            <select class="form-control" name="category_type" required>
+                                                <option value="">Pilih Tipe</option>
+                                                <option value="internal">Internal</option>
+                                                <option value="external">External</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -350,6 +371,11 @@
 
                                 // ← Fix: pakai response.category bukan response.user
                                 $("#userRow" + id + " td:nth-child(2)").text(response.category.category_name);
+                                $("#userRow" + id + " td:nth-child(3)").html(
+                                    `<span class="badge ${response.category.category_type == 'internal' ? 'badge-primary' : 'badge-success'}">
+                                        ${response.category.category_type.charAt(0).toUpperCase() + response.category.category_type.slice(1)}
+                                    </span>`
+                                );
 
                                 Swal.fire({
                                     icon: "success",
@@ -407,6 +433,11 @@
                         <tr id="userRow${response.category.id}">
                             <td>${response.category.id}</td>
                             <td>${response.category.category_name}</td>
+                            <td>
+                                <span class="badge ${response.category.category_type == 'internal' ? 'badge-primary' : 'badge-success'}">
+                                    ${response.category.category_type.charAt(0).toUpperCase() + response.category.category_type.slice(1)}
+                                </span>
+                            </td>
                             <td>
                                 <button class="btn btn-success btn-sm" data-toggle="modal" 
                                         data-target="#editUserModal${response.category.id}">Edit</button>

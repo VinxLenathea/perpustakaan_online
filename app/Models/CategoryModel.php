@@ -11,7 +11,7 @@ class CategoryModel extends Model
 
     protected $table = 'categories';
     protected $primaryKey = 'id';
-    protected $fillable = ['category_name']; // sesuai dengan kolom di DB
+    protected $fillable = ['category_name', 'category_type'];
 
     public function documents()
     {

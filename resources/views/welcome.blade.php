@@ -275,7 +275,7 @@
                         <!-- Info -->
                         <div class="col-md-9 col-sm-8">
                             <a href="{{ route('documents.readonly', $doc->id) }}" class="text-title">{{ $doc->title }}</a>
-                            <div class="info-row"><span class="info-label">Jenis:</span><span class="info-value">{{ $doc->category->category_name }}</span></div>
+                            <div class="info-row"><span class="info-label">Kategori:</span><span class="info-value">{{ $doc->category->category_name }}</span></div>
                             <div class="info-row"><span class="info-label">Pembuat:</span><span class="info-value">{{ $doc->author }}</span></div>
                             <div class="info-row"><span class="info-label">Tahun:</span><span class="info-value">{{ $doc->year_published }}</span></div>
 
@@ -309,32 +309,27 @@
     </div>
 
     <!-- Kategori Unggulan -->
+    <!-- Kategori Unggulan -->
     <div class="container my-5 pb-5">
         <h3 class="text-center fw-bold mb-5" style="color: #001f3f;">Kategori Unggulan</h3>
         <div class="row g-4 justify-content-center">
-            @php
-            $cats = [
-            ['Karya Tulis Ilmiah', 'fas fa-file-contract'],
-            ['Poster', 'fas fa-image'],
-            ['Penelitian Eksternal', 'fas fa-flask'],
-            ['Penelitian Internal', 'fas fa-microscope'],
-            ['E-Book', 'fas fa-book-open']
-            ];
-            @endphp
+
+            
 
             @foreach($cats as $c)
             <div class="col-6 col-md-4 col-lg-2">
                 <div class="cat-card shadow-sm">
                     <div>
-                        <i class="{{ $c[1] }} cat-icon"></i>
-                        <p class="fw-bold small mb-3">{{ $c[0] }}</p>
+                        <i class="{{ $iconMap[$c->category_name] ?? 'fas fa-folder' }} cat-icon"></i>
+                        <p class="fw-bold small mb-3">{{ $c->category_name }}</p>
                     </div>
-                    <a href="{{ route('collection', $c[0]) }}" class="btn btn-navy btn-sm w-100">Lihat Koleksi</a>
+                    <a href="{{ route('collection', $c->category_name) }}" class="btn btn-navy btn-sm w-100">
+                        Lihat Koleksi
+                    </a>
                 </div>
             </div>
             @endforeach
 
-            <!-- Tombol Lihat Semua Kategori -->
             <div class="text-center mt-4">
                 <a href="{{ route('categoryCollection') }}" class="btn btn-navy btn-lg">
                     <i class="fas fa-th-large me-2"></i>Lihat Semua Kategori

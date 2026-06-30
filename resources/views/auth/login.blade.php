@@ -303,7 +303,7 @@
 
                 <!-- Footer -->
                 <div class="login-footer">
-                    <p>&copy; {{ date('Y') }} Perpustakaan Online. All rights reserved.</p>
+                    <p>&copy; 2025 Perpustakaan Online. All rights reserved.</p>
                 </div>
             </div>
         </div>

@@ -23,6 +23,7 @@ class CategoryController extends Controller
         // ✅ FIX: Ubah 'name' jadi 'category_name' sesuai form
         $validated = $request->validate([
             'category_name' => 'required|string|max:255|unique:categories,category_name',
+            'category_type' => 'required|in:internal,external', // Validasi untuk category_type
         ]);
 
         $category = CategoryModel::create($validated);
@@ -48,6 +49,7 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'category_name' => 'required|string|max:255|unique:categories,category_name,' . $id,
+            'category_type' => 'required|in:internal,external', // Validasi untuk category_type
         ]);
 
         $category = CategoryModel::findOrFail($id);
